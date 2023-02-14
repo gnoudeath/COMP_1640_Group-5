@@ -1,0 +1,22 @@
+{
+  "name": "comp1640",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnoudeath/COMP_1640.git"
+  },
+  "author": "Group 5",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gnoudeath/COMP_1640/issues"
+  },
+  "homepage": "https://github.com/gnoudeath/COMP_1640#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
