@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+          <img src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" alt="">
+        </a>
+      </nav>
+    <div class="container">
+        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <h2>NODE.JS MVC</h2>  
+                                <div class="card">
+                                    <div class="card-header">Login</div>
+                                    <div class="card-body">
+        
+                                        <form class="form-horizontal" method="post" action="/login">
+        
+                                        
+                                            <div class="form-group">
+                                                <label for="email" class="cols-sm-2 control-label">Your Username</label>
+                                                <div class="cols-sm-10">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
+                                                        <input type="text" class="form-control" name="username" id="username" placeholder="Enter your Email" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group">
+                                                <label for="password" class="cols-sm-2 control-label">Password</label>
+                                                <div class="cols-sm-10">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                                        <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group ">
+                                                <button type="submit" class="btn btn-primary btn-lg btn-block login-button">Login</button>
+                                            </div>
+                                            
+                                        </form>
+                                    </div>
+        
+                                </div>
+                            </div>
+                        </div>
+        </div>
+</body>
+</html>
