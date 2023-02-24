@@ -4,8 +4,12 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const session = require('express-session');
 dotenv.config();
+var flash = require("connect-flash");
+
 const passport = require("passport");
 const { loginCheck } = require("./auth/passport");
+
+
 loginCheck(passport);
 
 // Mongo DB conncetion
@@ -24,6 +28,11 @@ app.use(session({
     saveUninitialized: true,
     resave: true
   }));
+app.use(flash());
+app.use(express.static('public'))
+app.use('/css', express.static(__dirname + 'public/css'))
+
+
   
 
 app.use(passport.initialize());

@@ -3,34 +3,22 @@ LocalStrategy = require("passport-local").Strategy;
 const User = require("../models/User");
 const loginCheck = passport => {
   passport.use(
-    new LocalStrategy({ usernameField: "username" }, (username, password, done) => {
+    new LocalStrategy({ usernameField: "username", passReqToCallback: true}, (req,username, password, done) => {
       //Check customer
       User.findOne({ username: username })
         .then((user) => {
           if (!user) {
-            console.log("wrong username");
-            return done();
+            req.flash('error', 'Invalid username');
+            return done(null, false);
           }
           //Match Password
           const isPasswordValid = user.password === password;
           if (isPasswordValid) {
             return done(null, user);
           } else {
-                  console.log("Wrong password");
-                  return done();
+            req.flash('error', 'Invalid password');
+            return done(null, false);
           }
-                  
-
-
-        //   bcrypt.compare(password, user.password, (error, isMatch) => {
-        //     if (error) throw error;
-        //     if (isMatch) {
-        //       return done(null, user);
-        //     } else {
-        //       console.log("Wrong password");
-        //       return done();
-        //     }
-        //   });
         })
         .catch((error) => console.log(error));
     })
