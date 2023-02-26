@@ -23,23 +23,7 @@ const loginUser = (req, res,next) => {
         failureFlash: true,
       })(req, res);
     }
-    // passport.authenticate('local', (err, user, info) => {
-    //   if (err) { return next(err); }
-    //   if (!user) { return res.redirect('/login'); }
-    //   req.logIn(user, (err) => {
-    //     if (err) { return next(err); }
-    //     const role = req.user.role;
-    //     if (req.user.role === 'QAM') {
-    //       res.redirect('/qamanager');
-    //     } else if (req.user.role === 'QAC') {
-    //       res.redirect('/qacoordinator');
-    //     } else if (req.user.role === 'Staff') {
-    //       res.redirect('/staff');
-    //     } else if (req.user.role === 'Admin') {
-    //       res.redirect('/admin');
-    //     }
-    //   });
-    // })(req, res, next);
+    
   };
   const logoutUser = (req, res,next) => {
     req.logout(function(err) {

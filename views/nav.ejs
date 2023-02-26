@@ -19,16 +19,46 @@
         <div class="navbar">
             <nav>
                 <ul>
-                    <li><a href="home-staff.html"><i class="fa fa-home"></i></a></li>
+                    <li><a href="/"><i class="fa fa-home"></i></a></li>
                 </ul>
             </nav>
-            <div class="dropdown">
-                <a>Hello, <%= user.username %> | <%= user.role %> <i class="fa fa-caret-down"></i></a>
-                <div class="dropdown-content">
-                    <a href="#">Upload</a>
-                    <a href="/logout">Logout</a>
+            <% if(user.role.name === "Admin"){ %>
+                <div class="dropdown">
+                    <a>Hello, <%= user.username %> | <%= user.role.name %> <i class="fa fa-caret-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#">Create account</a>
+                        <a href="/logout">Logout</a>
+                    </div>
                 </div>
-            </div>
+              <% }
+              else if (user.role.name === "QAM"){ %>  
+                <div class="dropdown">
+                    <a>Hello, <%= user.username %> | <%= user.role.name %> <i class="fa fa-caret-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#">Upload</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                </div>
+             <% }
+             else if (user.role.name === "QAC"){ %>  
+                <div class="dropdown">
+                    <a>Hello, <%= user.username %> | <%= user.role.name %> <i class="fa fa-caret-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#">Upload</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                </div>
+             <% }
+              else{ %>  
+                <div class="dropdown">
+                    <a>Hello, <%= user.username %> | <%= user.role.name %> <i class="fa fa-caret-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#">Upload</a>
+                        <a href="/logout">Logout</a>
+                    </div>
+                </div>
+             <% } %>
+            
         </div>
     
     </header>
