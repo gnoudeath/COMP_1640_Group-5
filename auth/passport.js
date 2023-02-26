@@ -3,9 +3,9 @@ LocalStrategy = require("passport-local").Strategy;
 const User = require("../models/User");
 const loginCheck = passport => {
   passport.use(
-    new LocalStrategy({ usernameField: "username", passReqToCallback: true}, (req,username, password, done) => {
+    new LocalStrategy({ usernameField: "username", passReqToCallback: true }, (req, username, password, done) => {
       //Check customer
-      User.findOne({ username: username })
+      User.User.findOne({ username: username })
         .then((user) => {
           if (!user) {
             req.flash('error', 'Invalid username');
@@ -27,7 +27,7 @@ const loginCheck = passport => {
     done(null, user.id);
   });
   passport.deserializeUser((id, done) => {
-    User.findById(id, (error, user) => {
+    User.User.findById(id, (error, user) => {
       done(error, user);
     });
   });
