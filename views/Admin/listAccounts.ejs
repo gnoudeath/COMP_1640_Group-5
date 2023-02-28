@@ -1,0 +1,102 @@
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <p>FPT University</p>
+          <h1><%= title %></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- Section: list Accounts -->
+<div class="contact-from-section mt-150 mb-150">
+  <div class="container">
+    <!-- Tab links -->
+    <div class="tabs">
+      <button class="tablinks active" data-electronic="qa_manager">Quality Assurance Manager</button>
+      <button class="tablinks" data-electronic="qa_coordinator">Quality Assurance Coordinator</button>
+      <button class="tablinks" data-electronic="staff">Staff</button>
+    </div>
+    <!-- End: Tab links -->
+
+    <hr>
+
+    <!-- Tab content -->
+    <div class="wrapper_tabcontent">
+      <div id="qa_manager" class="tabcontent active">
+
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Handle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>qa_manager</td>
+              <td>qa_manager</td>
+              <td>qa_manager</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="qa_coordinator" class="tabcontent">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Last</th>
+              <th scope="col">Handle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>qa_coordinator</td>
+              <td>qa_coordinator</td>
+              <td>qa_coordinator</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="staff" class="tabcontent">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Username</th>
+              <th scope="col">Full Name</th>
+              <th scope="col">Handle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% 
+              i = 1; 
+              resultArray.forEach(element => {  %>
+            <tr>
+              <th scope="row"><%= i++ %></th>
+              <td><%= element.username %></td>
+              <td><%= element.fullName %></td>
+              <td>Staff Test</td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- End: Tab content -->
+  </div>
+</div>
+<!-- End: Section: list Accounts -->

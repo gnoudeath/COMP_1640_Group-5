@@ -352,7 +352,7 @@ p:last-child {
 }
 
 .mt-150 {
-  margin-top: 100px;
+  margin-top: 75px;
 }
 
 @media only screen and (max-width: 767.96px) {
@@ -362,12 +362,12 @@ p:last-child {
 }
 
 .mb-150 {
-  margin-bottom: 150px;
+  margin-bottom: 75px;
 }
 
 @media only screen and (max-width: 767.96px) {
   .mb-150 {
-    margin-bottom: 100px;
+    margin-bottom: 50px;
   }
 }
 
@@ -2802,4 +2802,55 @@ table.order-details tbody td {
   display: table-cell;
   vertical-align: middle;
   width: 100%;
+}
+
+/* -----------------------------------------------------------------------------
+
+# List Accounts Page Styles
+
+----------------------------------------------------------------------------- */
+/* Tab Links */
+.tabs {
+  display: flex;
+}
+
+.tablinks {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 100%;
+  padding: 1rem;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: 0.2s ease;
+  border-radius: 50px;
+  margin-right: 15px;
+}
+
+.tablinks:hover {
+  background: #051922;
+  color: #fff;
+}
+
+/* Tab active */
+.tablinks.active {
+  background: #F28123;
+  color: #fff;
+}
+
+/* tab content */
+.tabcontent {
+  display: none;
+}
+
+/* Text*/
+.tabcontent p {
+  color: #333;
+  font-size: 16px;
+}
+
+/* tab content active */
+.tabcontent.active {
+  display: block;
 }
