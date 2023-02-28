@@ -34,9 +34,37 @@ const logoutUser = (req, res, next) => {
     res.redirect('/');
   });
 };
+// Start: GET: Home Page
+
+
+const dashboardView = async (req, res) => {
+  try {
+      const title = 'Home';
+      const user = req.user;
+
+      // If the user has a role, fetch the role data using the populate() method
+      if (user.role) {
+          const role = await User.Role.findById(user.role);
+          user.role = role;
+          if (role.name === "Admin") res.render('Admin/home', { user, title });
+          else if (role.name === "Staff") res.render('Staff/home', { user, title });
+      }
+      else {
+          res.render('login_page');
+      }
+
+
+  } catch (error) {
+      console.error(error);
+      res.redirect('/');
+      // res.status(500).send('Internal Server Error');
+  }
+};
+// End: GET: Home Page
 
 module.exports = {
   logoutUser,
   loginView,
   loginUser,
+  dashboardView
 };

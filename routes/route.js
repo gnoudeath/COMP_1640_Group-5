@@ -3,9 +3,9 @@ const express = require('express');
 const { loginView, loginUser } = require('../controllers/loginController');
 
 const { protectRoute } = require("../auth/protect");
-const { logoutUser } = require('../controllers/loginController');
+const { logoutUser,dashboardView, } = require('../controllers/loginController');
 
-const { dashboardView, formAccountView, submitFormAccount, listAccountsView, updateAccountView } = require('../controllers/adminController');
+const {  formAccountView, submitFormAccount, listAccountsView, updateAccountView } = require('../controllers/adminController');
 const { Role } = require('../models/User');
 
 // Define Routes
