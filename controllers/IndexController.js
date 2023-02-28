@@ -11,9 +11,15 @@ const dashboardView = async (req, res) => {
         if (user.role) {
             const role = await User.Role.findById(user.role);
             user.role = role;
+            if(role.name === "Admin") res.render('Admin/home', { user });
+            else if (role.name === "Staff") res.render('Staff/home', { user });
         }
+        else {
+            res.render('login_page');
+        }
+        
 
-        res.render('Admin/home', { user, title });
+       
     } catch (error) {
         console.error(error);
         res.redirect('/');

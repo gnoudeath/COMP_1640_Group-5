@@ -4,9 +4,8 @@ const User = require("../models/User");
 // For View 
 const loginView = (req, res) => {
   const messages = req.flash('error')
-  const title = 'Login';
-  res.render("login", {
-    title,
+  res.render("login_page", {
+    layout: 'login_page',
     messages
   });
 }
@@ -16,8 +15,7 @@ const loginUser = (req, res, next) => {
 
   //Required
   if (!username || !password) {
-    console.log("Please fill in all the fields");
-    req.flash('error', "Please fill in all the fields")
+    req.flash('error', "Please enter both your username and password to continue.")
     res.redirect("login");
   } else {
     passport.authenticate("local", {

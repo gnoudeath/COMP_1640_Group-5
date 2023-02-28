@@ -8,7 +8,7 @@ const loginCheck = passport => {
       User.User.findOne({ username: username })
         .then((user) => {
           if (!user) {
-            req.flash('error', 'Invalid username');
+            req.flash('error', 'Invalid username. Please try again.');
             return done(null, false);
           }
           //Match Password
@@ -16,7 +16,7 @@ const loginCheck = passport => {
           if (isPasswordValid) {
             return done(null, user);
           } else {
-            req.flash('error', 'Invalid password');
+            req.flash('error', 'Invalid password. Please try again.');
             return done(null, false);
           }
         })
