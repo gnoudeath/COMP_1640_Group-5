@@ -66,7 +66,36 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 // End: Define our user schema
 
+/**
+ *  Function: Thêm 1 tài khoản
+ */
+function insertUser(data) {
+  User.create(data);
+}
+
+/**
+ *  Function Lấy toàn bộ thông tin các Roles
+ */
+async function getAllRoles() {
+  // Sử dụng phương thức find để lấy tất cả các documents từ bảng users
+  const roles = await Role.find();
+  return roles;
+}
+
+/**
+ * Function: Lấy toàn bộ thông tin các Users dựa vào tên Role
+ */
+async function getAccountsByRoleName(roleName) {
+  try {
+    const role = await Role.findOne({ name: roleName });
+    const users = await User.find({ role: role._id }).populate('role');
+    return users;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
 
 // Export the Mongoose model
-module.exports = { User, Role, Department };
+module.exports = { User, Role, Department, insertUser, getAllRoles, getAccountsByRoleName };
 

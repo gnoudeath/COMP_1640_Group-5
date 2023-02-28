@@ -5,12 +5,8 @@ const { loginView, loginUser } = require('../controllers/loginController');
 const { protectRoute } = require("../auth/protect");
 const { logoutUser } = require('../controllers/loginController');
 
-<<<<<<< HEAD
 const { dashboardView, formAccountView, submitFormAccount, listAccountsView } = require('../controllers/adminController');
 const { Role } = require('../models/User');
-=======
-const { dashboardView } = require('../controllers/IndexController');
->>>>>>> 0d7d5148bd4c2dda75d8a680b125ec326d5db7b7
 
 // Define Routes
 const router = express.Router();

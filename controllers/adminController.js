@@ -11,15 +11,14 @@ const dashboardView = async (req, res) => {
         if (user.role) {
             const role = await User.Role.findById(user.role);
             user.role = role;
-            if(role.name === "Admin") res.render('Admin/home', { user });
-            else if (role.name === "Staff") res.render('Staff/home', { user });
+            if (role.name === "Admin") res.render('Admin/home', { user, title });
+            else if (role.name === "Staff") res.render('Staff/home', { user, title });
         }
         else {
             res.render('login_page');
         }
-        
 
-       
+
     } catch (error) {
         console.error(error);
         res.redirect('/');
@@ -40,16 +39,9 @@ const formAccountView = async (req, res) => {
             user.role = role;
         }
 
-        let allRoles = [];
+        const allRoles = await User.getAllRoles();
 
-        User.Role.find().exec((err, datas) => {
-            if (err) {
-                console.error(err);
-            } else {
-                allRoles = datas; // lưu kết quả vào biến ngoài allRoles
-                res.render('Admin/formAccount', { user, title, allRoles })
-            }
-        });
+        res.render('Admin/formAccount', { user, title, allRoles })
 
     } catch (error) {
         console.error(error);
@@ -61,7 +53,7 @@ const formAccountView = async (req, res) => {
 
 // Start: POST: Create Account
 const submitFormAccount = (req, res, next) => {
-    User.User.create(req.body);
+    User.insertUser(req.body);
     console.log(req.body);
     res.redirect('/listAccounts');
 };
@@ -73,52 +65,17 @@ const listAccountsView = async (req, res, next) => {
         const title = 'List Accounts';
         const user = req.user;
 
-        const data = [];
-
         // If the user has a role, fetch the role data using the populate() method
         if (user.role) {
             const role = await User.Role.findById(user.role);
             user.role = role;
         }
 
-        User.Role.find().exec((err, datas) => {
-            if (err) {
-                console.error(err);
-            } else {
-                const allRoles = datas; // lưu kết quả vào biến allRoles
+        const staffs = await User.getAccountsByRoleName("Staff");
+        const qa_managers = await User.getAccountsByRoleName("QA Manager");
+        const qa_coordinators = await User.getAccountsByRoleName("QA Coordinator");
 
-                allRoles.forEach(role => {
-                    if (role.name === 'Staff') {
-                        const role_ID = role._id;
-
-                        console.log(role.name);
-                        console.log(role_ID);
-
-                        User.User.find({ role: role_ID })
-                            .then(staffs => {
-                                console.log(typeof staffs)
-
-                                var staffss = staffs;
-
-                                var resultArray = Object.keys(staffss).map(function (personNamedIndex) {
-                                    let person = staffss[personNamedIndex];
-                                    // do something with person
-                                    return person;
-                                });
-
-                                res.render('Admin/listAccounts', { user, title, resultArray });
-
-                            })
-                            .catch(error => {
-                                console.log(error);
-                            });
-                    }
-                });
-            }
-        });
-
-
-
+        res.render('Admin/listAccounts', { user, title, qa_managers, qa_coordinators, staffs });
 
     } catch (error) {
         console.error(error);
@@ -127,6 +84,10 @@ const listAccountsView = async (req, res, next) => {
     }
 }
 // Start: GET: List Account Page
+
+// Start: GET: Update Account Page
+
+// Start: GET: Update Account Page
 
 
 module.exports = {

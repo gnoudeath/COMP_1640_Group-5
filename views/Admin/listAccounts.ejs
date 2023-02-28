@@ -29,23 +29,24 @@
     <!-- Tab content -->
     <div class="wrapper_tabcontent">
       <div id="qa_manager" class="tabcontent active">
-
         <table class="table">
           <thead class="thead-light">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
+              <th scope="col">Username</th>
+              <th scope="col">Full Name</th>
             </tr>
           </thead>
           <tbody>
+            <% 
+              i = 1; 
+              qa_managers.forEach(element => {  %>
             <tr>
-              <th scope="row">1</th>
-              <td>qa_manager</td>
-              <td>qa_manager</td>
-              <td>qa_manager</td>
+              <th scope="row"><%= i++ %></th>
+              <td><%= element.username %></td>
+              <td><%= element.fullName %></td>
             </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
@@ -55,18 +56,20 @@
           <thead class="thead-light">
             <tr>
               <th scope="col">#</th>
-              <th scope="col">First</th>
-              <th scope="col">Last</th>
-              <th scope="col">Handle</th>
+              <th scope="col">Username</th>
+              <th scope="col">Full Name</th>
             </tr>
           </thead>
           <tbody>
+            <% 
+              i = 1; 
+              qa_coordinators.forEach(element => {  %>
             <tr>
-              <th scope="row">1</th>
-              <td>qa_coordinator</td>
-              <td>qa_coordinator</td>
-              <td>qa_coordinator</td>
+              <th scope="row"><%= i++ %></th>
+              <td><%= element.username %></td>
+              <td><%= element.fullName %></td>
             </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
@@ -78,23 +81,22 @@
               <th scope="col">#</th>
               <th scope="col">Username</th>
               <th scope="col">Full Name</th>
-              <th scope="col">Handle</th>
             </tr>
           </thead>
           <tbody>
             <% 
               i = 1; 
-              resultArray.forEach(element => {  %>
+              staffs.forEach(element => {  %>
             <tr>
               <th scope="row"><%= i++ %></th>
               <td><%= element.username %></td>
               <td><%= element.fullName %></td>
-              <td>Staff Test</td>
             </tr>
             <% }) %>
           </tbody>
         </table>
       </div>
+
     </div>
     <!-- End: Tab content -->
   </div>
