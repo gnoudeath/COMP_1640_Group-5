@@ -53,7 +53,7 @@ const formAccountView = async (req, res) => {
 
 // Start: POST: Create Account
 const submitFormAccount = (req, res, next) => {
-    User.insertUser(req.body);
+    awaitUser.insertUser(req.body);
     console.log(req.body);
     res.redirect('/listAccounts');
 };
@@ -86,10 +86,33 @@ const listAccountsView = async (req, res, next) => {
 // Start: GET: List Account Page
 
 // Start: GET: Update Account Page
+const updateAccountView = async (req, res) => {
+    try {
+        const title = 'Update Account';
+        const user = req.user;
 
+        // If the user has a role, fetch the role data using the populate() method
+        if (user.role) {
+            const role = await User.Role.findById(user.role);
+            user.role = role;
+        }
+
+        const allRoles = await User.getAllRoles();
+
+        User.User.findById(req.params.id, (error, data) => {
+            res.render('Admin/updateAccount', { user, title, allRoles, account: data });
+        });
+
+
+    } catch (error) {
+        console.error(error);
+        // res.status(500).send('Internal Server Error');
+        res.redirect('/');
+    }
+};
 // Start: GET: Update Account Page
 
 
 module.exports = {
-    dashboardView, formAccountView, submitFormAccount, listAccountsView
+    dashboardView, formAccountView, submitFormAccount, listAccountsView, updateAccountView
 };

@@ -5,7 +5,7 @@ const { loginView, loginUser } = require('../controllers/loginController');
 const { protectRoute } = require("../auth/protect");
 const { logoutUser } = require('../controllers/loginController');
 
-const { dashboardView, formAccountView, submitFormAccount, listAccountsView } = require('../controllers/adminController');
+const { dashboardView, formAccountView, submitFormAccount, listAccountsView, updateAccountView } = require('../controllers/adminController');
 const { Role } = require('../models/User');
 
 // Define Routes
@@ -21,6 +21,7 @@ router.get('/logout', logoutUser);
 router.get('/formAccount', formAccountView);
 router.post('/submitFormAccount', submitFormAccount);
 router.get('/listAccounts', listAccountsView);
+router.get('/updateAccount/:id', updateAccountView);
 
 // End: Route Admin site
 

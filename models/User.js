@@ -96,6 +96,19 @@ async function getAccountsByRoleName(roleName) {
   }
 }
 
+/**
+ * Function: Lấy dữ liệu của 1 users bằng User_ID
+ */
+async function getAccountByID(user_id) {
+  try {
+    const user = await User.findById({ user_id });
+    return user;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 // Export the Mongoose model
-module.exports = { User, Role, Department, insertUser, getAllRoles, getAccountsByRoleName };
+module.exports = { User, Role, Department, insertUser, getAllRoles, getAccountsByRoleName, getAccountByID };
 
