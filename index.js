@@ -44,6 +44,7 @@ app.use('/css', express.static(__dirname + 'public/css'));
 app.use('/img', express.static(__dirname + 'public/img'));
 app.use('/js', express.static(__dirname + 'public/js'));
 app.use('/webfonts', express.static(__dirname + 'public/webfonts'));
+app.set("layout login_page", false);
 
 
 app.use(passport.initialize());

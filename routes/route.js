@@ -5,7 +5,7 @@ const { loginView, loginUser } = require('../controllers/loginController');
 const { protectRoute } = require("../auth/protect");
 const { logoutUser } = require('../controllers/loginController');
 
-const { dashboardView } = require('../controllers/adminController');
+const { dashboardView } = require('../controllers/IndexController');
 
 // Define Routes
 const router = express.Router();
