@@ -3,10 +3,10 @@ const express = require('express');
 const { loginView, loginUser } = require('../controllers/loginController');
 
 const { protectRoute } = require("../auth/protect");
-const { logoutUser,dashboardView, } = require('../controllers/loginController');
+const { logoutUser, dashboardView, } = require('../controllers/loginController');
 
-const {  formAccountView, submitFormAccount, listAccountsView, updateAccountView } = require('../controllers/adminController');
-const { Role } = require('../models/User');
+const { formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount } = require('../controllers/adminController');
+const { Role, User } = require('../models/User');
 
 // Define Routes
 const router = express.Router();
@@ -22,9 +22,10 @@ router.get('/formAccount', formAccountView);
 router.post('/submitFormAccount', submitFormAccount);
 router.get('/listAccounts', listAccountsView);
 router.get('/updateAccount/:id', updateAccountView);
+router.post('/updateFormAccount', updateFormAccount);
+router.post('/deleteAccount/:id', deleteFormAccount);
 
 // End: Route Admin site
-
 
 router.get('/save', async function (req, res, next) {
     // Create role Admin if not exists
@@ -54,6 +55,14 @@ router.get('/save', async function (req, res, next) {
         { name: 'Staff' },          // Data to update or insert new document
         { upsert: true },     // Upsert option set to true to create if does not exist
     );
+
+    await Role.findOneAndUpdate(
+        { name: 'Staff' },  // Query to find existing document
+        { name: 'Staff' },          // Data to update or insert new document
+        { upsert: true },     // Upsert option set to true to create if does not exist
+    );
+
+
 });
 
 module.exports = router;

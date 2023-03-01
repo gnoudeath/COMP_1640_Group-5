@@ -1,6 +1,4 @@
-
 const User = require('../models/User');
-
 
 
 // Start: GET: Create Account Page
@@ -29,8 +27,7 @@ const formAccountView = async (req, res) => {
 
 // Start: POST: Create Account
 const submitFormAccount = (req, res, next) => {
-    awaitUser.insertUser(req.body);
-    console.log(req.body);
+    User.insertUser(req.body);
     res.redirect('/listAccounts');
 };
 // End: POST: Create Account
@@ -74,11 +71,12 @@ const updateAccountView = async (req, res) => {
         }
 
         const allRoles = await User.getAllRoles();
+        const account = await User.getAccountByID(req.params.id);
 
-        User.User.findById(req.params.id, (error, data) => {
-            res.render('Admin/updateAccount', { user, title, allRoles, account: data });
-        });
+        const dob = new Date(account.dob);
+        const isoDob = dob.toISOString().slice(0, 10);
 
+        res.render('Admin/updateAccount', { user, title, allRoles, account, isoDob });
 
     } catch (error) {
         console.error(error);
@@ -88,7 +86,22 @@ const updateAccountView = async (req, res) => {
 };
 // Start: GET: Update Account Page
 
+// Start: POST: Update Account
+const updateFormAccount = async (req, res) => {
+    await User.updateAccount(req.body.id, req.body);
+    console.log(req.body);
+    res.redirect('/listAccounts');
+}
+// End: POST: Update Account
+
+// Start: POST: Delete Account
+const deleteFormAccount = async (req, res) => {
+    await User.deleteAccount(req.params.id);
+    res.redirect('/listAccounts');
+}
+// End: POST: Delete Account
+
 
 module.exports = {
-     formAccountView, submitFormAccount, listAccountsView, updateAccountView
+    formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount
 };

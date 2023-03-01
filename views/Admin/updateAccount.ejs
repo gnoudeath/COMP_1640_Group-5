@@ -24,7 +24,10 @@
         <div id="form_status"></div>
         <div class="contact-form">
 
-          <form method="POST" action="/submitFormAccount">
+          <form method="POST" action="/updateFormAccount">
+
+            <input type="text" name="id" value="<%= account._id %>" hidden />
+
             <div class="form-group row">
               <label for="" class="col-sm-2 col-form-label">Username:</label>
               <div class="col-sm-10">
@@ -35,7 +38,7 @@
             <div class="form-group row">
               <label for="" class="col-sm-2 col-form-label">Password</label>
               <div class="col-sm-10">
-                <input type="password" class="form-control" name="password">
+                <input type="password" class="form-control" name="password" value="<%= account.password %>">
               </div>
             </div>
 
@@ -49,7 +52,7 @@
             <div class="form-group row">
               <label for="" class="col-sm-2 col-form-label">Date Of Birth:</label>
               <div class="col-sm-10">
-                <input type="date" class="form-control" name="dob" value="<%= account.dob %>">
+                <input type="date" class="form-control" name="dob" value="<%= isoDob %>">
               </div>
             </div>
 
@@ -73,8 +76,11 @@
                 <div class="col-sm-10">
 
                   <% for( let index = 0; index < allRoles.length; index++ ) { %>
+                  <% if (account.role == allRoles[index]._id) { %>
+                  test
+                  <% } %>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="role" id="gridRadios1" value="<%= allRoles[index]._id %>">
+                    <input class="form-check-input" type="radio" name="role" id="gridRadios1" value="<%= allRoles[index]._id %>" <%= (account.role._id.equals(allRoles[index]._id)) ? 'checked' : '' %>>
                     <label class="form-check-label" for="">
                       <%= allRoles[index].name %>
                     </label>

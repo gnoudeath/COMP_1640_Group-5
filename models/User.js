@@ -101,7 +101,7 @@ async function getAccountsByRoleName(roleName) {
  */
 async function getAccountByID(user_id) {
   try {
-    const user = await User.findById({ user_id });
+    const user = await User.findOne({ _id: user_id }).populate('role');
     return user;
   } catch (err) {
     console.error(err);
@@ -109,6 +109,16 @@ async function getAccountByID(user_id) {
   }
 }
 
+async function updateAccount(id, data) {
+  await User.findByIdAndUpdate(id, data);
+}
+
+async function deleteAccount(id) {
+  await User.findByIdAndRemove(id);
+}
+
+
+
 // Export the Mongoose model
-module.exports = { User, Role, Department, insertUser, getAllRoles, getAccountsByRoleName, getAccountByID };
+module.exports = { User, Role, Department, insertUser, getAllRoles, getAccountsByRoleName, getAccountByID, updateAccount, deleteAccount };
 
