@@ -1,5 +1,6 @@
 const passport = require("passport");
 const User = require("../models/User");
+const {Idea,Category} = require('../models/Idea');
 
 // For View 
 const loginView = (req, res) => {
@@ -41,17 +42,40 @@ const dashboardView = async (req, res) => {
   try {
       const title = 'Home';
       const user = req.user;
-
-      // If the user has a role, fetch the role data using the populate() method
-      if (user.role) {
+      let perPage = 6;
+    let page = req.params.page || 1; 
+    
+    Idea
+      .find()
+      .populate('user','username')
+      .populate('category','name') // find tất cả các data
+      .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
+      .limit(perPage)
+      .exec((err, ideas) => {
+        Idea.countDocuments(async(err, count) => { // đếm để tính có bao nhiêu trang
+          if (err) return next(err);
+          if (user.role) {
           const role = await User.Role.findById(user.role);
           user.role = role;
-          if (role.name === "Admin") res.render('Admin/home', { user, title });
-          else if (role.name === "Staff") res.render('Staff/home', { user, title });
+          if (role.name === "Admin") res.render('Admin/home', { user, ideas, // sản phẩm trên một page
+          current: page, // page hiện tại
+          pages: Math.ceil(count / perPage), // tổng số các page
+          title:title });
+          else if (role.name === "Staff") res.render('Staff/home', { user, ideas, // sản phẩm trên một page
+          current: page, // page hiện tại
+          pages: Math.ceil(count / perPage), // tổng số các page
+          title:title });
+          else {
+            res.render('login_page');
+        }
       }
-      else {
-          res.render('login_page');
-      }
+           // Trả về dữ liệu các sản phẩm theo định dạng như JSON, XML,...
+        });
+      });
+
+      // If the user has a role, fetch the role data using the populate() method
+      
+      
 
 
   } catch (error) {
