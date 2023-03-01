@@ -67,7 +67,7 @@ router.get('/save', async function (req, res, next) {
 
 });
 
-// Staff route
+
 
 //   router.get('/testaddcat', async (req, res) => {
       
@@ -101,6 +101,8 @@ router.get('/save', async function (req, res, next) {
     }
     res.redirect('/');    
 }) 
+
+// Index List Ideas
 router.get('/:page',async(req, res, next) => {
     let perPage = 6;
     let page = req.params.page || 1; 
@@ -118,13 +120,8 @@ router.get('/:page',async(req, res, next) => {
       .exec((err, ideas) => {
         Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
           if (err) return next(err);
-          res.render('Staff/home', {
-            user,
-            ideas, // sản phẩm trên một page
-            current: page, // page hiện tại
-            pages: Math.ceil(count / perPage), // tổng số các page
-            title:title
-          }); // Trả về dữ liệu các sản phẩm theo định dạng như JSON, XML,...
+          if (role.name === "Admin")res.render('Staff/home', {user,ideas,current: page,pages: Math.ceil(count / perPage),title:title}); 
+          else if(role.name === "Staff")res.render('Admin/home', {user,ideas,current: page,pages: Math.ceil(count / perPage),title:title}); 
         });
       });
       
@@ -161,8 +158,6 @@ router.get('/last-ideas/:page', async (req, res, next) => {
       });
       
 })
-
-   
-// End Staff Route
+// End Index List Ideas
 
 module.exports = router;
