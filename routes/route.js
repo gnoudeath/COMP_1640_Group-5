@@ -5,8 +5,13 @@ const { loginView, loginUser } = require('../controllers/loginController');
 const { protectRoute } = require("../auth/protect");
 const { logoutUser, dashboardView, } = require('../controllers/loginController');
 
+const staffController = require('../controllers/staffController');
+
 const { formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount } = require('../controllers/adminController');
 const { Role, User } = require('../models/User');
+
+const multer = require('multer');
+const upload = multer();
 
 const {Idea,Category} = require('../models/Idea');
 
@@ -28,6 +33,25 @@ router.post('/updateFormAccount', updateFormAccount);
 router.post('/deleteAccount/:id', deleteFormAccount);
 
 // End: Route Admin site
+
+// Start: Route Staff site
+
+router.get('/upload', async(req, res) => {
+  const user = req.user
+  const role = await Role.findById(user.role);
+  const category = await Category.find()
+  user.role = role;
+  const title = "Upload"; 
+  res.render('Staff/upload', {
+    title: title,
+    user:user,
+    category:category,
+  })
+});
+router.post('/upload', upload.array('files'), staffController.uploadFile);
+
+
+// End: Route Staff site
 
 router.get('/save', async function (req, res, next) {
     // Create role Admin if not exists
@@ -63,8 +87,6 @@ router.get('/save', async function (req, res, next) {
         { name: 'Staff' },          // Data to update or insert new document
         { upsert: true },     // Upsert option set to true to create if does not exist
     );
-
-
 });
 
 
@@ -87,20 +109,22 @@ router.get('/save', async function (req, res, next) {
 //       });
 //   });
 
-  router.get('/fake', async(req, res, next) =>{
-    for(let i = 0; i < 24; i++) {
-    const idea = new Idea();
-    idea.title = `Idea ${i}`,
-    idea.content = `This is the ${i}${i == 1 ? "st" : i == 2 ? "nd" : i == 3 ? "rd" : "th"} idea`,
-    idea.user = '63fd7c066d913319b0fa85a2',
-    idea.category = '63ff39a6d4e860420b69ddea'
+//   router.get('/fake', async(req, res, next) =>{
+//     for(let i = 0; i < 24; i++) {
+//     const idea = new Idea();
+//     idea.title = `Idea ${i}`,
+//     idea.content = `This is the ${i}${i == 1 ? "st" : i == 2 ? "nd" : i == 3 ? "rd" : "th"} idea`,
+//     idea.user = '63fd7c066d913319b0fa85a2',
+//     idea.category = '63ff39a6d4e860420b69ddea'
     
-    idea.save((err)=>{
-        if (err) { return next(err); }
-      });
-    }
-    res.redirect('/');    
-}) 
+//     idea.save((err)=>{
+//         if (err) { return next(err); }
+//       });
+//     }
+//     res.redirect('/');    
+// })
+
+
 
 // Index List Ideas
 router.get('/:page',async(req, res, next) => {
