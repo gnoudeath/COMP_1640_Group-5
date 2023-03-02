@@ -49,18 +49,16 @@
             <div class="header-icons">
               <a class="boxed-btn" href="#">Hello, <%= user.fullName %> | <%= user.role.name %></a>
               <ul class="sub-menu">
-                <li><a href="#">Account Settings</a></li>
+                <li><a href="/updateAccount/<%= user._id %>">Account Settings</a></li>
                 <li><a href="/logout">Log out</a></li>
               </ul>
             </div>
           </li>
         </ul>
       </nav>
+      <%# End: Nav Admin Site %>
 
-      <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-      <div class="mobile-menu"></div>
-
-      <!-- menu end -->
+      <%# Start: Nav Staff Site %>
       <% } else if (user.role.name === "Staff") { %>
       <nav class="main-menu">
         <ul>
@@ -91,12 +89,14 @@
         </ul>
       </nav>
       <% }
-      
       %>
-      <%# Start: Nav Admin Site %>
-
-
       <% } %>
+      <%# End: Nav Staff Site %>
+
+      <!-- menu end -->
+      <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+      <div class="mobile-menu"></div>
+
 
     </div>
   </div>
