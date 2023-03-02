@@ -7,7 +7,7 @@ const { logoutUser, dashboardView, } = require('../controllers/loginController')
 
 const staffController = require('../controllers/staffController');
 
-const { formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount, formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment } = require('../controllers/adminController');
+const { formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount, formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment, formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory } = require('../controllers/adminController');
 const { Role, User } = require('../models/User');
 
 const multer = require('multer');
@@ -41,6 +41,15 @@ router.get('/listDepartments', listDepartmentsView);
 router.get('/updateDepartment/:id', updateDepartmentView);
 router.post('/updateFormDepartment', updateFormDepartment);
 router.post('/deleteDepartment/:id', deleteFormDepartment);
+
+// Section: Department
+router.get('/formCategory', formCategoryView);
+router.post('/submitFormCategory', submitFormCategory);
+router.get('/listCategories', listCategoriesView);
+router.get('/updateCategory/:id', updateCategoryView);
+router.post('/updateFormCategory', updateFormCategory);
+router.post('/deleteCategory/:id', deleteFormCategory);
+
 
 // End: Route Admin site
 

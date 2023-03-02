@@ -168,12 +168,11 @@ async function deleteDepartment(id) {
 }
 
 
-
 // Export the Mongoose model
 module.exports = {
   User, Role, Department,
-  getAllRoles,
-  insertUser, getAccountsByRoleName, getAccountByID, updateAccount, deleteAccount,
-  insertDepartment, getAllDepartments, getDepartmentByID, updateDepartment, deleteDepartment
+  getAllRoles,                                                                                    // Function: Role
+  insertUser, getAccountsByRoleName, getAccountByID, updateAccount, deleteAccount,                // Function: Account
+  insertDepartment, getAllDepartments, getDepartmentByID, updateDepartment, deleteDepartment,     // Function: Department
 };
 
