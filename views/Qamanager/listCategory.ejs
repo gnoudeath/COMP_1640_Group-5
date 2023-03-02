@@ -12,7 +12,7 @@
   </div>
 </div>
 <!-- end breadcrumb section -->
-<div class="container mt-150 mb-150">
+<div class="container mt-150 mb-10">
 
   <div class="row">
     <table class="table">
@@ -28,9 +28,18 @@
           <td>1</td>
           <td>a</td>
           <td>
-            <button type="button" class="btn btn-primary" data-id="" data-toggle="modal" data-target="">
-              Delete
-            </button>
+            <div class="input-group ">
+              <input type="text" class="form-control" placeholder="Enter Category">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-primary mr-2" data-id="" data-toggle="modal" data-target="">
+                  Add
+                </button>
+                <button type="button" class="btn btn-primary" data-id="" data-toggle="modal" data-target="">
+                  Delete
+                </button>
+              </div>
+            </div>
+            
           </td>
         </tr>
       </tbody>
