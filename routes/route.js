@@ -7,13 +7,13 @@ const { logoutUser, dashboardView, } = require('../controllers/loginController')
 
 const staffController = require('../controllers/staffController');
 
-const { formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount } = require('../controllers/adminController');
+const { formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount, formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment } = require('../controllers/adminController');
 const { Role, User } = require('../models/User');
 
 const multer = require('multer');
 const upload = multer();
 
-const {Idea,Category} = require('../models/Idea');
+const { Idea, Category } = require('../models/Idea');
 
 // Define Routes
 const router = express.Router();
@@ -25,6 +25,8 @@ router.get("/", protectRoute, dashboardView);
 router.get('/logout', logoutUser);
 
 // Start: Route Admin site
+
+// Section: Account
 router.get('/formAccount', formAccountView);
 router.post('/submitFormAccount', submitFormAccount);
 router.get('/listAccounts', listAccountsView);
@@ -32,20 +34,28 @@ router.get('/updateAccount/:id', updateAccountView);
 router.post('/updateFormAccount', updateFormAccount);
 router.post('/deleteAccount/:id', deleteFormAccount);
 
+// Section: Department
+router.get('/formDepartment', formDepartmentView);
+router.post('/submitFormDepartment', submitFormDepartment);
+router.get('/listDepartments', listDepartmentsView);
+router.get('/updateDepartment/:id', updateDepartmentView);
+router.post('/updateFormDepartment', updateFormDepartment);
+router.post('/deleteDepartment/:id', deleteFormDepartment);
+
 // End: Route Admin site
 
 // Start: Route Staff site
 
-router.get('/upload', async(req, res) => {
+router.get('/upload', async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
   const category = await Category.find()
   user.role = role;
-  const title = "Upload"; 
+  const title = "Upload";
   res.render('Staff/upload', {
     title: title,
-    user:user,
-    category:category,
+    user: user,
+    category: category,
   })
 });
 router.post('/upload', upload.array('files'), staffController.uploadFile);
@@ -54,48 +64,48 @@ router.post('/upload', upload.array('files'), staffController.uploadFile);
 // End: Route Staff site
 
 router.get('/save', async function (req, res, next) {
-    // Create role Admin if not exists
-    await Role.findOneAndUpdate(
-        { name: 'Admin' },  // Query to find existing document
-        { name: 'Admin' },          // Data to update or insert new document
-        { upsert: true },     // Upsert option set to true to create if does not exist
-    );
+  // Create role Admin if not exists
+  await Role.findOneAndUpdate(
+    { name: 'Admin' },  // Query to find existing document
+    { name: 'Admin' },          // Data to update or insert new document
+    { upsert: true },     // Upsert option set to true to create if does not exist
+  );
 
-    // Create Role Quality Assurance Manager if not exists
-    await Role.findOneAndUpdate(
-        { name: 'QA Manager' },  // Query to find existing document
-        { name: 'QA Manager' },          // Data to update or insert new document
-        { upsert: true },     // Upsert option set to true to create if does not exist
-    );
+  // Create Role Quality Assurance Manager if not exists
+  await Role.findOneAndUpdate(
+    { name: 'QA Manager' },  // Query to find existing document
+    { name: 'QA Manager' },          // Data to update or insert new document
+    { upsert: true },     // Upsert option set to true to create if does not exist
+  );
 
-    // Create Role Quality Assurance Coordinator if not exists
-    await Role.findOneAndUpdate(
-        { name: 'QA Coordinator' },  // Query to find existing document
-        { name: 'QA Coordinator' },          // Data to update or insert new document
-        { upsert: true },     // Upsert option set to true to create if does not exist
-    );
+  // Create Role Quality Assurance Coordinator if not exists
+  await Role.findOneAndUpdate(
+    { name: 'QA Coordinator' },  // Query to find existing document
+    { name: 'QA Coordinator' },          // Data to update or insert new document
+    { upsert: true },     // Upsert option set to true to create if does not exist
+  );
 
-    // Create Role Staff if not exists
-    await Role.findOneAndUpdate(
-        { name: 'Staff' },  // Query to find existing document
-        { name: 'Staff' },          // Data to update or insert new document
-        { upsert: true },     // Upsert option set to true to create if does not exist
-    );
+  // Create Role Staff if not exists
+  await Role.findOneAndUpdate(
+    { name: 'Staff' },  // Query to find existing document
+    { name: 'Staff' },          // Data to update or insert new document
+    { upsert: true },     // Upsert option set to true to create if does not exist
+  );
 
-    await Role.findOneAndUpdate(
-        { name: 'Staff' },  // Query to find existing document
-        { name: 'Staff' },          // Data to update or insert new document
-        { upsert: true },     // Upsert option set to true to create if does not exist
-    );
+  await Role.findOneAndUpdate(
+    { name: 'Staff' },  // Query to find existing document
+    { name: 'Staff' },          // Data to update or insert new document
+    { upsert: true },     // Upsert option set to true to create if does not exist
+  );
 });
 
 
 
 //   router.get('/testaddcat', async (req, res) => {
-      
+
 //     const newCategory = new Category({
 //         name: 'My Simple Category',
-        
+
 //         // other properties of your category schema
 //       });
 //       newCategory.save((err) => {
@@ -116,7 +126,7 @@ router.get('/save', async function (req, res, next) {
 //     idea.content = `This is the ${i}${i == 1 ? "st" : i == 2 ? "nd" : i == 3 ? "rd" : "th"} idea`,
 //     idea.user = '63fd7c066d913319b0fa85a2',
 //     idea.category = '63ff39a6d4e860420b69ddea'
-    
+
 //     idea.save((err)=>{
 //         if (err) { return next(err); }
 //       });
@@ -127,60 +137,60 @@ router.get('/save', async function (req, res, next) {
 
 
 // Index List Ideas
-router.get('/:page',async(req, res, next) => {
-    let perPage = 6;
-    let page = req.params.page || 1; 
-    let title = 'Home'
-    const user = req.user;
-    const role = await Role.findById(user.role);
-    user.role = role;
-    
-    Idea
-      .find()
-      .populate('user','username')
-      .populate('category','name') // find tất cả các data
-      .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
-      .limit(perPage)
-      .exec((err, ideas) => {
-        Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
-          if (err) return next(err);
-          if (role.name === "Admin")res.render('Staff/home', {user,ideas,current: page,pages: Math.ceil(count / perPage),title:title}); 
-          else if(role.name === "Staff")res.render('Admin/home', {user,ideas,current: page,pages: Math.ceil(count / perPage),title:title}); 
-        });
+router.get('/:page', async (req, res, next) => {
+  let perPage = 6;
+  let page = req.params.page || 1;
+  let title = 'Home'
+  const user = req.user;
+  const role = await Role.findById(user.role);
+  user.role = role;
+
+  Idea
+    .find()
+    .populate('user', 'username')
+    .populate('category', 'name') // find tất cả các data
+    .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
+    .limit(perPage)
+    .exec((err, ideas) => {
+      Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
+        if (err) return next(err);
+        if (role.name === "Admin") res.render('Staff/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
+        else if (role.name === "Staff") res.render('Admin/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
       });
-      
+    });
+
 })
 router.get('/last-ideas/:page', async (req, res, next) => {
-    let perPage = 6;
-    let page = req.params.page || 1; 
-    let title = 'Home'
-    let filter = 'last-ideas'
-    const user = req.user;
-    const role = await Role.findById(user.role);
-    user.role = role;
-    
-    Idea
-      .find()
-      .sort({createdDate: -1})
-      .populate('user','username')
-      .populate('category','name') // find tất cả các data
-      .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
-      .limit(perPage)
-      .exec((err, ideas) => {
-        Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
-          if (err) return next(err);
-          res.render('Staff/home', {
-            user,
-            filter:filter,
-            ideas, // sản phẩm trên một page
-            current: page, // page hiện tại
-            pages: Math.ceil(count / perPage), // tổng số các page
-            title:title
-          }); // Trả về dữ liệu các sản phẩm theo định dạng như JSON, XML,...
-        
-    });
+  let perPage = 6;
+  let page = req.params.page || 1;
+  let title = 'Home'
+  let filter = 'last-ideas'
+  const user = req.user;
+  const role = await Role.findById(user.role);
+  user.role = role;
+
+  Idea
+    .find()
+    .sort({ createdDate: -1 })
+    .populate('user', 'username')
+    .populate('category', 'name') // find tất cả các data
+    .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
+    .limit(perPage)
+    .exec((err, ideas) => {
+      Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
+        if (err) return next(err);
+        res.render('Staff/home', {
+          user,
+          filter: filter,
+          ideas, // sản phẩm trên một page
+          current: page, // page hiện tại
+          pages: Math.ceil(count / perPage), // tổng số các page
+          title: title
+        }); // Trả về dữ liệu các sản phẩm theo định dạng như JSON, XML,...
+
       });
-      
+    });
+
 })
 // End Index List Ideas
 

@@ -15,6 +15,7 @@ const Role = mongoose.model('Role', roleSchema);
 // Start: Define our Department schema
 const departmentSchema = new mongoose.Schema({
   name: { type: String },
+  describe: { type: String },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -109,16 +110,70 @@ async function getAccountByID(user_id) {
   }
 }
 
+/**
+ * Function: Cập nhật tài khoản
+ */
 async function updateAccount(id, data) {
   await User.findByIdAndUpdate(id, data);
 }
 
+/**
+ * Function: Xóa tài khoản
+ */
 async function deleteAccount(id) {
   await User.findByIdAndRemove(id);
+}
+
+/**
+ *  Function: Thêm 1 Department
+ */
+function insertDepartment(data) {
+  Department.create(data);
+}
+
+/**
+ *  Function Lấy toàn bộ thông tin các Departments
+ */
+async function getAllDepartments() {
+  // Sử dụng phương thức find để lấy tất cả các documents từ bảng Departments
+  const departments = await Department.find();
+  return departments;
+}
+
+/**
+ * Function: Lấy dữ liệu của 1 department bằng id
+ */
+async function getDepartmentByID(id) {
+  try {
+    const department = await Department.findOne({ _id: id });
+    return department;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+/**
+ * Function: Cập nhật department
+ */
+async function updateDepartment(id, data) {
+  await Department.findByIdAndUpdate(id, data);
+}
+
+/**
+ * Function: Xóa Department
+ */
+async function deleteDepartment(id) {
+  await Department.findByIdAndRemove(id);
 }
 
 
 
 // Export the Mongoose model
-module.exports = { User, Role, Department, insertUser, getAllRoles, getAccountsByRoleName, getAccountByID, updateAccount, deleteAccount };
+module.exports = {
+  User, Role, Department,
+  getAllRoles,
+  insertUser, getAccountsByRoleName, getAccountByID, updateAccount, deleteAccount,
+  insertDepartment, getAllDepartments, getDepartmentByID, updateDepartment, deleteDepartment
+};
 

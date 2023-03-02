@@ -27,6 +27,14 @@
             </ul>
           </li>
 
+          <li>
+            <a href="#">Departments</a>
+            <ul class="sub-menu">
+              <li><a href="/listDepartments">List Departments</a></li>
+              <li><a href="/formDepartment">Create new department</a></li>
+            </ul>
+          </li>
+
           <li><a href="#">Set Date</a></li>
 
           <li>
@@ -45,15 +53,15 @@
       <div class="mobile-menu"></div>
 
       <!-- menu end -->
-      <% } else if (user.role.name === "Staff") { %> 
-        <nav class="main-menu">
-          <ul>
-  
-            <li><a href="/">Home</a></li>
-  
-            <li><a href="/upload">Upload</a></li>
-  
-            <!-- <li>
+      <% } else if (user.role.name === "Staff") { %>
+      <nav class="main-menu">
+        <ul>
+
+          <li><a href="/">Home</a></li>
+
+          <li><a href="/upload">Upload</a></li>
+
+          <!-- <li>
               <a href="shop.html">Shop</a>
               <ul class="sub-menu">
                 <li><a href="shop.html">Shop</a></li>
@@ -62,19 +70,19 @@
                 <li><a href="cart.html">Cart</a></li>
               </ul>
             </li> -->
-  
-            <li>
-              <div class="header-icons">
-                <a class="boxed-btn" href="cart.html">Hello, <%= user.fullName %> | <%= user.role.name %></a>
-                <ul class="sub-menu">
-                  
-                  <li><a href="/logout">Log out</a></li>
-                </ul>
-              </div>
-            </li>
-          </ul>
-        </nav>
-        <% }
+
+          <li>
+            <div class="header-icons">
+              <a class="boxed-btn" href="cart.html">Hello, <%= user.fullName %> | <%= user.role.name %></a>
+              <ul class="sub-menu">
+
+                <li><a href="/logout">Log out</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <% }
       
       %>
       <%# Start: Nav Admin Site %>
