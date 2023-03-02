@@ -6,8 +6,16 @@ const { protectRoute } = require("../auth/protect");
 const { logoutUser, dashboardView, } = require('../controllers/loginController');
 
 const staffController = require('../controllers/staffController');
+const qaManagerController = require('../controllers/adminController');
 
-const { formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount, formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment, formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory } = require('../controllers/adminController');
+const {
+  formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount,
+  formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment,
+  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory
+} = require('../controllers/adminController');
+
+
+
 const { Role, User } = require('../models/User');
 
 const multer = require('multer');
@@ -42,7 +50,7 @@ router.get('/updateDepartment/:id', updateDepartmentView);
 router.post('/updateFormDepartment', updateFormDepartment);
 router.post('/deleteDepartment/:id', deleteFormDepartment);
 
-// Section: Department
+// Section: Category
 router.get('/formCategory', formCategoryView);
 router.post('/submitFormCategory', submitFormCategory);
 router.get('/listCategories', listCategoriesView);
@@ -54,7 +62,6 @@ router.post('/deleteCategory/:id', deleteFormCategory);
 // End: Route Admin site
 
 // Start: Route Staff site
-
 router.get('/upload', async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
@@ -68,9 +75,17 @@ router.get('/upload', async (req, res) => {
   })
 });
 router.post('/upload', upload.array('files'), staffController.uploadFile);
-
-
 // End: Route Staff site
+
+// Start: Route QA Manager Site
+// Section: Category
+// router.get('/formCategory', qaManagerController.formCategoryView);
+// router.post('/submitFormCategory', submitFormCategory);
+// router.get('/listCategories', listCategoriesView);
+// router.get('/updateCategory/:id', updateCategoryView);
+// router.post('/updateFormCategory', updateFormCategory);
+// router.post('/deleteCategory/:id', deleteFormCategory);
+// End: Route QA Manager Site
 
 router.get('/save', async function (req, res, next) {
   // Create role Admin if not exists
