@@ -2,7 +2,7 @@ const express = require('express');
 
 const { loginView, loginUser } = require('../controllers/loginController');
 
-const { protectRoute } = require("../auth/protect");
+const { protectRoute,isAdmin,isCoordinator,isManager,isStaff } = require("../auth/protect");
 const { logoutUser, dashboardView, } = require('../controllers/loginController');
 
 const staffController = require('../controllers/staffController');
@@ -35,34 +35,34 @@ router.get('/logout', logoutUser);
 // Start: Route Admin site
 
 // Section: Account
-router.get('/formAccount', formAccountView);
-router.post('/submitFormAccount', submitFormAccount);
-router.get('/listAccounts', listAccountsView);
-router.get('/updateAccount/:id', updateAccountView);
-router.post('/updateFormAccount', updateFormAccount);
-router.post('/deleteAccount/:id', deleteFormAccount);
+router.get('/formAccount',isAdmin, formAccountView);
+router.post('/submitFormAccount',isAdmin, submitFormAccount);
+router.get('/listAccounts',isAdmin, listAccountsView);
+router.get('/updateAccount/:id',isAdmin, updateAccountView);
+router.post('/updateFormAccount',isAdmin, updateFormAccount);
+router.post('/deleteAccount/:id',isAdmin, deleteFormAccount);
 
 // Section: Department
-router.get('/formDepartment', formDepartmentView);
-router.post('/submitFormDepartment', submitFormDepartment);
-router.get('/listDepartments', listDepartmentsView);
-router.get('/updateDepartment/:id', updateDepartmentView);
-router.post('/updateFormDepartment', updateFormDepartment);
-router.post('/deleteDepartment/:id', deleteFormDepartment);
+router.get('/formDepartment',isAdmin, formDepartmentView);
+router.post('/submitFormDepartment',isAdmin, submitFormDepartment);
+router.get('/listDepartments',isAdmin, listDepartmentsView);
+router.get('/updateDepartment/:id',isAdmin, updateDepartmentView);
+router.post('/updateFormDepartment',isAdmin, updateFormDepartment);
+router.post('/deleteDepartment/:id',isAdmin, deleteFormDepartment);
 
 // Section: Category
-router.get('/formCategory', formCategoryView);
-router.post('/submitFormCategory', submitFormCategory);
-router.get('/listCategories', listCategoriesView);
-router.get('/updateCategory/:id', updateCategoryView);
-router.post('/updateFormCategory', updateFormCategory);
-router.post('/deleteCategory/:id', deleteFormCategory);
+router.get('/formCategory',isAdmin, formCategoryView);
+router.post('/submitFormCategory',isAdmin, submitFormCategory);
+router.get('/listCategories',isAdmin, listCategoriesView);
+router.get('/updateCategory/:id',isAdmin, updateCategoryView);
+router.post('/updateFormCategory',isAdmin, updateFormCategory);
+router.post('/deleteCategory/:id',isAdmin, deleteFormCategory);
 
 
 // End: Route Admin site
 
 // Start: Route Staff site
-router.get('/upload', async (req, res) => {
+router.get('/upload',isStaff ,async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
   const category = await Category.find()
@@ -125,23 +125,7 @@ router.get('/save', async function (req, res, next) {
 
 
 
-//   router.get('/testaddcat', async (req, res) => {
 
-//     const newCategory = new Category({
-//         name: 'My Simple Category',
-
-//         // other properties of your category schema
-//       });
-//       newCategory.save((err) => {
-//         if (err) {
-//           console.error(err);
-//           res.status(500).send('Error saving category to database');
-//         } else {
-//           console.log('New category saved to database');
-//           res.send(`New category "${newCategory.name}" saved to database`);
-//         }
-//       });
-//   });
 
 //   router.get('/fake', async(req, res, next) =>{
 //     for(let i = 0; i < 24; i++) {
@@ -158,10 +142,16 @@ router.get('/save', async function (req, res, next) {
 //     res.redirect('/');    
 // })
 
-
+// ERROR PAGE
+router.get('/error',(req,res)=>{
+  res.render("error",{
+    layout: 'error',
+  })
+})
+// END ERROR PAGE
 
 // Index List Ideas
-router.get('/:page', async (req, res, next) => {
+router.get('/:page',protectRoute, async (req, res, next) => {
   let perPage = 6;
   let page = req.params.page || 1;
   let title = 'Home'
@@ -184,7 +174,7 @@ router.get('/:page', async (req, res, next) => {
     });
 
 })
-router.get('/last-ideas/:page', async (req, res, next) => {
+router.get('/last-ideas/:page',protectRoute, async (req, res, next) => {
   let perPage = 6;
   let page = req.params.page || 1;
   let title = 'Home'
@@ -217,5 +207,7 @@ router.get('/last-ideas/:page', async (req, res, next) => {
 
 })
 // End Index List Ideas
+
+
 
 module.exports = router;
