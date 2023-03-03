@@ -1,0 +1,89 @@
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <p>University Of Greenwich</p>
+          <h1><%= title %></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- Section: list categories -->
+<div class="contact-from-section mt-150 mb-150">
+  <div class="container">
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Describe</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 
+          i = 1; 
+          categories.forEach(element => {  %>
+        <tr>
+          <th scope="row"><%= i++ %></th>
+          <td><%= element.nameCate %></td>
+          <td><%= element.describe %></td>
+          <td>
+            <a href="updateCategory/<%= element._id %>" class="btn btn-warning">Edit</a>
+            <button type="button" class="btn btn-primary" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_category_modal">
+              Delete
+            </button>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- End: Section: list categories -->
+
+<!-- Modal -->
+<div class="modal fade" id="delete_category_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Do you want to delete this category?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="btn-delete-category" type="button" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form name="form-delete-category" method="post"></form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var category_id;
+    var formDeleteCategory = document.forms['form-delete-category'];
+    var btnDeleteCategory = document.getElementById('btn-delete-category');
+
+    $('#delete_category_modal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget);
+      category_id = button.data('id');
+    })
+
+    btnDeleteCategory.onclick = function() {
+      formDeleteCategory.action = '/deleteCategory/' + category_id;
+      formDeleteCategory.submit();
+    };
+  });
+</script>
