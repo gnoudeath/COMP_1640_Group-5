@@ -6,48 +6,40 @@ const protectRoute = (req, res, next) => {
   console.log('Please log in to continue');
   res.redirect('/login');
 }
+const {Role} = require('../models/User');
 
-const isAdmin = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    if(req.user.role === "Admin")
-    return next();
-    else res.redirect('/error')
+function checkRole(allowedRoles) {
+  return async function(req, res, next) {
+    try {
+      // Find the user's role in the Role table by objectId
+      const userRole = await Role.findById(req.user.role).lean();
+
+      if (!userRole) {
+        // User's role not found in the Role table, redirect to error page
+        return res.redirect('/error');
+      }
+
+      if (!allowedRoles.includes(userRole.name)) {
+        // User doesn't have the required role, redirect to error page
+        return res.redirect('/error');
+      }
+
+      // User has the required role, proceed to the next middleware
+      next();
+    } catch (err) {
+      // Handle errors
+      console.error(err);
+      res.status(500).send('Internal server error');
+    }
   }
-  else res.redirect('/login');
 }
-const isManager = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    if(req.user.role === "QA Manager")
-    return next();
-    else res.redirect('/error')
-  }
-  else res.redirect('/login');
-}
-const isCoordinator = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    if(req.user.role === "QA Coordinator")
-    return next();
-    else res.redirect('/error')
-  }
-  else res.redirect('/login');
-}
-const isStaff = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    if(req.user.role === "Staff")
-    return next();
-    else res.redirect('/error')
-  }
-  else res.redirect('/login');
-}
+
 
 
 
 
 module.exports = {
   protectRoute,
-  isAdmin,
-  isCoordinator,
-  isManager,
-  isStaff
+  checkRole,
   
 };

@@ -2,7 +2,7 @@ const express = require('express');
 
 const { loginView, loginUser } = require('../controllers/loginController');
 
-const { protectRoute,isAdmin,isCoordinator,isManager,isStaff } = require("../auth/protect");
+const { protectRoute,checkRole } = require("../auth/protect");
 const { logoutUser, dashboardView, } = require('../controllers/loginController');
 
 const staffController = require('../controllers/staffController');
@@ -35,34 +35,34 @@ router.get('/logout', logoutUser);
 // Start: Route Admin site
 
 // Section: Account
-router.get('/formAccount',isAdmin, formAccountView);
-router.post('/submitFormAccount',isAdmin, submitFormAccount);
-router.get('/listAccounts',isAdmin, listAccountsView);
-router.get('/updateAccount/:id',isAdmin, updateAccountView);
-router.post('/updateFormAccount',isAdmin, updateFormAccount);
-router.post('/deleteAccount/:id',isAdmin, deleteFormAccount);
+router.get('/formAccount',checkRole('Admin'), formAccountView);
+router.post('/submitFormAccount',checkRole('Admin'), submitFormAccount);
+router.get('/listAccounts',checkRole('Admin'), listAccountsView);
+router.get('/updateAccount/:id',checkRole('Admin'), updateAccountView);
+router.post('/updateFormAccount',checkRole('Admin'), updateFormAccount);
+router.post('/deleteAccount/:id',checkRole('Admin'), deleteFormAccount);
 
 // Section: Department
-router.get('/formDepartment',isAdmin, formDepartmentView);
-router.post('/submitFormDepartment',isAdmin, submitFormDepartment);
-router.get('/listDepartments',isAdmin, listDepartmentsView);
-router.get('/updateDepartment/:id',isAdmin, updateDepartmentView);
-router.post('/updateFormDepartment',isAdmin, updateFormDepartment);
-router.post('/deleteDepartment/:id',isAdmin, deleteFormDepartment);
+router.get('/formDepartment',checkRole('Admin'), formDepartmentView);
+router.post('/submitFormDepartment',checkRole('Admin'), submitFormDepartment);
+router.get('/listDepartments',checkRole('Admin'), listDepartmentsView);
+router.get('/updateDepartment/:id',checkRole('Admin'), updateDepartmentView);
+router.post('/updateFormDepartment',checkRole('Admin'), updateFormDepartment);
+router.post('/deleteDepartment/:id',checkRole('Admin'), deleteFormDepartment);
 
 // Section: Category
-router.get('/formCategory',isAdmin, formCategoryView);
-router.post('/submitFormCategory',isAdmin, submitFormCategory);
-router.get('/listCategories',isAdmin, listCategoriesView);
-router.get('/updateCategory/:id',isAdmin, updateCategoryView);
-router.post('/updateFormCategory',isAdmin, updateFormCategory);
-router.post('/deleteCategory/:id',isAdmin, deleteFormCategory);
+router.get('/formCategory',checkRole('Admin'), formCategoryView);
+router.post('/submitFormCategory',checkRole('Admin'), submitFormCategory);
+router.get('/listCategories',checkRole('Admin'), listCategoriesView);
+router.get('/updateCategory/:id',checkRole('Admin'), updateCategoryView);
+router.post('/updateFormCategory',checkRole('Admin'), updateFormCategory);
+router.post('/deleteCategory/:id',checkRole('Admin'), deleteFormCategory);
 
 
 // End: Route Admin site
 
 // Start: Route Staff site
-router.get('/upload',isStaff ,async (req, res) => {
+router.get('/upload',checkRole('Staff'),async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
   const category = await Category.find()
