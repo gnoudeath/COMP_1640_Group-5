@@ -168,8 +168,8 @@ router.get('/:page',protectRoute, async (req, res, next) => {
     .exec((err, ideas) => {
       Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
         if (err) return next(err);
-        if (role.name === "Admin") res.render('Staff/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
-        else if (role.name === "Staff") res.render('Admin/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
+        if (role.name === "Admin") res.render('Admin/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
+        else if (role.name === "Staff") res.render('Staff/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
       });
     });
 
