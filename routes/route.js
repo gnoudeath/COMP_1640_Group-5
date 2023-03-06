@@ -2,7 +2,7 @@ const express = require('express');
 
 const { loginView, loginUser } = require('../controllers/loginController');
 
-const { protectRoute } = require("../auth/protect");
+const { protectRoute,checkRole } = require("../auth/protect");
 const { logoutUser, dashboardView, } = require('../controllers/loginController');
 
 const staffController = require('../controllers/staffController');
@@ -35,34 +35,34 @@ router.get('/logout', logoutUser);
 // Start: Route Admin site
 
 // Section: Account
-router.get('/formAccount', formAccountView);
-router.post('/submitFormAccount', submitFormAccount);
-router.get('/listAccounts', listAccountsView);
-router.get('/updateAccount/:id', updateAccountView);
-router.post('/updateFormAccount', updateFormAccount);
-router.post('/deleteAccount/:id', deleteFormAccount);
+router.get('/formAccount',checkRole('Admin'), formAccountView);
+router.post('/submitFormAccount',checkRole('Admin'), submitFormAccount);
+router.get('/listAccounts',checkRole('Admin'), listAccountsView);
+router.get('/updateAccount/:id',checkRole('Admin'), updateAccountView);
+router.post('/updateFormAccount',checkRole('Admin'), updateFormAccount);
+router.post('/deleteAccount/:id',checkRole('Admin'), deleteFormAccount);
 
 // Section: Department
-router.get('/formDepartment', formDepartmentView);
-router.post('/submitFormDepartment', submitFormDepartment);
-router.get('/listDepartments', listDepartmentsView);
-router.get('/updateDepartment/:id', updateDepartmentView);
-router.post('/updateFormDepartment', updateFormDepartment);
-router.post('/deleteDepartment/:id', deleteFormDepartment);
+router.get('/formDepartment',checkRole('Admin'), formDepartmentView);
+router.post('/submitFormDepartment',checkRole('Admin'), submitFormDepartment);
+router.get('/listDepartments',checkRole('Admin'), listDepartmentsView);
+router.get('/updateDepartment/:id',checkRole('Admin'), updateDepartmentView);
+router.post('/updateFormDepartment',checkRole('Admin'), updateFormDepartment);
+router.post('/deleteDepartment/:id',checkRole('Admin'), deleteFormDepartment);
 
 // Section: Category
-router.get('/formCategory', formCategoryView);
-router.post('/submitFormCategory', submitFormCategory);
-router.get('/listCategories', listCategoriesView);
-router.get('/updateCategory/:id', updateCategoryView);
-router.post('/updateFormCategory', updateFormCategory);
-router.post('/deleteCategory/:id', deleteFormCategory);
+router.get('/formCategory',checkRole('Admin'), formCategoryView);
+router.post('/submitFormCategory',checkRole('Admin'), submitFormCategory);
+router.get('/listCategories',checkRole('Admin'), listCategoriesView);
+router.get('/updateCategory/:id',checkRole('Admin'), updateCategoryView);
+router.post('/updateFormCategory',checkRole('Admin'), updateFormCategory);
+router.post('/deleteCategory/:id',checkRole('Admin'), deleteFormCategory);
 
 
 // End: Route Admin site
 
 // Start: Route Staff site
-router.get('/upload', async (req, res) => {
+router.get('/upload',checkRole('Staff'),async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
   const category = await Category.find()
@@ -190,23 +190,7 @@ router.get('/save', async function (req, res, next) {
 
 
 
-//   router.get('/testaddcat', async (req, res) => {
 
-//     const newCategory = new Category({
-//         name: 'My Simple Category',
-
-//         // other properties of your category schema
-//       });
-//       newCategory.save((err) => {
-//         if (err) {
-//           console.error(err);
-//           res.status(500).send('Error saving category to database');
-//         } else {
-//           console.log('New category saved to database');
-//           res.send(`New category "${newCategory.name}" saved to database`);
-//         }
-//       });
-//   });
 
 //   router.get('/fake', async(req, res, next) =>{
 //     for(let i = 0; i < 24; i++) {
@@ -223,10 +207,16 @@ router.get('/save', async function (req, res, next) {
 //     res.redirect('/');    
 // })
 
-
+// ERROR PAGE
+router.get('/error',(req,res)=>{
+  res.render("error",{
+    layout: 'error',
+  })
+})
+// END ERROR PAGE
 
 // Index List Ideas
-router.get('/:page', async (req, res, next) => {
+router.get('/:page',protectRoute, async (req, res, next) => {
   let perPage = 6;
   let page = req.params.page || 1;
   let title = 'Home'
@@ -243,13 +233,13 @@ router.get('/:page', async (req, res, next) => {
     .exec((err, ideas) => {
       Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
         if (err) return next(err);
-        if (role.name === "Admin") res.render('Staff/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
-        else if (role.name === "Staff") res.render('Admin/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
+        if (role.name === "Admin") res.render('Admin/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
+        else if (role.name === "Staff") res.render('Staff/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
       });
     });
 
 })
-router.get('/last-ideas/:page', async (req, res, next) => {
+router.get('/last-ideas/:page',protectRoute, async (req, res, next) => {
   let perPage = 6;
   let page = req.params.page || 1;
   let title = 'Home'
@@ -282,5 +272,7 @@ router.get('/last-ideas/:page', async (req, res, next) => {
 
 })
 // End Index List Ideas
+
+
 
 module.exports = router;
