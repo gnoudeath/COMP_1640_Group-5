@@ -49,16 +49,18 @@
           <!-- <a href="single-news.html">
             <div class="latest-news-bg news-bg-1"></div>
           </a> -->
-          <div class="news-text-box">
-            <h3><a href="single-news.html"><%= ideas[i].title %></a></h3>
-            <h3><a href="single-news.html"></a></h3>
-            <p class="blog-meta">
-              <span class="author"><i class="fas fa-user"></i> <%= ideas[i].user.username %></span>
-              <span class="date"><i class="fas fa-calendar"></i> <%= ideas[i].createdDate %></span>
-            </p>
-            <p class="excerpt"><%= ideas[i].content.substring(0, 50) + "..."%></p>
-            <a href="single-news.html" class="read-more-btn">read more <i class="fas fa-angle-right"></i></a>
-          </div>
+          <a href="/detailIdeas/<%= ideas[i]._id %>">
+            <div class="news-text-box">
+              <h3><%= ideas[i].title %></h3>
+              <h3></h3>
+              <p class="blog-meta">
+                <span class="author"><i class="fas fa-user"></i> <%= ideas[i].user.username %></span>
+                <span class="date"><i class="fas fa-calendar"></i> <%= ideas[i].createdDate %></span>
+              </p>
+              <p class="excerpt"><%= ideas[i].content.substring(0, 50) + "..."%></p>
+              <a  class="read-more-btn">read more <i class="fas fa-angle-right"></i></a>
+            </div>
+          </a>
         </div>
       </div>
       <% } %>
