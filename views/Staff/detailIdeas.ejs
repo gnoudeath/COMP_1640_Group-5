@@ -1,0 +1,113 @@
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+          <div class="breadcrumb-text">
+            <p>Organic Information</p>
+            <h1> Detail Ideas</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- end breadcrumb section -->
+<script> let id = "<%= idea._id %>" </script>
+<!-- form -->
+<div class="contact-from-section mt-150 mb-150">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mb-5 mb-lg-0">
+          <div class="form-title">
+            <h2><%= idea.title %></h2>
+          </div>
+          <div class="idead-cotent">
+            <p><%= idea.content %></p>
+          </div>
+          <div id="form_status"></div>
+          <div class="action">
+            <div>
+              <!-- Thumbs up -->
+              <div class="like grow" data="<%= idea._id %>" id="like-idea">
+                <span id="number-like"><%= idea.like %></span>
+                <i class="fa fa-thumbs-up fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
+              </div>
+              <!-- Thumbs down -->
+              <div class="dislike grow" data="<%= idea._id %>" id="dislike-idea">
+                <span id="number-dislike"><%= idea.dislike %></span>
+                <i class="fa fa-thumbs-down fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
+              </div>
+              <!-- Comments -->
+            </div>
+          </div>
+
+          <div class="contact-form">
+  
+              <!-- <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Detail Ideas</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="nameCate">
+                </div>
+              </div> -->
+  
+              <!-- <div class="form-group row">
+                <label for="" class="col-sm-2 col-form-label">Comment:</label>
+                <div class="col-sm-10">
+                  <textarea name="describe" id="" cols="79" rows="3"></textarea>
+                </div>
+              </div>
+  
+              <div class="form-group row">
+                <div class="col-sm-10">
+                  <input type="submit" value="UPLOAD">
+                </div>
+              </div> -->
+
+           
+
+              <div class="mt-3 d-flex flex-row align-items-center p-3 form-color">
+                <input type="text" class="form-control" placeholder="Enter your comment..." id="comment-value">
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-10">
+                  <input type="submit" value="COMMENT" id="add-comment">
+                </div>
+              </div>
+              
+            <div class="container mt-5 mb-5">
+
+                <div class="row height d-flex justify-content-center align-items-center">
+    
+                  <div class="col-md-7">
+    
+                    <div class="card">
+    
+                      <div class="p-3">
+    
+                        <h6>List Of Comments</h6>
+                        
+                      </div>
+                      <div id="list-comment" class="p-3">
+                        <% for(var i=0; i < comments.length; i++) { %>
+                          <div class="mb-2">
+                            <span class="d-block mb-1" ><%= comments[i].comment %></span>
+                            <span class="d-block"> created at: <%= new Date(comments[i].created_at).toLocaleDateString()  %> </span>
+                          </div>
+                        <% } %>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  
+                </div>
+                </div>
+                
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- end form -->
+
+ 

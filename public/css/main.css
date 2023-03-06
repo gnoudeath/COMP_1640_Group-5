@@ -1508,7 +1508,7 @@ input[type="submit"] {
   font-size: 15px;
   border: none !important;
   cursor: pointer;
-  padding: 15px 25px;
+  padding: 2px 20px;
   border-radius: 3px;
 }
 
@@ -2856,4 +2856,40 @@ table.order-details tbody td {
 /* tab content active */
 .tabcontent.active {
   display: block;
+}
+
+.rating {
+  display: inline-block;
+  width: 100%;
+  margin-top: 40px;
+  padding-top: 40px;
+  text-align: center;
+}
+
+.like{
+  display: inline-block;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.dislike {
+  display: inline-block;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.dislike:hover{
+  color: red;
+  transition: all .2s ease-in-out;
+  transform: scale(1.1);
+}
+
+.like:hover{
+  color: blue;
+  transition: all .2s ease-in-out;
+  transform: scale(1.1);
+}
+
+.active {
+  color: #2EBDD1;
 }

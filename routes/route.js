@@ -21,7 +21,7 @@ const { Role, User } = require('../models/User');
 const multer = require('multer');
 const upload = multer();
 
-const { Idea, Category } = require('../models/Idea');
+const { Idea, Category, CommentModel } = require('../models/Idea');
 
 // Define Routes
 const router = express.Router();
@@ -77,6 +77,71 @@ router.get('/upload', async (req, res) => {
 router.post('/upload', upload.array('files'), staffController.uploadFile);
 // End: Route Staff site
 
+
+router.get('/detailIdeas/:id', async(req,res)=>{
+  const idea = await Idea
+  .findById(req.params.id)
+  .populate()
+  const title = 'Detail';
+  const comments = await CommentModel.find({
+    idea: req.params.id
+  });
+  console.log(comments)
+  res.render('Staff/detailIdeas',{title, idea, comments})
+})
+
+router.post('/likeIdeas/:id', async (req,res) => {
+  // save data to db 
+  let idea = await Idea
+  .findById(req.params.id);
+  if(idea.like){
+    idea.like = idea.like + 1
+  }else{
+    idea.like = 1
+  }
+  idea = await Idea.findOneAndUpdate({_id: req.params.id}, {
+    like: idea.like
+  })
+  res.json({
+    message: "success",
+    data: idea
+  })
+})
+
+
+router.post('/disLikeIdeas/:id', async (req,res) => {
+  // save data to db 
+  let idea = await Idea
+  .findById(req.params.id);
+  if(idea.dislike){
+    idea.dislike = idea.dislike + 1
+  }else{
+    idea.dislike = 1
+  }
+  idea = await Idea.findOneAndUpdate({_id: req.params.id}, {
+    dislike: idea.dislike
+  })
+  res.json({
+    message: "success",
+    data: idea
+  })
+})
+
+
+router.post("/comment/:id", async(req,res) => {
+  console.log(req.query)
+  const {comment} = req.query;
+  const data = await CommentModel.create({
+    idea: req.params.id,
+    comment: comment
+  });
+  res.json({
+    message: "success",
+    data
+  })
+})
+
+router.post('/upload', upload.array('files'), staffController.uploadFile);
 // Start: Route QA Manager Site
 // Section: Category
 // router.get('/formCategory', qaManagerController.formCategoryView);

@@ -53,12 +53,14 @@ const dashboardView = async (req, res) => {
       .limit(perPage)
       .exec((err, ideas) => {
         Idea.countDocuments(async (err, count) => { // đếm để tính có bao nhiêu trang
+          console.log(ideas)
           if (err) return next(err);
           if (user.role) {
             const role = await User.Role.findById(user.role);
             user.role = role;
             // Login: Admin
             if (role.name === "Admin") {
+
               res.render('Admin/home', {
                 user, ideas, // sản phẩm trên một page
                 current: page, // page hiện tại
