@@ -51,12 +51,12 @@ router.post('/updateFormDepartment',checkRole('Admin'), updateFormDepartment);
 router.post('/deleteDepartment/:id',checkRole('Admin'), deleteFormDepartment);
 
 // Section: Category
-router.get('/formCategory',checkRole('Admin'), formCategoryView);
-router.post('/submitFormCategory',checkRole('Admin'), submitFormCategory);
-router.get('/listCategories',checkRole('Admin'), listCategoriesView);
-router.get('/updateCategory/:id',checkRole('Admin'), updateCategoryView);
-router.post('/updateFormCategory',checkRole('Admin'), updateFormCategory);
-router.post('/deleteCategory/:id',checkRole('Admin'), deleteFormCategory);
+router.get('/formCategory',checkRole(['Admin','QA Manager']), formCategoryView);
+router.post('/submitFormCategory',checkRole(['Admin','QA Manager']), submitFormCategory);
+router.get('/listCategories',checkRole(['Admin','QA Manager']), listCategoriesView);
+router.get('/updateCategory/:id',checkRole(['Admin','QA Manager']), updateCategoryView);
+router.post('/updateFormCategory',checkRole(['Admin','QA Manager']), updateFormCategory);
+router.post('/deleteCategory/:id',checkRole(['Admin','QA Manager']), deleteFormCategory);
 
 
 // End: Route Admin site

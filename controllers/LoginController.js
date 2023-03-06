@@ -53,7 +53,6 @@ const dashboardView = async (req, res) => {
       .limit(perPage)
       .exec((err, ideas) => {
         Idea.countDocuments(async (err, count) => { // đếm để tính có bao nhiêu trang
-          console.log(ideas)
           if (err) return next(err);
           if (user.role) {
             const role = await User.Role.findById(user.role);
