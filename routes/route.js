@@ -98,7 +98,6 @@ router.get('/detailIdeas/:id', async (req, res) => {
   const comments = await CommentModel.find({
     idea: req.params.id
   });
-  console.log(comments)
   res.render('Staff/detailIdeas', { title, idea, comments })
 })
 
@@ -318,39 +317,15 @@ router.get('/:page', protectRoute, async (req, res, next) => {
         if (user.role) {
           const role = await Role.findById(user.role);
           user.role = role;
-          // Login: Admin
-          if (role.name === "Admin") {
-            res.render('Admin/home', {
+            res.render('home', {
               user,
               ideas,
               current: page,
               pages: Math.ceil(count / perPage),
               title
             });
-          }
-          // Login: Staff
-          else if (role.name === "Staff") {
-            res.render('Staff/home', {
-              user,
-              ideas,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              title
-            });
-          }
-          // Login: QA Manager
-          else if (role.name === "QA Manager") {
-            res.render('QA_Manager/home', {
-              user,
-              ideas,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              title
-            });
-          }
-          else {
-            res.render('login_page');
-          }
+          
+          
         }
       });
     })
@@ -457,9 +432,7 @@ router.get('/last-ideas/:page', protectRoute, async (req, res, next) => {
         if (user.role) {
           const role = await Role.findById(user.role);
           user.role = role;
-          // Login: Admin
-          if (role.name === "Admin") {
-            res.render('Admin/home', {
+            res.render('home', {
               user,
               ideas,
               current: page,
@@ -467,32 +440,7 @@ router.get('/last-ideas/:page', protectRoute, async (req, res, next) => {
               title,
               filter:filter
             });
-          }
-          // Login: Staff
-          else if (role.name === "Staff") {
-            res.render('Staff/home', {
-              user,
-              ideas,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              title,
-              filter:filter
-            });
-          }
-          // Login: QA Manager
-          else if (role.name === "QA Manager") {
-            res.render('QA_Manager/home', {
-              user,
-              ideas,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              title,
-              filter:filter
-            });
-          }
-          else {
-            res.render('login_page');
-          }
+          
         }
       });
     })
@@ -600,8 +548,7 @@ router.get('/most-viewed/:page', protectRoute, async (req, res, next) => {
           const role = await Role.findById(user.role);
           user.role = role;
           // Login: Admin
-          if (role.name === "Admin") {
-            res.render('Admin/home', {
+            res.render('home', {
               user,
               ideas,
               current: page,
@@ -609,32 +556,7 @@ router.get('/most-viewed/:page', protectRoute, async (req, res, next) => {
               title,
               filter:filter
             });
-          }
-          // Login: Staff
-          else if (role.name === "Staff") {
-            res.render('Staff/home', {
-              user,
-              ideas,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              title,
-              filter:filter
-            });
-          }
-          // Login: QA Manager
-          else if (role.name === "QA Manager") {
-            res.render('QA_Manager/home', {
-              user,
-              ideas,
-              current: page,
-              pages: Math.ceil(count / perPage),
-              title,
-              filter:filter
-            });
-          }
-          else {
-            res.render('login_page');
-          }
+          
         }
       });
     })

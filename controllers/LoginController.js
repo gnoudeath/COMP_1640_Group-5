@@ -127,48 +127,17 @@ const dashboardView = async (req, res) => {
           if (user.role) {
             const role = await User.Role.findById(user.role);
             user.role = role;
-            // Login: Admin
-            if (role.name === "Admin") {
-              res.render('Admin/home', {
+              res.render('home', {
                 user,
                 ideas,
                 current: page,
                 pages: Math.ceil(count / perPage),
                 title
               });
-            }
-            // Login: Staff
-            else if (role.name === "Staff") {
-              res.render('Staff/home', {
-                user,
-                ideas,
-                current: page,
-                pages: Math.ceil(count / perPage),
-                title
-              });
-            }
-            // Login: QA Manager
-            else if (role.name === "QA Manager") {
-              res.render('QA_Manager/home', {
-                user,
-                ideas,
-                current: page,
-                pages: Math.ceil(count / perPage),
-                title
-              });
-            }
-            else {
-              res.render('login_page');
-            }
-          }
+            } else {res.redirect('/login')}
+          })
         });
-      })
-    }
-          // Trả về dữ liệu các sản phẩm theo định dạng nh
-    
-
-
-
+      }
    catch (error) {
     console.error(error);
     res.redirect('/');
