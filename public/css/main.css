@@ -218,6 +218,8 @@ p:last-child {
   width: 50px;
 }
 
+
+
 .circle {
   width: 8vmax;
   height: 8vmax;
@@ -467,6 +469,7 @@ a.read-more-btn {
   -o-transition: 0.3s;
   transition: 0.3s;
   font-weight: 700;
+  float:  right;
 }
 
 a.read-more-btn:hover {
