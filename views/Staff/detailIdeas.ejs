@@ -17,7 +17,7 @@
 <div class="contact-from-section mt-150 mb-150">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 mb-5 mb-lg-0">
+        <div class="col-lg-8 mb-5 mb-lg-0" style="background-color:blanchedalmond">
           <div class="form-title">
             <h2><%= idea.title %></h2>
           </div>
@@ -78,7 +78,7 @@
 
                 <div class="row height d-flex justify-content-center align-items-center">
     
-                  <div class="col-md-7">
+                  <div class="col-md-11">
     
                     <div class="card">
     
@@ -86,15 +86,20 @@
     
                         <h6>List Of Comments</h6>
                         
-                      </div>
-                      <div id="list-comment" class="p-3">
+                      
+                      <div id="list-comment" class="p-3" style="border:black">
                         <% for(var i=0; i < comments.length; i++) { %>
-                          <div class="mb-2">
-                            <span class="d-block mb-1" ><%= comments[i].comment %></span>
-                            <span class="d-block"> created at: <%= new Date(comments[i].created_at).toLocaleDateString()  %> </span>
+                        <div style="border:black">
+                          <div style="background-color:rgb(223, 220, 220)">
+                            <strong class="d-block mb-1" ><%= comments[i].comment %></strong>
+                            <li>Created at: <%= new Date(comments[i].created_at).toLocaleDateString()  %> </li>
                           </div>
+                          &ensp;
+                        </div>
+                          
                         <% } %>
                       </div>
+                    </div>
                     </div>
                     
                   </div>
