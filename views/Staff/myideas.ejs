@@ -1,0 +1,93 @@
+
+<style>
+.blog-container {
+max-width: 800px;
+margin: 0 auto;
+margin-top:50px;
+margin-bottom: 50px;
+}
+
+.blog-posts {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+grid-gap: 30px;
+}
+
+article {
+background-color: #fff;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+font-size: 24px;
+margin-top: 0;
+margin-bottom: 10px;
+}
+
+.post-info {
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+font-size: 14px;
+color: #888;
+margin-bottom: 20px;
+}
+
+.post-info span {
+margin-right: 10px;
+}
+
+.post-info a {
+color: #888;
+text-decoration: none;
+}
+
+.post-info a:hover {
+text-decoration: underline;
+}
+
+p {
+font-size: 16px;
+line-height: 1.5;
+}
+</style>
+
+    
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+          <div class="breadcrumb-text">
+            <p>Organic Information</p>
+            <h1>My Ideas</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+    
+  <div class="blog-container">
+    <div class="blog-posts">
+        <% for(var i=0; i < ideas.length; i++) { %>
+      <article>
+        <h3><a href="/detailIdeas/<%= ideas[i]._id %>"><%= ideas[i].title %></a></h3>
+        <div class="post-info">
+          <span>Category: <a href="#"><%= ideas[i].category %></a></span>
+          <span>Date: <%= ideas[i].createdDate %></span>
+          <span>Likes: <%= ideas[i].like %></span>
+          <span>Dislikes: <%= ideas[i].dislike %></span>
+          <span>Comments: <%= ideas[i].commentCount %></span>
+          <span>Views: <%= ideas[i].viewCount %></span>
+        </div>
+        <p><%= ideas[i].content %></p>
+      </article>
+      <% } %>
+     
+    </div>
+  </div>
+  
+
+   

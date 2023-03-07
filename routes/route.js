@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose')
 
 const { loginView, loginUser } = require('../controllers/loginController');
 
@@ -65,6 +66,72 @@ router.post('/submitFormSetDate', checkRole('Admin'), submitFormSetDate);
 // End: Route Admin site
 
 // Start: Route Staff site
+router.get('/myideas', async(req,res)=>{
+  const user = req.user
+  const role = await Role.findById(user.role)
+  user.role = role
+  const title = 'My Ideas'
+
+  Idea.aggregate([
+    // Match ideas by user id
+    {
+      $match: {
+        user: mongoose.Types.ObjectId(user._id)
+      }
+    },
+    // Left join with comments collection to get comment count per idea
+    {
+      $lookup: {
+        from: "comments",
+        localField: "_id",
+        foreignField: "idea",
+        as: "comments"
+      }
+    },
+    // Left join with categories collection to get category name
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
+    // Project only required fields and category name
+    {
+      $project: {
+        title: 1,
+        content: 1,
+        createdDate: 1,
+        closedDate: 1,
+        category: { $arrayElemAt: ['$category.nameCate', 0] }, // Include category name
+        user: 1,
+        viewedBy: 1,
+        like: 1,
+        dislike: 1,
+        commentCount: { $size: "$comments" }, // Count number of comments
+        viewCount: { $sum: { $cond: [ { $isArray: '$viewedBy' }, { $size: '$viewedBy' }, 0 ] } }
+      }
+    }
+  ], function(err, ideas) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    
+  
+    res.render('Staff/myideas',{
+      title:title,
+      ideas:ideas,
+      user:user
+    
+    })
+  });
+  
+
+  
+})
+
 router.get('/upload', checkRole('Staff'), async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
@@ -568,6 +635,8 @@ router.get('/most-viewed/:page', protectRoute, async (req, res, next) => {
 }
 
 })
+
+
 
 // End Index List Ideas
 
