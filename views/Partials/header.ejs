@@ -9,65 +9,65 @@
       </div>
       <!-- logo -->
 
-      <% if (typeof user !== "undefined") { %>
+      <% if (typeof user !=="undefined" ) { %>
 
-      <%# Start: Nav Admin Site %>
-      <% if (user.role.name === "Admin") { %>
-      <!-- menu start -->
-      <nav class="main-menu">
-        <ul>
+        <%# Start: Nav Admin Site %>
+          <% if (user.role.name==="Admin" ) { %>
+            <!-- menu start -->
+            <nav class="main-menu">
+              <ul>
 
-          <li><a href="/">Home</a></li>
+                <li><a href="/">Home</a></li>
 
-          <li>
-            <a href="#">Accounts</a>
-            <ul class="sub-menu">
-              <li><a href="/listAccounts">List Accounts</a></li>
-              <li><a href="/formAccount">Create new account</a></li>
-            </ul>
-          </li>
+                <li>
+                  <a href="#">Accounts</a>
+                  <ul class="sub-menu">
+                    <li><a href="/listAccounts">List Accounts</a></li>
+                    <li><a href="/formAccount">Create new account</a></li>
+                  </ul>
+                </li>
 
-          <li>
-            <a href="#">Departments</a>
-            <ul class="sub-menu">
-              <li><a href="/listDepartments">List Departments</a></li>
-              <li><a href="/formDepartment">Create new department</a></li>
-            </ul>
-          </li>
+                <li>
+                  <a href="#">Departments</a>
+                  <ul class="sub-menu">
+                    <li><a href="/listDepartments">List Departments</a></li>
+                    <li><a href="/formDepartment">Create new department</a></li>
+                  </ul>
+                </li>
 
-          <li>
-            <a href="#">Categories</a>
-            <ul class="sub-menu">
-              <li><a href="/listCategories">List Categories</a></li>
-              <li><a href="/formCategory">Create new category</a></li>
-            </ul>
-          </li>
+                <li>
+                  <a href="#">Categories</a>
+                  <ul class="sub-menu">
+                    <li><a href="/listCategories">List Categories</a></li>
+                    <li><a href="/formCategory">Create new category</a></li>
+                  </ul>
+                </li>
 
-          <li><a href="#">Set Date</a></li>
+                <li><a href="/formSetDate">Set Date</a></li>
 
-          <li>
-            <div class="header-icons">
-              <a class="boxed-btn" href="#">Hello, <%= user.fullName %> | <%= user.role.name %></a>
-              <ul class="sub-menu">
-                <li><a href="/updateAccount/<%= user._id %>">Account Settings</a></li>
-                <li><a href="/logout">Log out</a></li>
+                <li>
+                  <div class="header-icons">
+                    <a class="boxed-btn" href="#">Hello, <%= user.fullName %> | <%= user.role.name %></a>
+                    <ul class="sub-menu">
+                      <li><a href="/updateAccount/<%= user._id %>">Account Settings</a></li>
+                      <li><a href="/logout">Log out</a></li>
+                    </ul>
+                  </div>
+                </li>
               </ul>
-            </div>
-          </li>
-        </ul>
-      </nav>
-      <%# End: Nav Admin Site %>
+            </nav>
+            <%# End: Nav Admin Site %>
 
-      <%# Start: Nav Staff Site %>
-      <% } else if (user.role.name === "Staff") { %>
-      <nav class="main-menu">
-        <ul>
+              <%# Start: Nav Staff Site %>
+                <% } else if (user.role.name==="Staff" ) { %>
+                  <nav class="main-menu">
+                    <ul>
 
-          <li><a href="/">Home</a></li>
+                      <li><a href="/">Home</a></li>
 
-          <li><a href="/upload">Upload</a></li>
+                      <li><a href="/upload">Upload</a></li>
 
-          <!-- <li>
+                      <!-- <li>
               <a href="shop.html">Shop</a>
               <ul class="sub-menu">
                 <li><a href="shop.html">Shop</a></li>
@@ -77,54 +77,55 @@
               </ul>
             </li> -->
 
-          <li>
-            <div class="header-icons">
-              <a class="boxed-btn" href="cart.html">Hello, <%= user.fullName %> | <%= user.role.name %></a>
-              <ul class="sub-menu">
+                      <li>
+                        <div class="header-icons">
+                          <a class="boxed-btn" href="cart.html">Hello, <%= user.fullName %> | <%= user.role.name %></a>
+                          <ul class="sub-menu">
 
-                <li><a href="/logout">Log out</a></li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </nav>
-      <%# End: Nav Staff Site %>
+                            <li><a href="/logout">Log out</a></li>
+                          </ul>
+                        </div>
+                      </li>
+                    </ul>
+                  </nav>
+                  <%# End: Nav Staff Site %>
 
-      <%# Start: Nav QA Manager Site %>
-      <% } else if (user.role.name === "QA Manager") { %>
-      <nav class="main-menu">
-        <ul>
+                    <%# Start: Nav QA Manager Site %>
+                      <% } else if (user.role.name==="QA Manager" ) { %>
+                        <nav class="main-menu">
+                          <ul>
 
-          <li><a href="/">Home</a></li>
+                            <li><a href="/">Home</a></li>
 
-          <li>
-            <a href="#">Categories</a>
-            <ul class="sub-menu">
-              <li><a href="/listCategories">List Categories</a></li>
-              <li><a href="/formCategory">Create new category</a></li>
-            </ul>
-          </li>
+                            <li>
+                              <a href="#">Categories</a>
+                              <ul class="sub-menu">
+                                <li><a href="/listCategories">List Categories</a></li>
+                                <li><a href="/formCategory">Create new category</a></li>
+                              </ul>
+                            </li>
 
-          <li>
-            <div class="header-icons">
-              <a class="boxed-btn" href="cart.html">Hello, <%= user.fullName %> | <%= user.role.name %></a>
-              <ul class="sub-menu">
+                            <li>
+                              <div class="header-icons">
+                                <a class="boxed-btn" href="cart.html">Hello, <%= user.fullName %> | <%= user.role.name
+                                      %></a>
+                                <ul class="sub-menu">
 
-                <li><a href="/logout">Log out</a></li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </nav>
-      <%# End: Nav QA Manager Site %>
-      <% } %>
+                                  <li><a href="/logout">Log out</a></li>
+                                </ul>
+                              </div>
+                            </li>
+                          </ul>
+                        </nav>
+                        <%# End: Nav QA Manager Site %>
+                          <% } %>
 
-      <% } %>
+                            <% } %>
 
 
-      <!-- menu end -->
-      <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
-      <div class="mobile-menu"></div>
+                              <!-- menu end -->
+                              <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                              <div class="mobile-menu"></div>
 
 
     </div>

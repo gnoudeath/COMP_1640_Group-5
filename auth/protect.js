@@ -6,10 +6,10 @@ const protectRoute = (req, res, next) => {
   console.log('Please log in to continue');
   res.redirect('/login');
 }
-const {Role} = require('../models/User');
+const { Role } = require('../models/User');
 
 function checkRole(allowedRoles) {
-  return async function(req, res, next) {
+  return async function (req, res, next) {
     try {
       // Find the user's role in the Role table by objectId
       const userRole = await Role.findById(req.user.role).lean();
@@ -29,7 +29,8 @@ function checkRole(allowedRoles) {
     } catch (err) {
       // Handle errors
       console.error(err);
-      res.status(500).send('Internal server error');
+      // res.status(500).send('Internal server error');
+      res.redirect('/');
     }
   }
 }
@@ -41,5 +42,5 @@ function checkRole(allowedRoles) {
 module.exports = {
   protectRoute,
   checkRole,
-  
+
 };

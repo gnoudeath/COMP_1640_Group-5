@@ -2,16 +2,16 @@ const express = require('express');
 
 const { loginView, loginUser } = require('../controllers/loginController');
 
-const { protectRoute,checkRole } = require("../auth/protect");
+const { protectRoute, checkRole } = require("../auth/protect");
 const { logoutUser, dashboardView, } = require('../controllers/loginController');
 
 const staffController = require('../controllers/staffController');
-const qaManagerController = require('../controllers/adminController');
+// const qaManagerController = require('../controllers/adminController');
 
 const {
   formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount,
   formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment,
-  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory
+  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory, formSetDateView, submitFormSetDate
 } = require('../controllers/adminController');
 
 
@@ -35,34 +35,37 @@ router.get('/logout', logoutUser);
 // Start: Route Admin site
 
 // Section: Account
-router.get('/formAccount',checkRole('Admin'), formAccountView);
-router.post('/submitFormAccount',checkRole('Admin'), submitFormAccount);
-router.get('/listAccounts',checkRole('Admin'), listAccountsView);
-router.get('/updateAccount/:id',checkRole('Admin'), updateAccountView);
-router.post('/updateFormAccount',checkRole('Admin'), updateFormAccount);
-router.post('/deleteAccount/:id',checkRole('Admin'), deleteFormAccount);
+router.get('/formAccount', checkRole('Admin'), formAccountView);
+router.post('/submitFormAccount', checkRole('Admin'), submitFormAccount);
+router.get('/listAccounts', checkRole('Admin'), listAccountsView);
+router.get('/updateAccount/:id', checkRole('Admin'), updateAccountView);
+router.post('/updateFormAccount', checkRole('Admin'), updateFormAccount);
+router.post('/deleteAccount/:id', checkRole('Admin'), deleteFormAccount);
 
 // Section: Department
-router.get('/formDepartment',checkRole('Admin'), formDepartmentView);
-router.post('/submitFormDepartment',checkRole('Admin'), submitFormDepartment);
-router.get('/listDepartments',checkRole('Admin'), listDepartmentsView);
-router.get('/updateDepartment/:id',checkRole('Admin'), updateDepartmentView);
-router.post('/updateFormDepartment',checkRole('Admin'), updateFormDepartment);
-router.post('/deleteDepartment/:id',checkRole('Admin'), deleteFormDepartment);
+router.get('/formDepartment', checkRole('Admin'), formDepartmentView);
+router.post('/submitFormDepartment', checkRole('Admin'), submitFormDepartment);
+router.get('/listDepartments', checkRole('Admin'), listDepartmentsView);
+router.get('/updateDepartment/:id', checkRole('Admin'), updateDepartmentView);
+router.post('/updateFormDepartment', checkRole('Admin'), updateFormDepartment);
+router.post('/deleteDepartment/:id', checkRole('Admin'), deleteFormDepartment);
 
 // Section: Category
-router.get('/formCategory',checkRole(['Admin','QA Manager']), formCategoryView);
-router.post('/submitFormCategory',checkRole(['Admin','QA Manager']), submitFormCategory);
-router.get('/listCategories',checkRole(['Admin','QA Manager']), listCategoriesView);
-router.get('/updateCategory/:id',checkRole(['Admin','QA Manager']), updateCategoryView);
-router.post('/updateFormCategory',checkRole(['Admin','QA Manager']), updateFormCategory);
-router.post('/deleteCategory/:id',checkRole(['Admin','QA Manager']), deleteFormCategory);
+router.get('/formCategory', checkRole(['Admin', 'QA Manager']), formCategoryView);
+router.post('/submitFormCategory', checkRole(['Admin', 'QA Manager']), submitFormCategory);
+router.get('/listCategories', checkRole(['Admin', 'QA Manager']), listCategoriesView);
+router.get('/updateCategory/:id', checkRole(['Admin', 'QA Manager']), updateCategoryView);
+router.post('/updateFormCategory', checkRole(['Admin', 'QA Manager']), updateFormCategory);
+router.post('/deleteCategory/:id', checkRole(['Admin', 'QA Manager']), deleteFormCategory);
 
+// Section: Set Date
+router.get('/formSetDate', checkRole('Admin'), formSetDateView);
+router.post('/submitFormSetDate', checkRole('Admin'), submitFormSetDate);
 
 // End: Route Admin site
 
 // Start: Route Staff site
-router.get('/upload',checkRole('Staff'),async (req, res) => {
+router.get('/upload', checkRole('Staff'), async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
   const category = await Category.find()
@@ -78,28 +81,28 @@ router.post('/upload', upload.array('files'), staffController.uploadFile);
 // End: Route Staff site
 
 
-router.get('/detailIdeas/:id', async(req,res)=>{
+router.get('/detailIdeas/:id', async (req, res) => {
   const idea = await Idea
-  .findById(req.params.id)
-  .populate()
+    .findById(req.params.id)
+    .populate()
   const title = 'Detail';
   const comments = await CommentModel.find({
     idea: req.params.id
   });
   console.log(comments)
-  res.render('Staff/detailIdeas',{title, idea, comments})
+  res.render('Staff/detailIdeas', { title, idea, comments })
 })
 
-router.post('/likeIdeas/:id', async (req,res) => {
+router.post('/likeIdeas/:id', async (req, res) => {
   // save data to db 
   let idea = await Idea
-  .findById(req.params.id);
-  if(idea.like){
+    .findById(req.params.id);
+  if (idea.like) {
     idea.like = idea.like + 1
-  }else{
+  } else {
     idea.like = 1
   }
-  idea = await Idea.findOneAndUpdate({_id: req.params.id}, {
+  idea = await Idea.findOneAndUpdate({ _id: req.params.id }, {
     like: idea.like
   })
   res.json({
@@ -109,16 +112,16 @@ router.post('/likeIdeas/:id', async (req,res) => {
 })
 
 
-router.post('/disLikeIdeas/:id', async (req,res) => {
+router.post('/disLikeIdeas/:id', async (req, res) => {
   // save data to db 
   let idea = await Idea
-  .findById(req.params.id);
-  if(idea.dislike){
+    .findById(req.params.id);
+  if (idea.dislike) {
     idea.dislike = idea.dislike + 1
-  }else{
+  } else {
     idea.dislike = 1
   }
-  idea = await Idea.findOneAndUpdate({_id: req.params.id}, {
+  idea = await Idea.findOneAndUpdate({ _id: req.params.id }, {
     dislike: idea.dislike
   })
   res.json({
@@ -128,9 +131,9 @@ router.post('/disLikeIdeas/:id', async (req,res) => {
 })
 
 
-router.post("/comment/:id", async(req,res) => {
+router.post("/comment/:id", async (req, res) => {
   console.log(req.query)
-  const {comment} = req.query;
+  const { comment } = req.query;
   const data = await CommentModel.create({
     idea: req.params.id,
     comment: comment
@@ -142,6 +145,9 @@ router.post("/comment/:id", async(req,res) => {
 })
 
 router.post('/upload', upload.array('files'), staffController.uploadFile);
+
+
+
 // Start: Route QA Manager Site
 // Section: Category
 // router.get('/formCategory', qaManagerController.formCategoryView);
@@ -208,15 +214,15 @@ router.get('/save', async function (req, res, next) {
 // })
 
 // ERROR PAGE
-router.get('/error',(req,res)=>{
-  res.render("error",{
+router.get('/error', (req, res) => {
+  res.render("error", {
     layout: 'error',
   })
 })
 // END ERROR PAGE
 
 // Index List Ideas
-router.get('/:page',protectRoute, async (req, res, next) => {
+router.get('/:page', protectRoute, async (req, res, next) => {
   let perPage = 6;
   let page = req.params.page || 1;
   let title = 'Home'
@@ -239,7 +245,7 @@ router.get('/:page',protectRoute, async (req, res, next) => {
     });
 
 })
-router.get('/last-ideas/:page',protectRoute, async (req, res, next) => {
+router.get('/last-ideas/:page', protectRoute, async (req, res, next) => {
   let perPage = 6;
   let page = req.params.page || 1;
   let title = 'Home'

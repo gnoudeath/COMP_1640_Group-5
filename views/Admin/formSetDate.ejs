@@ -1,0 +1,63 @@
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <p>University Of Greenwich</p>
+          <h1>
+            <%= title %>
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- form -->
+<div class="contact-from-section mt-150 mb-150">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 mb-5 mb-lg-0">
+        <div class="form-title">
+          <h2>
+            <%= title %>
+          </h2>
+        </div>
+        <div id="form_status"></div>
+        <div class="contact-form">
+
+          <form method="POST" action="/submitFormSetDate">
+            <% if (typeof setDateData !=='undefined' ) { %>
+
+            <input type="number" class="form-control" name="setDate_ID" value="1" hidden>
+
+            <div class="form-group row">
+              <label for="" class="col-sm-2 col-form-label">Start Date:</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" name="startDate" value="<%= startDate !== '' ? startDate : '' %>">
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="" class="col-sm-2 col-form-label">End Date:</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" name="endDate" value="<%= endDate !== '' ? endDate : '' %>">
+              </div>
+            </div>
+
+            <div class=" form-group row">
+              <div class="col-sm-10">
+                <input type="submit" value="SUBMIT">
+              </div>
+            </div>
+
+            <% } %>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end form -->
