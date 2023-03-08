@@ -24,6 +24,18 @@
           <div class="idead-cotent">
             <p><%= idea.content %></p>
           </div>
+
+          <!-- Information Idea --> 
+          &ensp;
+          <div></div>
+          <strong>Category:</strong>
+          <div></div>
+          <strong>Author:</strong>
+          <div></div>
+          <strong>Created at:</strong>
+          <div></div>
+          &ensp;
+
           <div id="form_status"></div>
           <div class="action">
             <div>
@@ -39,6 +51,7 @@
               </div>
               <!-- Comments -->
             </div>
+            
           </div>
 
           <div class="contact-form">
@@ -90,7 +103,7 @@
                       <div id="list-comment" class="p-3" style="border:black">
                         <% for(var i=0; i < comments.length; i++) { %>
                         <div style="border:black">
-                          <div style="background-color:rgb(223, 220, 220)">
+                          <div style="background-color:blanchedalmond">
                             <strong>Author's name:</strong>
                             <div class="d-block mb-1" style="font-size:15px" ><%= comments[i].comment %></div>
                             <i style="font-size:10px">Created at: <%= new Date(comments[i].created_at).toLocaleDateString()  %> </i>
