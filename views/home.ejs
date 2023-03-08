@@ -1,4 +1,42 @@
 <!-- breadcrumb-section -->
+<style>
+  .pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.pagination li {
+  margin-right: 0.5rem;
+}
+
+.pagination a {
+  display: block;
+  padding: 0.8rem;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination a:hover {
+  background-color: #eee;
+}
+
+.pagination .page-item.active .page-link {
+  background: #F28123;
+  color: #fff;
+  border-color: #F28123;
+}
+
+.pagination .disabled a {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+</style>
+
 <div class="breadcrumb-section breadcrumb-bg">
   <div class="container">
     <div class="row">
