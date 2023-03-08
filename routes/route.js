@@ -97,6 +97,14 @@ router.get('/myideas', async(req,res)=>{
         as: "category"
       }
     },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user"
+      }
+    },
     // Project only required fields and category name
     {
       $project: {
@@ -105,7 +113,7 @@ router.get('/myideas', async(req,res)=>{
         createdDate: 1,
         closedDate: 1,
         category: { $arrayElemAt: ['$category.nameCate', 0] }, // Include category name
-        user: 1,
+        user: { $arrayElemAt: ['$user', 0] },
         viewedBy: 1,
         like: 1,
         dislike: 1,
@@ -119,7 +127,7 @@ router.get('/myideas', async(req,res)=>{
       return;
     }
     
-  
+    console.log(ideas);
     res.render('Staff/myideas',{
       title:title,
       ideas:ideas,

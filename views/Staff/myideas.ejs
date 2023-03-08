@@ -1,59 +1,9 @@
 
+
 <style>
-.blog-container {
-max-width: 800px;
-margin: 0 auto;
-margin-top:50px;
-margin-bottom: 50px;
-}
 
-.blog-posts {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-grid-gap: 30px;
-}
 
-article {
-background-color: #fff;
-padding: 20px;
-border-radius: 10px;
-box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-h3 {
-font-size: 24px;
-margin-top: 0;
-margin-bottom: 10px;
-}
-
-.post-info {
-display: flex;
-flex-wrap: wrap;
-justify-content: space-between;
-font-size: 14px;
-color: #888;
-margin-bottom: 20px;
-}
-
-.post-info span {
-margin-right: 10px;
-}
-
-.post-info a {
-color: #888;
-text-decoration: none;
-}
-
-.post-info a:hover {
-text-decoration: underline;
-}
-
-p {
-font-size: 16px;
-line-height: 1.5;
-}
 </style>
-
     
 <div class="breadcrumb-section breadcrumb-bg">
     <div class="container">
@@ -69,25 +19,94 @@ line-height: 1.5;
   </div>
  
     
-  <div class="blog-container">
-    <div class="blog-posts">
-        <% for(var i=0; i < ideas.length; i++) { %>
-      <article>
-        <h3><a href="/detailIdeas/<%= ideas[i]._id %>"><%= ideas[i].title %></a></h3>
-        <div class="post-info">
-          <span>Category: <a href="#"><%= ideas[i].category %></a></span>
-          <span>Date: <%= ideas[i].createdDate %></span>
-          <span>Likes: <%= ideas[i].like %></span>
-          <span>Dislikes: <%= ideas[i].dislike %></span>
-          <span>Comments: <%= ideas[i].commentCount %></span>
-          <span>Views: <%= ideas[i].viewCount %></span>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card mt-4" >
+          <div class="card-body">
+            <h5 class="card-title mb-4">User Info</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Username: <span style="color: #FFA500;"><%= ideas[0].user.username %></span></h6>
+            <h6 class="card-subtitle mb-2 text-muted">Full Name: <span style="color: #FFA500;"><%= ideas[0].user.fullName %></span></h6>
+            <h6 class="card-subtitle mb-2 text-muted">Email: <span style="color: #FFA500;"><%= ideas[0].user.email %></span></h6>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Posts
+                <span class="badge badge-pill badge-primary">25</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Views
+                <span class="badge badge-pill badge-primary">200</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Likes
+                <span class="badge badge-pill badge-primary">100</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Dislikes
+                <span class="badge badge-pill badge-primary">50</span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <p><%= ideas[i].content %></p>
-      </article>
-      <% } %>
-     
+        <div class="card sticky-top" style="top: 150px; z-index: 1;margin-top: 15px;">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Categories</h5>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Technology
+                <span class="badge badge-pill badge-primary">10</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Science
+                <span class="badge badge-pill badge-primary">5</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Business
+                <span class="badge badge-pill badge-primary">8</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Sports
+                <span class="badge badge-pill badge-primary">3</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="blog-posts">
+          <% for(var i=0; i < ideas.length; i++) { %>
+          <article class="card my-3">
+            <div class="card-body">
+              <h3 class="card-title"><a href="/detailIdeas/<%= ideas[i]._id %>"><%= ideas[i].title %></a></h3>
+              <div class="card-text">
+                <span class="text-muted">Category: <a href="#" class="text-dark"><%= ideas[i].category %></a></span>
+                <span class="text-muted">Date: <%= ideas[i].createdDate %></span>
+                <span class="text-muted">Likes: <%= ideas[i].like %></span>
+                <span class="text-muted">Dislikes: <%= ideas[i].dislike %></span>
+                <span class="text-muted">Comments: <%= ideas[i].commentCount %></span>
+                <span class="text-muted">Views: <%= ideas[i].viewCount %></span>
+              </div>
+              <hr>
+              <p class="card-text"><%= ideas[i].content %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Attached Documents:</span>
+                <div>
+                  <i class="far fa-file-word text-primary mr-3"></i>
+                  <i class="far fa-file-pdf text-danger"></i>
+                </div>
+              </div>
+            </div>
+          </article>
+          <% } %>
+        </div>
+      </div>
     </div>
   </div>
+  
+  
+  
+  
+  
   
 
    
