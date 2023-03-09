@@ -35,7 +35,8 @@
             <select id="download-option">
             <option value="all">Download All</option>
             <% for (const file of files) { %>
-              <option value="<%= file.name %>"><%= file.name %></option>
+              <option value="<%= file.name %>"><%= file.name %> / <span class="file-size"><%= (file.files.length / 1024).toFixed(2) %> KB</span></option>
+              
             <% } %>
           </select>
           <button id="download-btn" class="btn btn-primary">Download</button>
