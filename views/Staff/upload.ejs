@@ -40,10 +40,16 @@
               <input type="checkbox" id="terms" name="terms">
               I agree to the terms and conditions
               </label>
-            <div>
-                <input type="file" name="files" multiple>
+            <!-- <div>
+                <input type="file" name="files" accept=".doc, .docx, .pdf" multiple>
                 <input type="submit" value="Upload">
-            </div>   
+            </div>               -->
+            <label for="file" class="drop-container">
+              <span class="drop-title">Drop files here</span>
+              or
+              <input type="file" name="files" accept=".doc, .docx, .pdf" multiple required>
+            </label>
+            <input type="submit" value="Upload">
           </form>
     </div>
     <script>
