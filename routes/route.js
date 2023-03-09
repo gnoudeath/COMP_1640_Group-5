@@ -157,7 +157,9 @@ router.post('/upload', upload.array('files'), staffController.uploadFile);
 
 
 router.get('/detailIdeas/:id', async (req, res) => {
-  
+  const user = req.user
+  const role = await Role.findById(user.role);
+  user.role = role;
   const idea = await Idea
     .findById(req.params.id)
     .populate('user','username')
@@ -169,12 +171,13 @@ router.get('/detailIdeas/:id', async (req, res) => {
       await idea.save();
     }
   
+
     
   const title = 'Detail';
   const comments = await CommentModel.find({
     idea: req.params.id
   }).populate('user','username');
-  res.render('Staff/detailIdeas', { title, idea, comments })
+  res.render('Staff/detailIdeas', { title, idea, comments,user })
 })
 
 router.post('/likeIdeas/:id', async (req, res) => {
