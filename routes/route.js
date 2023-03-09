@@ -22,7 +22,7 @@ const { Role, User } = require('../models/User');
 const multer = require('multer');
 const upload = multer();
 
-const { Idea, Category, CommentModel } = require('../models/Idea');
+const { Idea, Category, CommentModel,File } = require('../models/Idea');
 
 // Define Routes
 const router = express.Router();
@@ -144,12 +144,14 @@ router.get('/upload', checkRole('Staff'), async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
   const category = await Category.find()
+  
   user.role = role;
   const title = "Upload";
   res.render('Staff/upload', {
     title: title,
     user: user,
     category: category,
+    
   })
 });
 router.post('/upload', upload.array('files'), staffController.uploadFile);
@@ -160,6 +162,7 @@ router.get('/detailIdeas/:id', async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
   user.role = role;
+  const files = await File.find({ ideas: req.params.id });
   const idea = await Idea
     .findById(req.params.id)
     .populate('user','username')
@@ -177,7 +180,7 @@ router.get('/detailIdeas/:id', async (req, res) => {
   const comments = await CommentModel.find({
     idea: req.params.id
   }).populate('user','username');
-  res.render('Staff/detailIdeas', { title, idea, comments,user })
+  res.render('Staff/detailIdeas', { title, idea, comments,user,files })
 })
 
 router.post('/likeIdeas/:id', async (req, res) => {

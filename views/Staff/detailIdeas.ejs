@@ -1,3 +1,5 @@
+
+
 <!-- Start breadcrumb section -->
 <div class="breadcrumb-section breadcrumb-bg">
     <div class="container">
@@ -30,6 +32,13 @@
             </p>
             <h2 ><%= idea.title %></h2>
             <p><%= idea.content %></p>
+            <% for (const file of files) { %>
+              <a href="data:application/octet-stream;base64,<%= file.files.toString('base64') %>" download="<%= file.name %>" class="btn btn-primary btn-file">
+  <i class="fas fa-file"></i> 
+  <span class="file-name"><%= file.name %></span> 
+  <span class="file-size"><%= (file.files.length / 1024).toFixed(2) %> KB</span>
+</a><br>
+<% } %>
           </div>
           <div id="form_status"></div>
           <div class="action">
@@ -61,6 +70,7 @@
               </div>
               <% } %>
             </div>
+            
           </div>
 
           <div class="comment-template">
@@ -83,7 +93,6 @@
   </div>
 </div>
 <!-- end single article section -->
-
 
 
 
