@@ -9,11 +9,8 @@ exports.uploadFile = async (req, res,next) => {
         idea.category = '6400840bd62ad3650a510427'
         idea.user = req.user
         idea.save((err)=>{
-
             if (err) { return next(err); }
         });
-          //as      
-
         const files = req.files;
         const uploadPromises = files.map(file => {
             const newFile = new File({
