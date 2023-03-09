@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
                 <label for="exampleFormControlTextarea1">Content</label>
-                <textarea type="text" name="content" class="form-control" id="exampleFormControlTextarea1" required></textarea>
+                <textarea type="text" name="content" class="form-control" id="exampleFormControlTextarea1" rows="7" required></textarea>
             </div>
             <div class="form-group">
               <label for="exampleFormControlSelect1">Category</label>
@@ -49,7 +49,7 @@
     <script>
       function confirmAgreement() {
         if (document.getElementById("terms").checked) {
-          var terms = "Terms and conditions: Chắc chưa:))";
+          var terms = "Terms and conditions: Are you sure";
           window.alert(terms);
           return confirm("Are you sure you agree to the terms and conditions?");
         } else {

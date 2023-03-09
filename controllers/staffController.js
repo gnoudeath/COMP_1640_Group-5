@@ -2,7 +2,6 @@ const {File, Idea} = require('../models/Idea');
 
 exports.uploadFile = async (req, res,next) => {
     try {
-        
         const idea = new Idea();
         idea.title =req.body.title
         idea.content = req.body.content
