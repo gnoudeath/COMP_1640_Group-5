@@ -1,6 +1,8 @@
+
+
 (function ($) {
     "use strict";
-
+    
     $(document).ready(function ($) {
 
         // testimonial sliders
@@ -248,12 +250,28 @@ $(document).ready(() => {
               
               $.ajax(settings).done(function (response) {
                 $("#comment-value").val("")
+
+                var commentsCount = parseInt($(".comment-count-title").text()) + 1;
+                $(".comment-count-title").text(`${commentsCount} Comment${commentsCount > 1 ? "s" : ""}`);
+                
                 $("#list-comment").append(`
-                    <div class="mb-2">
-                        <span class="d-block mb-1">${response.data.comment}</span>
-                        <span class="d-block"> created at: ${new Date(response.data.created_at).toLocaleDateString()} </span>
-                    </div>
+                <div class="single-comment-body">
+                <div class="comment-user-avater">
+                  <img src="assets/img/avaters/avatar1.png" alt="">
+                </div>
+                <div class="comment-text-body">
+                  <h4>${response.data.user.username} <span class="comment-date">created at: ${new Date(response.data.created_at).toLocaleDateString()}</span></h4>
+                  <p>${response.data.comment}</p>
+                </div>
+                <div class="single-comment-body child">
+                  <div class="comment-user-avater">
+                    <img src="assets/img/avaters/avatar3.png" alt="">
+                  </div>
+                </div>
+              </div>
                 `)
+                // update comment count
+                
               });
         }
     })

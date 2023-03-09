@@ -72,6 +72,11 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Idea',
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
 }); 
 
 const CommentModel = mongoose.model('Comment', commentSchema, "comments");

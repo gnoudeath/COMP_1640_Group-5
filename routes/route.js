@@ -172,7 +172,7 @@ router.get('/detailIdeas/:id', async (req, res) => {
   const title = 'Detail';
   const comments = await CommentModel.find({
     idea: req.params.id
-  });
+  }).populate('user','username');
   res.render('Staff/detailIdeas', { title, idea, comments })
 })
 
@@ -217,13 +217,19 @@ router.post('/disLikeIdeas/:id', async (req, res) => {
 router.post("/comment/:id", async (req, res) => {
   console.log(req.query)
   const { comment } = req.query;
-  const data = await CommentModel.create({
+  const cmt = await CommentModel.create({
     idea: req.params.id,
-    comment: comment
+    comment: comment,
+    user: req.user._id
+
   });
+  
+  const populateComment = await CommentModel.findById(cmt._id).populate('user','username')
+  console.log(populateComment)
   res.json({
     message: "success",
-    data
+    data:populateComment,
+    
   })
 })
 
