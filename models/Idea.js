@@ -35,11 +35,46 @@ const ideaSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  viewedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  like: {
+    type: mongoose.Schema.Types.Number,
+    required: false,
+    default: 0
+  },
+  dislike: {
+    type: mongoose.Schema.Types.Number,
+    required: false,
+    default: 0
   }
 });
 
 const Idea = mongoose.model('Idea', ideaSchema);
 
+
+const commentSchema = new mongoose.Schema({
+  comment: {
+    type: String,
+    required: true
+  },
+  created_at: {
+    type: Date,
+    default: Date.now()
+  },
+  updated_at: {
+    type: Date,
+    default: null
+  },
+  idea: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Idea',
+  },
+}); 
+
+const CommentModel = mongoose.model('Comment', commentSchema, "comments");
 
 // Upload file
 const uploadSchema = new mongoose.Schema({
@@ -61,7 +96,8 @@ const uploadSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Idea',
     required: true
-  }
+  },
+
 });
 
 const File = mongoose.model('Upload', uploadSchema);
@@ -110,5 +146,5 @@ async function deleteCategory(id) {
 
 module.exports = {
   Idea, Category, File,
-  getAllCategorys, insertCategory, getCategoryByID, updateCategory, deleteCategory,     // Function: Category
+  getAllCategorys, insertCategory, getCategoryByID, updateCategory, deleteCategory, CommentModel    // Function: Category
 }

@@ -1,0 +1,112 @@
+
+
+<style>
+
+
+</style>
+    
+<div class="breadcrumb-section breadcrumb-bg">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2 text-center">
+          <div class="breadcrumb-text">
+            <p>Organic Information</p>
+            <h1>My Ideas</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+    
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card mt-4" >
+          <div class="card-body">
+            <h5 class="card-title mb-4">User Info</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Username: <span style="color: #FFA500;"><%= ideas[0].user.username %></span></h6>
+            <h6 class="card-subtitle mb-2 text-muted">Full Name: <span style="color: #FFA500;"><%= ideas[0].user.fullName %></span></h6>
+            <h6 class="card-subtitle mb-2 text-muted">Email: <span style="color: #FFA500;"><%= ideas[0].user.email %></span></h6>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Posts
+                <span class="badge badge-pill badge-primary">25</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Views
+                <span class="badge badge-pill badge-primary">200</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Likes
+                <span class="badge badge-pill badge-primary">100</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Total Dislikes
+                <span class="badge badge-pill badge-primary">50</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="card sticky-top" style="top: 150px; z-index: 1;margin-top: 15px;">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Categories</h5>
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Technology
+                <span class="badge badge-pill badge-primary">10</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Science
+                <span class="badge badge-pill badge-primary">5</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Business
+                <span class="badge badge-pill badge-primary">8</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                Sports
+                <span class="badge badge-pill badge-primary">3</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="blog-posts">
+          <% for(var i=0; i < ideas.length; i++) { %>
+          <article class="card my-3">
+            <div class="card-body">
+              <h3 class="card-title"><a href="/detailIdeas/<%= ideas[i]._id %>"><%= ideas[i].title %></a></h3>
+              <div class="card-text">
+                <span class="text-muted">Category: <a href="#" class="text-dark"><%= ideas[i].category %></a></span>
+                <span class="text-muted">Date: <%= ideas[i].createdDate %></span>
+                <span class="text-muted">Likes: <%= ideas[i].like %></span>
+                <span class="text-muted">Dislikes: <%= ideas[i].dislike %></span>
+                <span class="text-muted">Comments: <%= ideas[i].commentCount %></span>
+                <span class="text-muted">Views: <%= ideas[i].viewCount %></span>
+              </div>
+              <hr>
+              <p class="card-text"><%= ideas[i].content %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span>Attached Documents:</span>
+                <div>
+                  <i class="far fa-file-word text-primary mr-3"></i>
+                  <i class="far fa-file-pdf text-danger"></i>
+                </div>
+              </div>
+            </div>
+          </article>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  
+
+   

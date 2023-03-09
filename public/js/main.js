@@ -192,3 +192,69 @@ function openTabs(el) {
     btn.classList.add("active");
     // các button mà chúng ta click vào sẽ được add class active
 }
+
+$(document).ready(() => {
+    $(document).on("click", "#like-idea",() => {
+        const settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": `http://localhost:3000/likeIdeas/${id}`,
+            "method": "POST",
+            "headers": {
+              "cache-control": "no-cache",
+              "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
+            }
+          }
+          
+          $.ajax(settings).done(function (response) {
+            $("#number-like").html(response.data.like + 1)
+          });
+    })
+    $(document).on("click", "#dislike-idea",() => {
+        console.log(id)
+        const settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": `http://localhost:3000/disLikeIdeas/${id}`,
+            "method": "POST",
+            "headers": {
+              "cache-control": "no-cache",
+              "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
+            }
+          }
+          
+          $.ajax(settings).done(function (response) {
+            $("#number-dislike").html(response.data.dislike + 1)
+          });
+    })
+
+    $(document).on("click", "#add-comment" , () => {
+        
+        const commentValue = $("#comment-value").val();
+        if(commentValue){
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": `http://localhost:3000/comment/${id}?comment=${commentValue}`,
+                "method": "POST",
+                "headers": {
+                  "content-type": "application/json",
+                  "cache-control": "no-cache",
+                  "postman-token": "4a023968-04bb-3e57-ca9b-dfdd6ab4a373"
+                },
+                "processData": false,
+                "data": "{\n\t\"comment\": \"test comment đá\"\n}"
+              }
+              
+              $.ajax(settings).done(function (response) {
+                $("#comment-value").val("")
+                $("#list-comment").append(`
+                    <div class="mb-2">
+                        <span class="d-block mb-1">${response.data.comment}</span>
+                        <span class="d-block"> created at: ${new Date(response.data.created_at).toLocaleDateString()} </span>
+                    </div>
+                `)
+              });
+        }
+    })
+})

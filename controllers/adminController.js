@@ -1,4 +1,5 @@
 const Idea = require('../models/Idea');
+const SetDate = require('../models/SetDate');
 const User = require('../models/User');
 
 // Start: GET: Create Account Page
@@ -285,11 +286,53 @@ const deleteFormCategory = async (req, res) => {
 }
 // End: POST: Delete Category
 
+// Start: GET: Create Category Page
+const formSetDateView = async (req, res) => {
+    try {
+        const title = 'Set Date';
+        const user = req.user;
 
+        // If the user has a role, fetch the role data using the populate() method
+        if (user.role) {
+            const role = await User.Role.findById(user.role);
+            user.role = role;
+        }
+
+        const setDateData = await SetDate.checkSetDateExists();
+        console.log(setDateData);
+
+        var startDate = '';
+        var endDate = '';
+
+        if (setDateData != null) {
+            startDate = new Date(setDateData.startDate);
+            startDate = startDate.toISOString().slice(0, 10);
+
+            endDate = new Date(setDateData.endDate);
+            endDate = endDate.toISOString().slice(0, 10);
+        }
+
+        res.render('Admin/formSetDate', { user, title, setDateData, startDate, endDate })
+
+    } catch (error) {
+        console.error(error);
+        // res.status(500).send('Internal Server Error');
+        res.redirect('/');
+    }
+}
+// End: GET: Create Category Page
+
+// Start: POST: Create Category
+const submitFormSetDate = (req, res, next) => {
+    SetDate.insertSetDate(req.body);
+    res.redirect('/');
+};
+// End: POST: Create Category
 
 
 module.exports = {
     formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount,                      // Function: Admin
     formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment,    // Function: Department
-    formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory                // Function: Category
+    formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory,               // Function: Category
+    formSetDateView, submitFormSetDate
 };

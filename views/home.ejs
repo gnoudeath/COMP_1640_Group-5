@@ -1,0 +1,267 @@
+<!-- breadcrumb-section -->
+<style>
+  .pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.pagination li {
+  margin-right: 0.5rem;
+}
+
+.pagination a {
+  display: block;
+  padding: 0.8rem;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination a:hover {
+  background-color: #eee;
+}
+
+.pagination .page-item.active .page-link {
+  background: #F28123;
+  color: #fff;
+  border-color: #F28123;
+}
+
+.pagination .disabled a {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+</style>
+
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <p>Organic Information</p>
+          <h1>News Article</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- latest news -->
+
+
+<div class="latest-news mt-150 mb-150">
+  <div class="container">
+
+    
+        <nav class="navbar bg-light">
+          
+          <div class="tabs">
+            <a href="/"><button class="tablinks <%= typeof filter =='undefined' ? 'active' : '' %>">All Ideas</button></a>
+            <a href=""><button class="tablinks">Most Poppular</button></a>
+            <a href="/most-viewed/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'most-viewed' ? 'active' : '' %>">Most Viewed</button></a>
+            <a href="/last-ideas/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'last-ideas' ? 'active' : '' %>">Latest Idea</button></a>
+            <a href=""><button class="tablinks ">Latest Comments</button></a>
+
+          </div>
+        </nav>
+        
+
+
+          <div class="row">
+            <% for(var i=0; i < ideas.length; i++) { %>
+              <div class="col-lg-4 col-md-6">
+                <div class="single-latest-news">
+                  <!-- <a href="single-news.html">
+            <div class="latest-news-bg news-bg-1"></div>
+          </a> -->
+                  <a href="/detailIdeas/<%= ideas[i]._id %>">
+                    <div class="news-text-box">
+                      <h3>
+                        <%= ideas[i].title %>
+                      </h3>
+                      <h3></h3>
+                      <p class="blog-meta">
+                        <span class="author"><i class="fas fa-user"></i>
+                          <%= ideas[i].user %>
+                        </span>
+                        <span class="date"><i class="fas fa-calendar"></i>
+                          <%= ideas[i].createdDate %>
+                        </span>
+                      </p>
+                      <p class="excerpt">
+                        <%= ideas[i].content.substring(0, 50) + "..." %>
+                      </p>
+                      <a>
+                        <i class="far fa-thumbs-up"></i> <%= ideas[i].like %>
+                        <i class="far fa-thumbs-down"></i> <%= ideas[i].dislike %>
+                        <i class="far fa-comment"></i> <%= ideas[i].commentCount %>
+                        <i class="far fa-eye"></i> <%= ideas[i].viewCount %>
+                      </a>
+                      <a class="read-more-btn" href="/detailIdeas/<%= ideas[i]._id %>">read more <i class="fas fa-angle-right"></i></a>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <% } %>
+
+          </div>
+
+          <div class="row">
+            <!-- hiển thị phân trang nếu có trang -->
+            <% if(pages> 0) { %>
+              <nav class="mx-auto">
+                <ul class="pagination" style="margin-top: 2rem;">
+
+                  <!-- FIRST ITEM -->
+                  <% if(current==1) { %>
+                    <!-- // Nếu thông số http://localhost:3333/news/1/ là 1 thì First sẽ bị disabled -->
+                    <% if(typeof filter !=='undefined' && filter==='last-ideas' ) {%>
+
+                      <li class="page-item disabled">
+                        <a class="page-link" href="/">First</a>
+                      </li>
+                      <% } 
+                      else if(typeof filter !=='undefined' && filter==='most-viewed' ){ %>
+                        <li class="page-item disabled">
+                          <a class="page-link" href="/most-viewed/1">First</a>
+                        </li>
+                        <% }
+                      else { %>
+                        <li class="page-item disabled">
+                          <a class="page-link" href="/last-ideas/1">First</a>
+                        </li>
+                        <% } %>
+
+                    <% } else { %>
+                  <!-- // Nếu thông số http://localhost:3333/news/2/ từ 2 trở lên thì First sẽ bỏ disabled -->
+                  <% if(typeof filter !=='undefined' && filter==='last-ideas' ) {%>
+                    <li class="page-item">
+                      <a class="page-link" href="/last-ideas/1">First</a>
+                    </li>
+                    <% }
+                    else if(typeof filter !=='undefined' && filter==='most-viewed' ){ %>
+                      <li class="page-item">
+                        <a class="page-link" href="/most-viewed/1">First</a>
+                      </li>
+                      <% }
+                    else { %>
+                      <li class="page-item">
+                        <a class="page-link" href="/">First</a>
+                      </li>
+                      <% } %>
+                        <% } %>
+
+                          <!-- ITEMS  -->
+                          <% var i=(Number(current)> 3 ? Number(current) - 2 : 1) %>
+                            <!-- // Toán tử điều kiện 3 ngôi syntax: < điều_kiện ? giá_trị_1 : giá_trị_2 >
+// Nếu điều_kiện trả về true, toán tử có giá trị giá_trị_1. Ngược lại toán tử có giá trị giá_trị_2. -->
+                            <% if(i !==1) { %>
+                              <li class="page-item disabled">
+                                <a class="page-link" href="#">...</a>
+                              </li>
+                              <% } %>
+                                <% for(; i <=(Number(current) + 2) && i <=pages; i++) { %>
+                                  <!-- // Sử dụng vòng lặp để lặp qua từng trang và tăng số trang 
+// Trong vòng lặp for có ba biểu thức tùy chọn nên chỉ cần các bạn tách mỗi biểu thức bằng dấu `;` là oke rồi -->
+                                  <% if(i==current) { %>
+                                    <!-- Check filter -->
+                                    <% if(typeof filter !=='undefined' && filter==='last-ideas' ) {%>
+                                      <li class="page-item active">
+                                        <a class="page-link" href="/last-ideas/<%= i %>/">
+                                          <%= i %>
+                                        </a>
+                                      </li>
+                                      <%} 
+                                      else if(typeof filter !=='undefined' && filter==='most-viewed' ){%>
+                                        <li class="page-item active">
+                                          <a class="page-link" href="/most-viewed/<%= i %>/">
+                                            <%= i %>
+                                          </a>
+                                        </li>
+                                        <%} 
+                                      else {%>
+                                        <li class="page-item active">
+                                          <a class="page-link" href="/<%= i %>/">
+                                            <%= i %>
+                                          </a>
+                                        </li>
+                                        <%} %>
+                                          <!-- End Check Filter -->
+                                          <% } else { %>
+                                            <% if(typeof filter !=='undefined' && filter==='last-ideas' ) {%>
+                                              <li class="page-item">
+                                                <a class="page-link" href="/last-ideas/<%= i %>/">
+                                                  <%= i %>
+                                                </a>
+                                              </li>
+                                              <%} 
+                                              else if(typeof filter !=='undefined' && filter==='most-viewed' ){%>
+                                                <li class="page-item">
+                                                  <a class="page-link" href="/most-viewed/<%= i %>/">
+                                                    <%= i %>
+                                                  </a>
+                                                </li>
+                                                <%}
+                                              else {%>
+                                                <li class="page-item">
+                                                  <a class="page-link" href="/<%= i %>/">
+                                                    <%= i %>
+                                                  </a>
+                                                </li>
+                                                <%} %>
+                                                  <% } %>
+                                                    <% if (i==Number(current) + 2 && i < pages) { %>
+                                                      <li class="page-item disabled">
+                                                        <a class="page-link" href="#">...</a>
+                                                      </li>
+                                                      <% } %>
+                                                        <% } %>
+
+                                                          <!-- LAST ITEM -->
+                                                          <% if(current==pages) { %>
+                                                            <!-- // Nếu số current( chỉ số phân trang ) là 6 và tổng số page là 6 thì Last bị disabled -->
+                                                            <li class="page-item disabled">
+                                                              <a class="page-link" href="#">
+                                                                Last
+                                                              </a>
+                                                            </li>
+                                                            <% } else { %>
+                                                              <!-- // Ngược lại, thì Last là trang cuối cùng pages ở đây là 6 đồng nghĩa với Last là trang số 6 -->
+                                                              <% if(typeof filter !=='undefined' &&
+                                                                filter==='last-ideas' ) {%>
+                                                                <li class="page-item">
+                                                                  <a class="page-link"
+                                                                    href="/last-ideas/<%= pages %>/">
+                                                                    Last
+                                                                  </a>
+                                                                </li>
+                                                                <%} 
+                                                                else if(typeof filter !=='undefined' && filter==='most-viewed' ){%>
+                                                                  <li class="page-item">
+                                                                    <a class="page-link"
+                                                                      href="/most-viewed/<%= pages %>/">
+                                                                      Last
+                                                                    </a>
+                                                                  </li>
+                                                                  <%} 
+                                                                else {%>
+                                                                  <li class="page-item">
+                                                                    <a class="page-link"
+                                                                      href="/<%= pages %>/">
+                                                                      Last
+                                                                    </a>
+                                                                  </li>
+                                                                  <%} %>
+                                                                    <% } %>
+                </ul>
+              </nav>
+              <% } %>
+          </div>
+  </div>
+</div>
+<!-- end latest news -->

@@ -1,17 +1,18 @@
 const express = require('express');
+const mongoose = require('mongoose')
 
 const { loginView, loginUser } = require('../controllers/loginController');
 
-const { protectRoute } = require("../auth/protect");
+const { protectRoute, checkRole } = require("../auth/protect");
 const { logoutUser, dashboardView, } = require('../controllers/loginController');
 
 const staffController = require('../controllers/staffController');
-const qaManagerController = require('../controllers/adminController');
+// const qaManagerController = require('../controllers/adminController');
 
 const {
   formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount,
   formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment,
-  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory
+  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory, formSetDateView, submitFormSetDate
 } = require('../controllers/adminController');
 
 
@@ -21,7 +22,7 @@ const { Role, User } = require('../models/User');
 const multer = require('multer');
 const upload = multer();
 
-const { Idea, Category } = require('../models/Idea');
+const { Idea, Category, CommentModel } = require('../models/Idea');
 
 // Define Routes
 const router = express.Router();
@@ -35,34 +36,111 @@ router.get('/logout', logoutUser);
 // Start: Route Admin site
 
 // Section: Account
-router.get('/formAccount', formAccountView);
-router.post('/submitFormAccount', submitFormAccount);
-router.get('/listAccounts', listAccountsView);
-router.get('/updateAccount/:id', updateAccountView);
-router.post('/updateFormAccount', updateFormAccount);
-router.post('/deleteAccount/:id', deleteFormAccount);
+router.get('/formAccount', checkRole('Admin'), formAccountView);
+router.post('/submitFormAccount', checkRole('Admin'), submitFormAccount);
+router.get('/listAccounts', checkRole('Admin'), listAccountsView);
+router.get('/updateAccount/:id', checkRole('Admin'), updateAccountView);
+router.post('/updateFormAccount', checkRole('Admin'), updateFormAccount);
+router.post('/deleteAccount/:id', checkRole('Admin'), deleteFormAccount);
 
 // Section: Department
-router.get('/formDepartment', formDepartmentView);
-router.post('/submitFormDepartment', submitFormDepartment);
-router.get('/listDepartments', listDepartmentsView);
-router.get('/updateDepartment/:id', updateDepartmentView);
-router.post('/updateFormDepartment', updateFormDepartment);
-router.post('/deleteDepartment/:id', deleteFormDepartment);
+router.get('/formDepartment', checkRole('Admin'), formDepartmentView);
+router.post('/submitFormDepartment', checkRole('Admin'), submitFormDepartment);
+router.get('/listDepartments', checkRole('Admin'), listDepartmentsView);
+router.get('/updateDepartment/:id', checkRole('Admin'), updateDepartmentView);
+router.post('/updateFormDepartment', checkRole('Admin'), updateFormDepartment);
+router.post('/deleteDepartment/:id', checkRole('Admin'), deleteFormDepartment);
 
 // Section: Category
-router.get('/formCategory', formCategoryView);
-router.post('/submitFormCategory', submitFormCategory);
-router.get('/listCategories', listCategoriesView);
-router.get('/updateCategory/:id', updateCategoryView);
-router.post('/updateFormCategory', updateFormCategory);
-router.post('/deleteCategory/:id', deleteFormCategory);
+router.get('/formCategory', checkRole(['Admin', 'QA Manager']), formCategoryView);
+router.post('/submitFormCategory', checkRole(['Admin', 'QA Manager']), submitFormCategory);
+router.get('/listCategories', checkRole(['Admin', 'QA Manager']), listCategoriesView);
+router.get('/updateCategory/:id', checkRole(['Admin', 'QA Manager']), updateCategoryView);
+router.post('/updateFormCategory', checkRole(['Admin', 'QA Manager']), updateFormCategory);
+router.post('/deleteCategory/:id', checkRole(['Admin', 'QA Manager']), deleteFormCategory);
 
+// Section: Set Date
+router.get('/formSetDate', checkRole('Admin'), formSetDateView);
+router.post('/submitFormSetDate', checkRole('Admin'), submitFormSetDate);
 
 // End: Route Admin site
 
 // Start: Route Staff site
-router.get('/upload', async (req, res) => {
+router.get('/myideas', async(req,res)=>{
+  const user = req.user
+  const role = await Role.findById(user.role)
+  user.role = role
+  const title = 'My Ideas'
+
+  Idea.aggregate([
+    // Match ideas by user id
+    {
+      $match: {
+        user: mongoose.Types.ObjectId(user._id)
+      }
+    },
+    // Left join with comments collection to get comment count per idea
+    {
+      $lookup: {
+        from: "comments",
+        localField: "_id",
+        foreignField: "idea",
+        as: "comments"
+      }
+    },
+    // Left join with categories collection to get category name
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category"
+      }
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user"
+      }
+    },
+    // Project only required fields and category name
+    {
+      $project: {
+        title: 1,
+        content: 1,
+        createdDate: 1,
+        closedDate: 1,
+        category: { $arrayElemAt: ['$category.nameCate', 0] }, // Include category name
+        user: { $arrayElemAt: ['$user', 0] },
+        viewedBy: 1,
+        like: 1,
+        dislike: 1,
+        commentCount: { $size: "$comments" }, // Count number of comments
+        viewCount: { $sum: { $cond: [ { $isArray: '$viewedBy' }, { $size: '$viewedBy' }, 0 ] } }
+      }
+    }
+  ], function(err, ideas) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    
+    console.log(ideas);
+    res.render('Staff/myideas',{
+      title:title,
+      ideas:ideas,
+      user:user
+    
+    })
+  });
+  
+
+  
+})
+
+router.get('/upload', checkRole('Staff'), async (req, res) => {
   const user = req.user
   const role = await Role.findById(user.role);
   const category = await Category.find()
@@ -76,6 +154,82 @@ router.get('/upload', async (req, res) => {
 });
 router.post('/upload', upload.array('files'), staffController.uploadFile);
 // End: Route Staff site
+
+
+router.get('/detailIdeas/:id', async (req, res) => {
+  
+  const idea = await Idea
+    .findById(req.params.id)
+    .populate()
+
+  if (!idea.viewedBy.includes(req.user._id)) {
+      // User hasn't viewed the idea before, so update the viewedBy array and increment the view count
+      idea.viewedBy.push(req.user._id);
+      await idea.save();
+    }
+  
+    
+  const title = 'Detail';
+  const comments = await CommentModel.find({
+    idea: req.params.id
+  });
+  res.render('Staff/detailIdeas', { title, idea, comments })
+})
+
+router.post('/likeIdeas/:id', async (req, res) => {
+  // save data to db 
+  let idea = await Idea
+    .findById(req.params.id);
+  if (idea.like) {
+    idea.like = idea.like + 1
+  } else {
+    idea.like = 1
+  }
+  idea = await Idea.findOneAndUpdate({ _id: req.params.id }, {
+    like: idea.like
+  })
+  res.json({
+    message: "success",
+    data: idea
+  })
+})
+
+
+router.post('/disLikeIdeas/:id', async (req, res) => {
+  // save data to db 
+  let idea = await Idea
+    .findById(req.params.id);
+  if (idea.dislike) {
+    idea.dislike = idea.dislike + 1
+  } else {
+    idea.dislike = 1
+  }
+  idea = await Idea.findOneAndUpdate({ _id: req.params.id }, {
+    dislike: idea.dislike
+  })
+  res.json({
+    message: "success",
+    data: idea
+  })
+})
+
+
+router.post("/comment/:id", async (req, res) => {
+  console.log(req.query)
+  const { comment } = req.query;
+  const data = await CommentModel.create({
+    idea: req.params.id,
+    comment: comment
+  });
+  res.json({
+    message: "success",
+    data
+  })
+})
+
+router.post('/upload', upload.array('files'), staffController.uploadFile);
+
+
 
 // Start: Route QA Manager Site
 // Section: Category
@@ -125,23 +279,7 @@ router.get('/save', async function (req, res, next) {
 
 
 
-//   router.get('/testaddcat', async (req, res) => {
 
-//     const newCategory = new Category({
-//         name: 'My Simple Category',
-
-//         // other properties of your category schema
-//       });
-//       newCategory.save((err) => {
-//         if (err) {
-//           console.error(err);
-//           res.status(500).send('Error saving category to database');
-//         } else {
-//           console.log('New category saved to database');
-//           res.send(`New category "${newCategory.name}" saved to database`);
-//         }
-//       });
-//   });
 
 //   router.get('/fake', async(req, res, next) =>{
 //     for(let i = 0; i < 24; i++) {
@@ -158,64 +296,357 @@ router.get('/save', async function (req, res, next) {
 //     res.redirect('/');    
 // })
 
-
+// ERROR PAGE
+router.get('/error', (req, res) => {
+  res.render("error", {
+    layout: 'error',
+  })
+})
+// END ERROR PAGE
 
 // Index List Ideas
-router.get('/:page', async (req, res, next) => {
-  let perPage = 6;
-  let page = req.params.page || 1;
-  let title = 'Home'
-  const user = req.user;
-  const role = await Role.findById(user.role);
-  user.role = role;
-
-  Idea
-    .find()
-    .populate('user', 'username')
-    .populate('category', 'name') // find tất cả các data
-    .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
-    .limit(perPage)
-    .exec((err, ideas) => {
-      Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
+router.get('/:page', protectRoute, async (req, res, next) => {
+  try {
+    const title = 'Home';
+    const user = req.user;
+    let perPage = 6;
+    let page = req.params.page || 1;
+    Idea.aggregate([
+      // perform a left join between Idea and Comment collections
+      {
+        $lookup: {
+          from: 'comments', // the name of the Comment collection
+          localField: '_id',
+          foreignField: 'idea',
+          as: 'comments'
+        }
+      },
+      // group by Idea id and count the number of comments for each Idea
+      {
+        $group: {
+          _id: '$_id',
+          title: { $first: '$title' },
+          content: { $first: '$content' },
+          category: { $first: '$category' },
+          user: { $first: '$user' },
+          createdDate: {$first : '$createdDate'},
+          commentCount: { $sum: { $size: '$comments' } },
+          like: {$first: '$like'},
+            dislike: {$first: '$dislike'},
+          viewedBy: { $addToSet: '$viewedBy' },
+            viewCount: { $sum: { $cond: [ { $isArray: '$viewedBy' }, { $size: '$viewedBy' }, 0 ] } }
+        }
+      },
+      // populate user and category fields
+      {
+        $lookup: {
+          from: 'users', // the name of the User collection
+          localField: 'user',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $lookup: {
+          from: 'categories', // the name of the Category collection
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      // project only the necessary fields
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          user: { $arrayElemAt: ['$user.username', 0] },
+          category: { $arrayElemAt: ['$category.name', 0] },
+          createdDate:1,
+          commentCount: 1,
+          viewCount:1,
+          like:1,
+            dislike:1,
+        }
+      },
+      // sort by descending comment count
+      {
+        $sort: {
+          commentCount: -1
+        }
+      },
+      // skip and limit based on pagination
+      {
+        $skip: (perPage * page) - perPage
+      },
+      {
+        $limit: perPage
+      }
+    ], (err, ideas) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+  
+      Idea.countDocuments(async (err, count) => { // đếm để tính có bao nhiêu trang
         if (err) return next(err);
-        if (role.name === "Admin") res.render('Staff/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
-        else if (role.name === "Staff") res.render('Admin/home', { user, ideas, current: page, pages: Math.ceil(count / perPage), title: title });
+        if (user.role) {
+          const role = await Role.findById(user.role);
+          user.role = role;
+            res.render('home', {
+              user,
+              ideas,
+              current: page,
+              pages: Math.ceil(count / perPage),
+              title
+            });
+          
+          
+        }
       });
-    });
+    })
+  }
+        // Trả về dữ liệu các sản phẩm theo định dạng nh
+  
+
+
+
+ catch (error) {
+  console.error(error);
+  res.redirect('/');
+  // res.status(500).send('Internal Server Error');
+}
 
 })
-router.get('/last-ideas/:page', async (req, res, next) => {
-  let perPage = 6;
-  let page = req.params.page || 1;
-  let title = 'Home'
-  let filter = 'last-ideas'
-  const user = req.user;
-  const role = await Role.findById(user.role);
-  user.role = role;
 
-  Idea
-    .find()
-    .sort({ createdDate: -1 })
-    .populate('user', 'username')
-    .populate('category', 'name') // find tất cả các data
-    .skip((perPage * page) - perPage) // Trong page đầu tiên sẽ bỏ qua giá trị là 0
-    .limit(perPage)
-    .exec((err, ideas) => {
-      Idea.countDocuments((err, count) => { // đếm để tính có bao nhiêu trang
+router.get('/last-ideas/:page', protectRoute, async (req, res, next) => {
+  try {
+    const title = 'Home';
+    const user = req.user;
+    let perPage = 6;
+    let page = req.params.page || 1;
+    const filter = 'last-ideas'
+  
+    Idea.aggregate([
+      // perform a left join between Idea and Comment collections
+      {
+        $lookup: {
+          from: 'comments', // the name of the Comment collection
+          localField: '_id',
+          foreignField: 'idea',
+          as: 'comments'
+        }
+      },
+      // group by Idea id and count the number of comments for each Idea
+      {
+        $group: {
+          _id: '$_id',
+          title: { $first: '$title' },
+          content: { $first: '$content' },
+          category: { $first: '$category' },
+          user: { $first: '$user' },
+          like: {$first: '$like'},
+            dislike: {$first: '$dislike'},
+          createdDate: {$first : '$createdDate'},
+          commentCount: { $sum: { $size: '$comments' } },
+          viewedBy: { $addToSet: '$viewedBy' },
+            viewCount: { $sum: { $cond: [ { $isArray: '$viewedBy' }, { $size: '$viewedBy' }, 0 ] } }
+        }
+      },
+      // populate user and category fields
+      {
+        $lookup: {
+          from: 'users', // the name of the User collection
+          localField: 'user',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $lookup: {
+          from: 'categories', // the name of the Category collection
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      // project only the necessary fields
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          user: { $arrayElemAt: ['$user.username', 0] },
+          category: { $arrayElemAt: ['$category.name', 0] },
+          createdDate:1,
+          commentCount: 1,
+          like:1,
+            dislike:1,
+          viewCount:1
+        }
+      },
+      // sort by descending comment count
+      {
+        $sort: {
+          createdDate: -1
+        }
+      },
+      // skip and limit based on pagination
+      {
+        $skip: (perPage * page) - perPage
+      },
+      {
+        $limit: perPage
+      }
+    ], (err, ideas) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+  
+      Idea.countDocuments(async (err, count) => { // đếm để tính có bao nhiêu trang
         if (err) return next(err);
-        res.render('Staff/home', {
-          user,
-          filter: filter,
-          ideas, // sản phẩm trên một page
-          current: page, // page hiện tại
-          pages: Math.ceil(count / perPage), // tổng số các page
-          title: title
-        }); // Trả về dữ liệu các sản phẩm theo định dạng như JSON, XML,...
-
+        if (user.role) {
+          const role = await Role.findById(user.role);
+          user.role = role;
+            res.render('home', {
+              user,
+              ideas,
+              current: page,
+              pages: Math.ceil(count / perPage),
+              title,
+              filter:filter
+            });
+          
+        }
       });
-    });
+    })
+  }
+        // Trả về dữ liệu các sản phẩm theo định dạng nh
+  
+
+
+
+ catch (error) {
+  console.error(error);
+  res.redirect('/');
+  // res.status(500).send('Internal Server Error');
+}
 
 })
+
+router.get('/most-viewed/:page', protectRoute, async (req, res, next) => {
+  try {
+    const title = 'Home';
+    const user = req.user;
+    let perPage = 6;
+    let page = req.params.page || 1;
+    const filter = 'most-viewed'
+  
+    Idea.aggregate([
+      // perform a left join between Idea and Comment collections
+      {
+        $lookup: {
+          from: 'comments', // the name of the Comment collection
+          localField: '_id',
+          foreignField: 'idea',
+          as: 'comments'
+        }
+      },
+      // group by Idea id and count the number of comments for each Idea
+      {
+        $group: {
+          _id: '$_id',
+          title: { $first: '$title' },
+          content: { $first: '$content' },
+          category: { $first: '$category' },
+          user: { $first: '$user' },
+          like: {$first: '$like'},
+            dislike: {$first: '$dislike'},
+          createdDate: {$first : '$createdDate'},
+          commentCount: { $sum: { $size: '$comments' } },
+          viewedBy: { $addToSet: '$viewedBy' },
+            viewCount: { $sum: { $cond: [ { $isArray: '$viewedBy' }, { $size: '$viewedBy' }, 0 ] } }
+        }
+      },
+      // populate user and category fields
+      {
+        $lookup: {
+          from: 'users', // the name of the User collection
+          localField: 'user',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      {
+        $lookup: {
+          from: 'categories', // the name of the Category collection
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      // project only the necessary fields
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          user: { $arrayElemAt: ['$user.username', 0] },
+          category: { $arrayElemAt: ['$category.name', 0] },
+          createdDate:1,
+          commentCount: 1,
+          like:1,
+            dislike:1,
+          viewCount:1
+        }
+      },
+      // sort by descending comment count
+      {
+        $sort: {
+          viewCount: -1
+        }
+      },
+      // skip and limit based on pagination
+      {
+        $skip: (perPage * page) - perPage
+      },
+      {
+        $limit: perPage
+      }
+    ], (err, ideas) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+  
+      Idea.countDocuments(async (err, count) => { // đếm để tính có bao nhiêu trang
+        if (err) return next(err);
+        if (user.role) {
+          const role = await Role.findById(user.role);
+          user.role = role;
+          // Login: Admin
+            res.render('home', {
+              user,
+              ideas,
+              current: page,
+              pages: Math.ceil(count / perPage),
+              title,
+              filter:filter
+            });
+          
+        }
+      });
+    })
+  }
+ catch (error) {
+  console.error(error);
+  res.redirect('/');
+  // res.status(500).send('Internal Server Error');
+}
+
+})
+
+
+
 // End Index List Ideas
+
 
 module.exports = router;
