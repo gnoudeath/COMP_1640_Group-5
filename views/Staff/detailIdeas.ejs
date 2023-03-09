@@ -53,17 +53,10 @@
             <div class="comment-list" id="list-comment">
               <% for(var i=0; i < comments.length; i++) { %>
               <div class="single-comment-body">
-                <div class="comment-user-avater">
-                  <img src="assets/img/avaters/avatar1.png" alt="">
-                </div>
+                
                 <div class="comment-text-body">
                   <h4><%= comments[i].user.username %> <span class="comment-date">Created at: <%= new Date(comments[i].created_at).toLocaleDateString()  %></span></h4>
                   <p><%= comments[i].comment %></p>
-                </div>
-                <div class="single-comment-body child">
-                  <div class="comment-user-avater">
-                    <img src="/public/img/products/product-img-1.jpg" alt="">
-                  </div>
                 </div>
               </div>
               <% } %>
