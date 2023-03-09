@@ -22,10 +22,13 @@
         <div class="single-article-section">
           <div class="single-article-text">
             <p class="blog-meta">
-              <span class="author"><i class="fas fa-user"></i> Admin</span>
-              <span class="date"><i class="fas fa-calendar"></i> 27 December, 2019</span>
+              <span class="author"><i class="fas fa-user"></i> <%= idea.user.username %></span>
+              <span class="date" style="margin-left: 480px;"><i class="fas fa-calendar"></i> <%= idea.createdDate %></span>
             </p>
-            <h2><%= idea.title %></h2>
+            <p class="blog-meta">
+              <span class="category"><i class="fa fa-tags" aria-hidden="true"></i> <%= idea.category.nameCate %></span>
+            </p>
+            <h2 ><%= idea.title %></h2>
             <p><%= idea.content %></p>
           </div>
           <div id="form_status"></div>
@@ -59,7 +62,7 @@
                 </div>
                 <div class="single-comment-body child">
                   <div class="comment-user-avater">
-                    <img src="assets/img/avaters/avatar3.png" alt="">
+                    <img src="/public/img/products/product-img-1.jpg" alt="">
                   </div>
                 </div>
               </div>

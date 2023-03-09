@@ -160,7 +160,8 @@ router.get('/detailIdeas/:id', async (req, res) => {
   
   const idea = await Idea
     .findById(req.params.id)
-    .populate()
+    .populate('user','username')
+    .populate('category','nameCate')
 
   if (!idea.viewedBy.includes(req.user._id)) {
       // User hasn't viewed the idea before, so update the viewedBy array and increment the view count
