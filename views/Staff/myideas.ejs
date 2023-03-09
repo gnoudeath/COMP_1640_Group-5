@@ -1,6 +1,11 @@
 
 
 <style>
+span.text-muted:not(:last-child)::after  {
+  content: "\2022";
+  margin-left: 5px;
+}
+
 
 
 </style>
@@ -79,12 +84,12 @@
             <div class="card-body">
               <h3 class="card-title"><a href="/detailIdeas/<%= ideas[i]._id %>"><%= ideas[i].title %></a></h3>
               <div class="card-text">
-                <span class="text-muted">Category: <a href="#" class="text-dark"><%= ideas[i].category %></a></span>
-                <span class="text-muted">Date: <%= ideas[i].createdDate %></span>
-                <span class="text-muted">Likes: <%= ideas[i].like %></span>
-                <span class="text-muted">Dislikes: <%= ideas[i].dislike %></span>
-                <span class="text-muted">Comments: <%= ideas[i].commentCount %></span>
-                <span class="text-muted">Views: <%= ideas[i].viewCount %></span>
+                <span class="text-muted"><i class="fas fa-tags" style="margin-right: 10px;"></i><a href="#" class="text-dark" ><%= ideas[i].category %></a></span>
+                <span class="text-muted">Created at <%= ideas[i].createdDate %></span>
+                <span class="text-muted"><%= ideas[i].like %> likes</span>
+                <span class="text-muted"><%= ideas[i].dislike %> dislikes</span>
+                <span class="text-muted"><%= ideas[i].commentCount %> comments</span>
+                <span class="text-muted"><%= ideas[i].viewCount %> views</span>
               </div>
               <hr>
               <p class="card-text"><%= ideas[i].content %></p>
