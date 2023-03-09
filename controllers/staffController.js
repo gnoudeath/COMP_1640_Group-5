@@ -6,7 +6,7 @@ exports.uploadFile = async (req, res,next) => {
         const idea = new Idea();
         idea.title =req.body.title
         idea.content = req.body.content
-        idea.category = '6400840bd62ad3650a510427'
+        idea.category = req.body.category
         idea.user = req.user
         idea.save((err)=>{
             if (err) { return next(err); }
