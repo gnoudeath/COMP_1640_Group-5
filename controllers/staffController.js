@@ -145,16 +145,46 @@ const getMyIdeasPage = async(req,res)=>{
       if (err) {
         console.log(err);
         return;
-      }   
+      }
+      
+      Idea.aggregate([
+        { $match: { user: mongoose.Types.ObjectId(user._id) } },
+        {
+          $group: {
+            _id: "$category",
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $lookup: {
+            from: "categories", // replace with the name of your Category model
+            localField: "_id",
+            foreignField: "_id",
+            as: "category"
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            category: { $arrayElemAt: ["$category", 0] },
+            count: 1
+          }
+        }
+      ], function(err, cate) {
+        if (err) {
+          console.log(err);
+          return;
+        }
       
     res.render('Staff/myideas',{
         title:title,
         ideas:ideas,
         user:user,
-        totals:totals
+        totals:totals,
+        cate:cate
       
       });
-    })})
+})})})
   }
 
 
