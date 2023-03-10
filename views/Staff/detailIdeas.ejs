@@ -34,7 +34,7 @@
             <p><%= idea.content %></p>
             <div class="right-left">
               <select id="download-option">
-                <option value="all">Download All</option>
+                <option value="all">All Document</option>
                 <% for (const file of files) { %>
                   <option value="<%= file.name %>"><%= file.name %> / <span class="file-size"><%= (file.files.length / 1024).toFixed(2) %> KB</span></option>             
                 <% } %>
@@ -48,7 +48,7 @@
               <i class="fas fa-file"></i> 
               <span class="file-name"><%= file.name %></span> 
               <span class="file-size"><%= (file.files.length / 1024).toFixed(2) %> KB</span>
-            </a><br>
+            </a>
           <% } %>
             </div>
           

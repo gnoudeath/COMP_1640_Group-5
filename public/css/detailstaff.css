@@ -103,5 +103,27 @@
   }
 
   .right-left {
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
   }
+  
+  
+  #download-option {
+    height: 38px;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #fff;
+    margin-right: 10px;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+  }
+
+  
+
+
+  
+ 
+  
