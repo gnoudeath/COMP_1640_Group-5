@@ -65,7 +65,7 @@
             <a href=""><button class="tablinks">Most Poppular</button></a>
             <a href="/most-viewed/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'most-viewed' ? 'active' : '' %>">Most Viewed</button></a>
             <a href="/last-ideas/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'last-ideas' ? 'active' : '' %>">Latest Idea</button></a>
-            <a href=""><button class="tablinks ">Latest Comments</button></a>
+            <a href="/last-comments/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'last-comments' ? 'active' : '' %>">Latest Comments</button></a>
 
           </div>
         </nav>
@@ -131,6 +131,11 @@
                           <a class="page-link" href="/most-viewed/1">First</a>
                         </li>
                         <% }
+                        else if(typeof filter !=='undefined' && filter==='last-comments' ){ %>
+                          <li class="page-item disabled">
+                            <a class="page-link" href="/last-comments/1">First</a>
+                          </li>
+                          <% }
                       else { %>
                         <li class="page-item disabled">
                           <a class="page-link" href="/last-ideas/1">First</a>
@@ -149,6 +154,11 @@
                         <a class="page-link" href="/most-viewed/1">First</a>
                       </li>
                       <% }
+                      else if(typeof filter !=='undefined' && filter==='last-comments' ){ %>
+                        <li class="page-item">
+                          <a class="page-link" href="/last-comments/1">First</a>
+                        </li>
+                        <% }
                     else { %>
                       <li class="page-item">
                         <a class="page-link" href="/">First</a>
@@ -184,6 +194,13 @@
                                           </a>
                                         </li>
                                         <%} 
+                                        else if(typeof filter !=='undefined' && filter==='last-comments' ){%>
+                                          <li class="page-item active">
+                                            <a class="page-link" href="/most-viewed/<%= i %>/">
+                                              <%= i %>
+                                            </a>
+                                          </li>
+                                          <%} 
                                       else {%>
                                         <li class="page-item active">
                                           <a class="page-link" href="/<%= i %>/">
@@ -207,6 +224,13 @@
                                                   </a>
                                                 </li>
                                                 <%}
+                                                else if(typeof filter !=='undefined' && filter==='last-comments' ){%>
+                                                  <li class="page-item">
+                                                    <a class="page-link" href="/last-comments/<%= i %>/">
+                                                      <%= i %>
+                                                    </a>
+                                                  </li>
+                                                  <%}
                                               else {%>
                                                 <li class="page-item">
                                                   <a class="page-link" href="/<%= i %>/">
@@ -248,7 +272,15 @@
                                                                       Last
                                                                     </a>
                                                                   </li>
-                                                                  <%} 
+                                                                  <%}
+                                                                  else if(typeof filter !=='undefined' && filter==='last-comments' ){%>
+                                                                    <li class="page-item">
+                                                                      <a class="page-link"
+                                                                        href="/last-comments/<%= pages %>/">
+                                                                        Last
+                                                                      </a>
+                                                                    </li>
+                                                                    <%} 
                                                                 else {%>
                                                                   <li class="page-item">
                                                                     <a class="page-link"

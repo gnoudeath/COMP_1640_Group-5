@@ -36,19 +36,19 @@ span.text-muted:not(:last-child)::after  {
             <ul class="list-group">
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Total Posts
-                <span class="badge badge-pill badge-primary">25</span>
+                <span class="badge badge-pill badge-primary"><%= totals[0].totalIdeas %></span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Total Views
-                <span class="badge badge-pill badge-primary">200</span>
+                <span class="badge badge-pill badge-primary"><%= totals[0].totalViews %></span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Total Likes
-                <span class="badge badge-pill badge-primary">100</span>
+                <span class="badge badge-pill badge-primary"><%= totals[0].totalLikes %></span>
               </li>
               <li class="list-group-item d-flex justify-content-between align-items-center">
                 Total Dislikes
-                <span class="badge badge-pill badge-primary">50</span>
+                <span class="badge badge-pill badge-primary"><%= totals[0].totalDislikes %></span>
               </li>
             </ul>
           </div>
@@ -93,12 +93,10 @@ span.text-muted:not(:last-child)::after  {
               </div>
               <hr>
               <p class="card-text"><%= ideas[i].content %></p>
-              <div class="d-flex justify-content-between align-items-center">
-                <span>Attached Documents:</span>
-                <div>
-                  <i class="far fa-file-word text-primary mr-3"></i>
-                  <i class="far fa-file-pdf text-danger"></i>
-                </div>
+              <div class="d-flex ">
+                <span><i class="fas fa-paperclip text-primary mr-3"></i></span>
+                <span><%= ideas[i].uploadCount %> </span>
+                
               </div>
             </div>
           </article>
