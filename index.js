@@ -19,7 +19,7 @@ loginCheck(passport);
 const database = process.env.MONGOLAB_URI;
 mongoose
   .connect(database, { useUnifiedTopology: true, useNewUrlParser: true })
-  .then(() => console.log("e don connect"))
+  .then(() => console.log("http://localhost:3000"))
   .catch((err) => console.log(err));
 
 

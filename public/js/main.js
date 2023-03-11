@@ -197,38 +197,43 @@ function openTabs(el) {
 
 $(document).ready(() => {
     $(document).on("click", "#like-idea",() => {
-        const settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": `http://localhost:3000/likeIdeas/${id}`,
-            "method": "POST",
-            "headers": {
-              "cache-control": "no-cache",
-              "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
-            }
-          }
-          
-          $.ajax(settings).done(function (response) {
-            $("#number-like").html(response.data.like + 1)
-          });
-    })
+        const $button = $("#like-idea");
+        if (!$button.hasClass("disabled")) {
+            const settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": `http://localhost:3000/likeIdeas/${id}`,
+                "method": "POST",
+                "headers": {
+                    "cache-control": "no-cache",
+                    "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
+                }
+            };
+            $.ajax(settings).done(function (response) {
+                $("#number-like").html(response.data.like + 1);
+            });
+            $button.addClass("disabled");
+        }
+    });
     $(document).on("click", "#dislike-idea",() => {
-        console.log(id)
-        const settings = {
-            "async": true,
-            "crossDomain": true,
-            "url": `http://localhost:3000/disLikeIdeas/${id}`,
-            "method": "POST",
-            "headers": {
-              "cache-control": "no-cache",
-              "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
-            }
-          }
-          
-          $.ajax(settings).done(function (response) {
-            $("#number-dislike").html(response.data.dislike + 1)
-          });
-    })
+        const $button = $("#dislike-idea");
+        if (!$button.hasClass("disabled")) {
+            const settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": `http://localhost:3000/disLikeIdeas/${id}`,
+                "method": "POST",
+                "headers": {
+                    "cache-control": "no-cache",
+                    "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
+                }
+            };
+            $.ajax(settings).done(function (response) {
+                $("#number-dislike").html(response.data.dislike + 1);
+            });
+            $button.addClass("disabled");
+        }
+    });
 
     $(document).on("click", "#add-comment" , () => {
         
