@@ -56,11 +56,11 @@
 
 <div class="latest-news mt-150 mb-150">
   <div class="container">
-
-    
+    <div class="row">
+    <div class="col-md-3">
         <nav class="navbar bg-light">
           
-          <div class="tabs">
+          <div class="">
             <a href="/"><button class="tablinks <%= typeof filter =='undefined' ? 'active' : '' %>">All Ideas</button></a>
             <a href=""><button class="tablinks">Most Poppular</button></a>
             <a href="/most-viewed/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'most-viewed' ? 'active' : '' %>">Most Viewed</button></a>
@@ -69,12 +69,12 @@
 
           </div>
         </nav>
-        
+      </div>
 
-
+      <div class="col-md-9">
           <div class="row">
             <% for(var i=0; i < ideas.length; i++) { %>
-              <div class="col-lg-4 col-md-6">
+              <div class="col-lg-6 col-md-6">
                 <div class="single-latest-news">
                   <!-- <a href="single-news.html">
             <div class="latest-news-bg news-bg-1"></div>
@@ -110,7 +110,8 @@
               <% } %>
 
           </div>
-
+        </div>
+        <div class="col-md-12">
           <div class="row">
             <!-- hiển thị phân trang nếu có trang -->
             <% if(pages> 0) { %>
@@ -294,6 +295,8 @@
               </nav>
               <% } %>
           </div>
+        </div>
+        </div>
   </div>
 </div>
 <!-- end latest news -->
