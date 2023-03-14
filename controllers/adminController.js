@@ -1,5 +1,5 @@
+const Event = require('../models/Event');
 const Idea = require('../models/Idea');
-const SetDate = require('../models/SetDate');
 const User = require('../models/User');
 
 // Start: GET: Create Account Page
@@ -286,10 +286,10 @@ const deleteFormCategory = async (req, res) => {
 }
 // End: POST: Delete Category
 
-// Start: GET: Create Category Page
-const formSetDateView = async (req, res) => {
+// Start: GET: Create Event Page
+const formEventView = async (req, res) => {
     try {
-        const title = 'Set Date';
+        const title = 'Create Event';
         const user = req.user;
 
         // If the user has a role, fetch the role data using the populate() method
@@ -298,21 +298,7 @@ const formSetDateView = async (req, res) => {
             user.role = role;
         }
 
-        const setDateData = await SetDate.checkSetDateExists();
-        console.log(setDateData);
-
-        var startDate = '';
-        var endDate = '';
-
-        if (setDateData != null) {
-            startDate = new Date(setDateData.startDate);
-            startDate = startDate.toISOString().slice(0, 10);
-
-            endDate = new Date(setDateData.endDate);
-            endDate = endDate.toISOString().slice(0, 10);
-        }
-
-        res.render('Admin/formSetDate', { user, title, setDateData, startDate, endDate })
+        res.render('Admin/formEvent', { user, title })
 
     } catch (error) {
         console.error(error);
@@ -320,19 +306,91 @@ const formSetDateView = async (req, res) => {
         res.redirect('/');
     }
 }
-// End: GET: Create Category Page
+// End: GET: Create Event Page
 
-// Start: POST: Create Category
-const submitFormSetDate = (req, res, next) => {
-    SetDate.insertSetDate(req.body);
-    res.redirect('/');
+// Start: POST: Create Event
+const submitFormEvent = (req, res, next) => {
+    Event.insertEvent(req.body);
+    res.redirect('/listEvents');
 };
-// End: POST: Create Category
+// End: POST: Create Event
+
+// Start: GET: List Events Page
+const listEventsView = async (req, res, next) => {
+    try {
+        const title = 'List Events';
+        const user = req.user;
+
+        // If the user has a role, fetch the role data using the populate() method
+        if (user.role) {
+            const role = await User.Role.findById(user.role);
+            user.role = role;
+        }
+
+        const events = await Event.getAllEvents();
+        console.log(events);
+
+        res.render('Admin/listEvents', { user, title, events });
+
+    } catch (error) {
+        console.error(error);
+        res.redirect('/');
+        // res.status(500).send('Internal Server Error');
+    }
+}
+// End: GET: List Events Page
+
+// Start: GET: Update Event Page
+const updateEventView = async (req, res) => {
+    try {
+        const title = 'Update Event';
+        const user = req.user;
+
+        // If the user has a role, fetch the role data using the populate() method
+        if (user.role) {
+            const role = await User.Role.findById(user.role);
+            user.role = role;
+        }
+
+        const event = await Event.getEventByID(req.params.id);
+
+        console.log(event);
+
+        res.render('Admin/updateEvent', { user, title, event });
+
+    } catch (error) {
+        console.error(error);
+        // res.status(500).send('Internal Server Error');
+        res.redirect('/');
+    }
+};
+// End: GET: Update Event Page
+
+// Start: POST: Update Event
+const updateFormEvent = async (req, res) => {
+    await Event.updateEvent(req.body.id, req.body);
+    res.redirect('/listEvents');
+};
+// End: POST: Update Event
+
+// Start: POST: Delete Event
+const deleteFormEvent = async (req, res) => {
+    await Event.deleteEvent(req.params.id);
+    res.redirect('/listEvents');
+};
+// End: POST: Delete Event
+
+// Start: POST: Set Date
+const setDateFormEvent = async (req, res) => {
+    await Event.setDate(req.params.id);
+    res.redirect('/listEvents');
+};
+// End: POST: Set Date
 
 
 module.exports = {
     formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount,                      // Function: Admin
     formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment,    // Function: Department
     formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory,               // Function: Category
-    formSetDateView, submitFormSetDate
+    formEventView, submitFormEvent, listEventsView, updateEventView, updateFormEvent, deleteFormEvent, setDateFormEvent
 };

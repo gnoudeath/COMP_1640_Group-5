@@ -1,0 +1,139 @@
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <p>University Of Greenwich</p>
+          <h1><%= title %></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- Section: list events -->
+<div class="contact-from-section mt-150 mb-150">
+  <div class="container">
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">First Closure Date</th>
+          <th scope="col">Final Closure Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% 
+          i = 1; 
+          events.forEach(element => {  %>
+        <tr>
+          <th scope="row"><%= i++ %></th>
+          <td><%= element.name %></td>
+          <td><%= element.startDate %></td>
+          <td><%= element.firstClosureDate %></td>
+          <td><%= element.finalClosureDate %></td>
+          <td><%= element.status %></td>
+          <td>
+            <button type="button" class="btn btn-primary" data-id="<%= element._id %>" data-toggle="modal" data-target="#set_date_modal">Set Date</button>
+            <a href="updateEvent/<%= element._id %>" class="btn btn-warning">Edit</a>
+            <button type="button" class="btn btn-primary" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_event_modal">Delete</button>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- End: Section: list events -->
+
+<!-- Modal: Delete Event -->
+<div class="modal fade" id="delete_event_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Do you want to delete this event?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="btn-delete-event" type="button" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End: Modal: Delete Event -->
+
+<!-- Modal: Update Set Date -->
+<div class="modal fade" id="set_date_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirm Set Date</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Do you want to set date this event?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="btn-set-date-event" type="button" class="btn btn-danger">Set Date</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End: Modal: Set Date -->
+
+<form name="form-delete-event" method="post"></form>
+<form name="form-set-date" method="post"></form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // Start: Delete Event function
+    var event_id;
+    var formDeleteEvent = document.forms['form-delete-event'];
+    var btnDeleteEvent = document.getElementById('btn-delete-event');
+
+    $('#delete_event_modal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget);
+      event_id = button.data('id');
+    })
+
+    btnDeleteEvent.onclick = function() {
+      formDeleteEvent.action = '/deleteEvent/' + event_id;
+      formDeleteEvent.submit();
+    };
+    // End: Delete Event function
+
+    // Start: Set Date function
+    var setDate_id;
+    var formSetDate = document.forms['form-set-date'];
+    var btnSetDate = document.getElementById('btn-set-date-event');
+
+    $('#set_date_modal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget);
+      setDate_id = button.data('id');
+    })
+
+    btnSetDate.onclick = function() {
+      formSetDate.action = '/setDate/' + setDate_id;
+      formSetDate.submit();
+    };
+    // End: Set Date function
+
+
+  });
+</script>
