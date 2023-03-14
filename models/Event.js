@@ -75,17 +75,41 @@ async function deleteEvent(id) {
     await Event.findByIdAndRemove(id);
 }
 
-async function updateBeforeSetDate() {
-}
-
 async function setDate(id) {
     await Event.updateMany({ status: true }, { $set: { status: false } }, { new: true });
     await Event.findByIdAndUpdate(id, { status: true }, { new: true });
+}
+
+async function hasTrueStatusEvent() {
+    try {
+        const events = await Event.find({ status: true });
+        console.log(events.length);
+        if (events.length == 1) {
+            const event = await Event.findOne({ status: true });
+
+            const currentTime = moment.tz(timezone)
+            const startDate = moment(event.startDate);
+            const firstClosureDate = moment(event.firstClosureDate);
+
+            if (currentTime.isAfter(startDate) && currentTime.isBefore(firstClosureDate)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
 }
 
 
 // Export the Mongoose model
 module.exports = {
     Event,
-    insertEvent, getAllEvents, getEventByID, updateEvent, deleteEvent, setDate
+    insertEvent, getAllEvents, getEventByID, updateEvent, deleteEvent, setDate, hasTrueStatusEvent
 };
