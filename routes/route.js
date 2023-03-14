@@ -72,8 +72,6 @@ router.post('/setDate/:id', checkRole('Admin'), setDateFormEvent);
 
 // End: Route Admin site
 
-
-
 // ------ STAFF -----------
 router.get('/myideas', getMyIdeasPage)
 router.get('/upload', checkRole('Staff'), getUploadPage);

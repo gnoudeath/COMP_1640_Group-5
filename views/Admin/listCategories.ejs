@@ -16,7 +16,7 @@
 <!-- Section: list categories -->
 <div class="contact-from-section mt-150 mb-150">
   <div class="container">
-    <table class="table">
+    <table class="table table-bordered">
       <thead class="thead-light">
         <tr>
           <th scope="col">#</th>
@@ -35,7 +35,7 @@
           <td><%= element.describe %></td>
           <td>
             <a href="updateCategory/<%= element._id %>" class="btn btn-warning">Edit</a>
-            <button type="button" class="btn btn-primary" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_category_modal">
+            <button type="button" class="btn btn-danger" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_category_modal">
               Delete
             </button>
           </td>

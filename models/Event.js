@@ -75,10 +75,11 @@ async function deleteEvent(id) {
     await Event.findByIdAndRemove(id);
 }
 
-/**
- * Function: Set Date
- */
+async function updateBeforeSetDate() {
+}
+
 async function setDate(id) {
+    await Event.updateMany({ status: true }, { $set: { status: false } }, { new: true });
     await Event.findByIdAndUpdate(id, { status: true }, { new: true });
 }
 

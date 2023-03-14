@@ -29,7 +29,7 @@
     <!-- Tab content -->
     <div class="wrapper_tabcontent">
       <div id="qa_manager" class="tabcontent active">
-        <table class="table">
+        <table class="table table-bordered">
           <thead class="thead-light">
             <tr>
               <th scope="col">#</th>
@@ -48,7 +48,7 @@
               <td><%= element.fullName %></td>
               <td>
                 <a href="updateAccount/<%= element._id %>" class="btn btn-warning">Edit</a>
-                <button type="button" class="btn btn-primary" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_account_modal">
+                <button type="button" class="btn btn-danger" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_account_modal">
                   Delete
                 </button>
               </td>
@@ -59,7 +59,7 @@
       </div>
 
       <div id="qa_coordinator" class="tabcontent">
-        <table class="table">
+        <table class="table table-bordered">
           <thead class="thead-light">
             <tr>
               <th scope="col">#</th>
@@ -78,7 +78,7 @@
               <td><%= element.fullName %></td>
               <td>
                 <a href="updateAccount/<%= element._id %>" class="btn btn-warning">Edit</a>
-                <button type="button" class="btn btn-primary" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_account_modal">
+                <button type="button" class="btn btn-danger" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_account_modal">
                   Delete
                 </button>
               </td>
@@ -89,7 +89,7 @@
       </div>
 
       <div id="staff" class="tabcontent">
-        <table class="table">
+        <table class="table table-bordered">
           <thead class="thead-light">
             <tr>
               <th scope="col">#</th>
@@ -108,7 +108,7 @@
               <td><%= element.fullName %></td>
               <td>
                 <a href="updateAccount/<%= element._id %>" class="btn btn-warning">Edit</a>
-                <button type="button" class="btn btn-primary" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_account_modal">
+                <button type="button" class="btn btn-danger" data-id="<%= element._id %>" data-toggle="modal" data-target="#delete_account_modal">
                   Delete
                 </button>
               </td>

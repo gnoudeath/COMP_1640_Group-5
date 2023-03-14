@@ -328,7 +328,6 @@ const listEventsView = async (req, res, next) => {
         }
 
         const events = await Event.getAllEvents();
-        console.log(events);
 
         res.render('Admin/listEvents', { user, title, events });
 
@@ -353,8 +352,6 @@ const updateEventView = async (req, res) => {
         }
 
         const event = await Event.getEventByID(req.params.id);
-
-        console.log(event);
 
         res.render('Admin/updateEvent', { user, title, event });
 
