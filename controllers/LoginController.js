@@ -123,7 +123,8 @@ const dashboardView = async (req, res) => {
           commentCount: { $sum: { $size: '$comments' } },
           viewedBy: { $addToSet: '$viewedBy' },
           viewCount: { $sum: { $cond: [{ $isArray: '$viewedBy' }, { $size: '$viewedBy' }, 0] } },
-          latestCommentDate: { $max: '$comments.created_at' }
+          latestCommentDate: { $max: '$comments.created_at' },
+          isAnonymous: { $first: '$isAnonymous' }
 
         }
       },
@@ -158,7 +159,8 @@ const dashboardView = async (req, res) => {
           like: 1,
           dislike: 1,
           viewCount: 1,
-          latestCommentDate: 1
+          latestCommentDate: 1,
+          isAnonymous: 1
         }
       },
       // sort by descending comment count
