@@ -149,12 +149,12 @@ router.post('/disLikeIdeas/:id', async (req, res) => {
 
 router.post("/comment/:id", async (req, res) => {
   console.log(req.query)
-  const { comment } = req.query;
+  const { comment, anonymous  } = req.query;
   const cmt = await CommentModel.create({
     idea: req.params.id,
     comment: comment,
-    user: req.user._id
-
+    user: req.user._id,
+    anonymous: anonymous === 'true'
   });
 
   const populateComment = await CommentModel.findById(cmt._id).populate('user', 'username')

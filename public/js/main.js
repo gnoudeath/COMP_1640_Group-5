@@ -235,14 +235,14 @@ $(document).ready(() => {
         }
     });
 
-    $(document).on("click", "#add-comment" , () => {
-        
+    $(document).on("click", "#add-comment", () => {     
         const commentValue = $("#comment-value").val();
-        if(commentValue){
+        const isAnonymous = $("#anonymous-checkbox").prop("checked"); // Lấy giá trị của ô checkbox
+        if (commentValue) {
             var settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": `http://localhost:3000/comment/${id}?comment=${commentValue}`,
+                "url": `http://localhost:3000/comment/${id}?comment=${commentValue}&anonymous=${isAnonymous}`,
                 "method": "POST",
                 "headers": {
                   "content-type": "application/json",
@@ -251,33 +251,31 @@ $(document).ready(() => {
                 },
                 "processData": false,
                 "data": "{\n\t\"comment\": \"test comment đá\"\n}"
-              }
-              
-              $.ajax(settings).done(function (response) {
-                $("#comment-value").val("")
-
+            };
+            
+            $.ajax(settings).done(function (response) {
+                $("#comment-value").val("");
+    
                 var commentsCount = parseInt($(".comment-count-title").text()) + 1;
                 $(".comment-count-title").text(`${commentsCount} Comment${commentsCount > 1 ? "s" : ""}`);
                 
+                const username = isAnonymous ? "Unknown" : response.data.user.username; // Lấy tên người comment
+                const createdAt = new Date(response.data.created_at).toLocaleDateString(); // Lấy thời gian tạo comment
+                const commentText = response.data.comment; // Lấy nội dung comment
+   
+                // Thêm comment mới vào danh sách
                 $("#list-comment").append(`
-                <div class="single-comment-body">
-                <div class="comment-user-avater">
-                  <img src="assets/img/avaters/avatar1.png" alt="">
-                </div>
-                <div class="comment-text-body">
-                  <h4>${response.data.user.username} <span class="comment-date">created at: ${new Date(response.data.created_at).toLocaleDateString()}</span></h4>
-                  <p>${response.data.comment}</p>
-                </div>
-                <div class="single-comment-body child">
-                  <div class="comment-user-avater">
-                    <img src="assets/img/avaters/avatar3.png" alt="">
-                  </div>
-                </div>
-              </div>
-                `)
-                // update comment count
-                
-              });
+                    <div class="single-comment-body">
+                        <div class="comment-user-avater">
+                            <img src="assets/img/avaters/avatar1.png" alt="">
+                        </div>
+                        <div class="comment-text-body">
+                            <h4>${username} <span class="comment-date">created at: ${createdAt}</span></h4>
+                            <p>${commentText}</p>
+                        </div>
+                    </div>
+                `);
+            });
         }
-    })
+    });
 })
