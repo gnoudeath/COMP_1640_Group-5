@@ -40,16 +40,16 @@ const ideaSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
-  like: {
-    type: mongoose.Schema.Types.Number,
-    required: false,
-    default: 0
-  },
-  dislike: {
-    type: mongoose.Schema.Types.Number,
-    required: false,
-    default: 0
-  }
+  likedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    unique: true
+  }],
+  dislikedBy: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    unique: true
+  }]
 });
 
 const Idea = mongoose.model('Idea', ideaSchema);
@@ -77,6 +77,10 @@ const commentSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  anonymous: {
+    type: Boolean,
+    default: false
+  }
 }); 
 
 const CommentModel = mongoose.model('Comment', commentSchema, "comments");
