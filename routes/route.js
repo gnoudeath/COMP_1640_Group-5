@@ -123,23 +123,7 @@ router.get('/detailIdeas/:id', async (req, res) => {
   res.render('detailIdeas', { title, idea, comments, user, files, formattedList, checkHasTrueStatusComment,isLiked,isDisliked,numLikes,numDislikes })
 })
 
-// router.post('/likeIdeas/:id', async (req, res) => {
-//   // save data to db 
-//   let idea = await Idea
-//     .findById(req.params.id);
-//   if (idea.like) {
-//     idea.like = idea.like + 1
-//   } else {
-//     idea.like = 1
-//   }
-//   idea = await Idea.findOneAndUpdate({ _id: req.params.id }, {
-//     like: idea.like
-//   })
-//   res.json({
-//     message: "success",
-//     data: idea
-//   })
-// })
+
 router.post('/likeIdeas/:id', async (req, res) => {
   try {
     const user = req.user; // assuming user authentication middleware is used
@@ -202,24 +186,6 @@ router.post('/dislikeIdeas/:id', async (req, res) => {
 });
 
 
-
-// router.post('/disLikeIdeas/:id', async (req, res) => {
-//   // save data to db 
-//   let idea = await Idea
-//     .findById(req.params.id);
-//   if (idea.dislike) {
-//     idea.dislike = idea.dislike + 1
-//   } else {
-//     idea.dislike = 1
-//   }
-//   idea = await Idea.findOneAndUpdate({ _id: req.params.id }, {
-//     dislike: idea.dislike
-//   })
-//   res.json({
-//     message: "success",
-//     data: idea
-//   })
-// })
 
 router.post("/comment/:id", async (req, res) => {
   const check = await Event.hasTrueStatusComment();
