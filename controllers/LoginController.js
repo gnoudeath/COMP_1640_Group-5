@@ -200,16 +200,19 @@ const dashboardView2 = async (req, res) => {
   }
   
     if (department && department !== 'all') {
-      query['user.department'] = mongoose.Types.ObjectId(department);
-      const selectedDepartment = await Department.findById(department);
-      console.log(category)
+      const departmentId = mongoose.Types.ObjectId(department);
+      const usersInDepartment = await User.find({ department: departmentId }).distinct('_id');
+      query.user = { $in: usersInDepartment };
+      
     }
 
     
 
     const ideas = await Idea.aggregate([
       
-      
+      {
+        $match: query
+      },
       // perform a left join between Idea and Comment collections
       {
         $lookup: {
@@ -246,9 +249,7 @@ const dashboardView2 = async (req, res) => {
           as: 'user'
         }
       },
-      {
-        $match: query
-      },
+      
       {
         $lookup: {
           from: 'categories', // the name of the Category collection
@@ -286,7 +287,8 @@ const dashboardView2 = async (req, res) => {
       {
         $limit: perPage
       }
-    ]).exec();;
+    ]).exec();
+    console.log(ideas)
     
     const formattedList = ideas.map(item => {
       return {
