@@ -63,12 +63,21 @@
               <!-- Thumbs up -->
               <div class="like grow" data="<%= idea._id %>" id="like-idea">
                 <span id="number-like"><%= idea.like %></span>
-                <i class="fa fa-thumbs-up fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
+                <button id="like-button" class="btn btn-outline-primary <%= isLiked ? 'active' : '' %> " data-id="<%= idea._id %>">
+  <i class="fa fa-thumbs-up fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
+  <span class="ms-2"><%= numLikes %></span>
+</button>
+
+
+              
               </div>
               <!-- Thumbs down -->
               <div class="dislike grow" data="<%= idea._id %>" id="dislike-idea">
                 <span id="number-dislike"><%= idea.dislike %></span>
-                <i class="fa fa-thumbs-down fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
+                <button id="dislike-button" class="btn btn-outline-danger <%= isDisliked ? 'active' : '' %>" data-id="<%= idea._id %>">
+  <i class="fa fa-thumbs-down fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
+  <span class="ms-2"><%= numDislikes %></span>
+</button>
               </div>
               <!-- Comments -->
             </div>
@@ -141,5 +150,7 @@
       selectedLink.click();
     }
   });
+
+  
 </script>
 <!-- end single article section -->

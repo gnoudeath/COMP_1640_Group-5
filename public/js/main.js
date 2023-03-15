@@ -196,45 +196,99 @@ function openTabs(el) {
 }
 
 $(document).ready(() => {
-    $(document).on("click", "#like-idea",() => {
-        const $button = $("#like-idea");
-        if (!$button.hasClass("disabled")) {
-            const settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": `http://localhost:3000/likeIdeas/${id}`,
-                "method": "POST",
-                "headers": {
-                    "cache-control": "no-cache",
-                    "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
-                }
-            };
-            $.ajax(settings).done(function (response) {
-                $("#number-like").html(response.data.like + 1);
-            });
-            $button.addClass("disabled");
+    // $(document).on("click", "#like-idea",() => {
+    //     const $button = $("#like-idea");
+    //     if (!$button.hasClass("disabled")) {
+    //         const settings = {
+    //             "async": true,
+    //             "crossDomain": true,
+    //             "url": `http://localhost:3000/likeIdeas/${id}`,
+    //             "method": "POST",
+    //             "headers": {
+    //                 "cache-control": "no-cache",
+    //                 "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
+    //             }
+    //         };
+    //         $.ajax(settings).done(function (response) {
+    //             $("#number-like").html(response.data.like + 1);
+    //         });
+    //         $button.addClass("disabled");
+    //     }
+    // });
+    // $(document).on("click", "#dislike-idea",() => {
+    //     const $button = $("#dislike-idea");
+    //     if (!$button.hasClass("disabled")) {
+    //         const settings = {
+    //             "async": true,
+    //             "crossDomain": true,
+    //             "url": `http://localhost:3000/disLikeIdeas/${id}`,
+    //             "method": "POST",
+    //             "headers": {
+    //                 "cache-control": "no-cache",
+    //                 "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
+    //             }
+    //         };
+    //         $.ajax(settings).done(function (response) {
+    //             $("#number-dislike").html(response.data.dislike + 1);
+    //         });
+    //         $button.addClass("disabled");
+    //     }
+    // });
+    // Like button
+$("#like-button").click(function() {
+    var ideaId = $(this).data("id");
+    var $button = $(this);
+    $.ajax({
+      type: "POST",
+      url: "/likeIdeas/" + ideaId,
+      success: function(data) {
+        
+        // Handle success response
+        if ($button.hasClass("active")) {
+          $button.removeClass("active");
+          $button.find(".ms-2").text(data.numLikes);
+        } else {
+          $button.addClass("active");
+        $button.find(".ms-2").text(data.numLikes);
+        $("#dislike-button").removeClass("active");
+        $("#dislike-button").find(".ms-2").text(data.numDislikes);
         }
+        $button.prop("disabled", false);
+        $("#dislike-button").prop("disabled", false);
+      },
+      error: function(xhr, status, error) {
+        // Handle error response
+      }
     });
-    $(document).on("click", "#dislike-idea",() => {
-        const $button = $("#dislike-idea");
-        if (!$button.hasClass("disabled")) {
-            const settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": `http://localhost:3000/disLikeIdeas/${id}`,
-                "method": "POST",
-                "headers": {
-                    "cache-control": "no-cache",
-                    "postman-token": "472a0d8c-3acd-61f6-88f3-738a13a45af3"
-                }
-            };
-            $.ajax(settings).done(function (response) {
-                $("#number-dislike").html(response.data.dislike + 1);
-            });
-            $button.addClass("disabled");
+  });
+  
+  // Dislike button
+  $("#dislike-button").click(function() {
+    var ideaId = $(this).data("id");
+    var $button = $(this);
+    $.ajax({
+      type: "POST",
+      url: "/dislikeIdeas/" + ideaId,
+      success: function(data) {
+        // Handle success response
+        if ($button.hasClass("active")) {
+          $button.removeClass("active");
+          $button.find(".ms-2").text(data.numDislikes);
+        } else {
+            $button.addClass("active");
+            $button.find(".ms-2").text(data.numDislikes);
+            $("#like-button").removeClass("active");
+            $("#like-button").find(".ms-2").text(data.numLikes);
         }
+        $button.prop("disabled", false);
+        $("#like-button").prop("disabled", false);
+      },
+      error: function(xhr, status, error) {
+        // Handle error response
+      }
     });
-
+  });
+  
     $(document).on("click", "#add-comment", () => {     
         const commentValue = $("#comment-value").val();
         const isAnonymous = $("#anonymous-checkbox").prop("checked"); // Lấy giá trị của ô checkbox

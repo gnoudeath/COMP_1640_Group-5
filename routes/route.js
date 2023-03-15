@@ -35,7 +35,7 @@ const router = express.Router();
 router.get('/login', loginView);
 router.post("/login", loginUser);
 
-router.get("/", protectRoute, dashboardView2);
+router.get("/", protectRoute, dashboardView);
 
 router.get('/logout', logoutUser);
 
@@ -102,6 +102,17 @@ router.get('/detailIdeas/:id', async (req, res) => {
     await idea.save();
   }
 
+  let isLiked = false;
+  let isDisliked = false;
+
+  if (idea.likedBy.includes(req.user._id)) {
+    isLiked = true;
+  } else if (idea.dislikedBy.includes(req.user._id)) {
+    isDisliked = true;
+  }
+
+  const numLikes = idea.likedBy.length;
+  const numDislikes = idea.dislikedBy.length;
   const title = 'Detail';
   const comments = await CommentModel.find({
     idea: req.params.id
@@ -109,45 +120,72 @@ router.get('/detailIdeas/:id', async (req, res) => {
 
   const checkHasTrueStatusComment = await Event.hasTrueStatusComment();
 
-  res.render('detailIdeas', { title, idea, comments, user, files, formattedList, checkHasTrueStatusComment })
+  res.render('detailIdeas', { title, idea, comments, user, files, formattedList, checkHasTrueStatusComment,isLiked,isDisliked,numLikes,numDislikes })
 })
+
 
 router.post('/likeIdeas/:id', async (req, res) => {
-  // save data to db 
-  let idea = await Idea
-    .findById(req.params.id);
-  if (idea.like) {
-    idea.like = idea.like + 1
-  } else {
-    idea.like = 1
+  try {
+    const user = req.user; // assuming user authentication middleware is used
+    const ideaId = req.params.id;
+    const idea = await Idea.findById(ideaId);
+
+    // check if user has already liked the idea
+    const isLiked = idea.likedBy.includes(user._id);
+    if (isLiked) {
+      return res.status(400).json({ message: 'You have already liked this idea.' });
+    }
+
+    // check if user has already disliked the idea
+    const isDisliked = idea.dislikedBy.includes(user._id);
+    if (isDisliked) {
+      // remove user from dislikedBy array
+      idea.dislikedBy.pull(user._id);
+    }
+
+    // add user to likedBy array
+    idea.likedBy.push(user._id);
+
+    // save updated idea
+    await idea.save();
+
+    const numLikes = idea.likedBy.length;
+    const numDislikes = idea.dislikedBy.length;
+    
+
+    return res.json({ message: 'Idea liked successfully.',numLikes: numLikes, numDislikes: numDislikes });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error.' });
   }
-  idea = await Idea.findOneAndUpdate({ _id: req.params.id }, {
-    like: idea.like
-  })
-  res.json({
-    message: "success",
-    data: idea
-  })
-})
+});
+
+router.post('/dislikeIdeas/:id', async (req, res) => {
+  try {
+    const idea = await Idea.findById(req.params.id);
+    if (!idea) {
+      return res.status(404).send('Idea not found');
+    }
+    if (idea.dislikedBy.includes(req.user._id)) {
+      return res.status(400).send('Already disliked this idea');
+    }
+    if (idea.likedBy.includes(req.user._id)) {
+      // Remove the user's like
+      idea.likedBy.pull(req.user._id);
+    }
+    idea.dislikedBy.push(req.user._id);
+    await idea.save();
+
+    const numLikes = idea.likedBy.length;
+    const numDislikes = idea.dislikedBy.length;
+    res.json({numLikes: numLikes, numDislikes: numDislikes});
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+});
 
 
-router.post('/disLikeIdeas/:id', async (req, res) => {
-  // save data to db 
-  let idea = await Idea
-    .findById(req.params.id);
-  if (idea.dislike) {
-    idea.dislike = idea.dislike + 1
-  } else {
-    idea.dislike = 1
-  }
-  idea = await Idea.findOneAndUpdate({ _id: req.params.id }, {
-    dislike: idea.dislike
-  })
-  res.json({
-    message: "success",
-    data: idea
-  })
-})
 
 router.post("/comment/:id", async (req, res) => {
   const check = await Event.hasTrueStatusComment();
