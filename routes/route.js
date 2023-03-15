@@ -1,5 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const dateTimeFormat = 'DD/MM/YYYY HH:mm';
+const moment = require('moment-timezone');
+const timezone = 'Asia/Ho_Chi_Minh';
 
 const { loginView, loginUser } = require('../controllers/loginController');
 
@@ -87,8 +90,10 @@ router.get('/detailIdeas/:id', async (req, res) => {
   const idea = await Idea
     .findById(req.params.id)
     .populate('user', 'username')
-    .populate('category', 'nameCate')
+    .populate('category', 'nameCate');
 
+    const formattedList = {
+          createdDate: moment(idea.createdDate).tz(timezone).format(dateTimeFormat)};
   if (!idea.viewedBy.includes(req.user._id)) {
     // User hasn't viewed the idea before, so update the viewedBy array and increment the view count
     idea.viewedBy.push(req.user._id);
@@ -101,7 +106,7 @@ router.get('/detailIdeas/:id', async (req, res) => {
   const comments = await CommentModel.find({
     idea: req.params.id
   }).populate('user', 'username');
-  res.render('detailIdeas', { title, idea, comments, user, files })
+  res.render('detailIdeas', { title, idea, comments, user, files,formattedList })
 })
 
 router.post('/likeIdeas/:id', async (req, res) => {
@@ -299,12 +304,18 @@ router.get('/:page', protectRoute, async (req, res, next) => {
         if (user.role) {
           const role = await Role.findById(user.role);
           user.role = role;
+          const formattedList = ideas.map(item => {
+            return {
+                createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
+            };
+        });
           res.render('home', {
             user,
             ideas,
             current: page,
             pages: Math.ceil(count / perPage),
-            title
+            title,
+            formattedList
           });
 
 
@@ -414,13 +425,19 @@ router.get('/last-ideas/:page', protectRoute, async (req, res, next) => {
         if (user.role) {
           const role = await Role.findById(user.role);
           user.role = role;
+          const formattedList = ideas.map(item => {
+            return {
+                createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
+            };
+        });
           res.render('home', {
             user,
             ideas,
             current: page,
             pages: Math.ceil(count / perPage),
             title,
-            filter: filter
+            filter: filter,
+            formattedList
           });
 
         }
@@ -529,14 +546,20 @@ router.get('/most-viewed/:page', protectRoute, async (req, res, next) => {
         if (user.role) {
           const role = await Role.findById(user.role);
           user.role = role;
-          // Login: Admin
+          const formattedList = ideas.map(item => {
+            return {
+                createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
+            };
+        });
           res.render('home', {
             user,
             ideas,
             current: page,
             pages: Math.ceil(count / perPage),
             title,
-            filter: filter
+            filter: filter,
+            formattedList
+            
           });
 
         }
@@ -638,14 +661,19 @@ router.get('/last-comments/:page', protectRoute, async (req, res, next) => {
         if (user.role) {
           const role = await Role.findById(user.role);
           user.role = role;
-          // Login: Admin
+          const formattedList = ideas.map(item => {
+            return {
+                createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
+            };
+        });
           res.render('home', {
             user,
             ideas,
             current: page,
             pages: Math.ceil(count / perPage),
             title,
-            filter: filter
+            filter: filter,
+            formattedList
           });
 
         }
