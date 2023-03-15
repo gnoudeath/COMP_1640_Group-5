@@ -26,7 +26,7 @@
 
           <div class="single-article-text">
             <p class="blog-meta">
-              <span class="author"><i class="fas fa-user"></i> <%= idea.user.username %></span>
+              <span class="author"><i class="fas fa-user"></i> <%= idea.isAnonymous ? 'Unknown' : idea.user.username %></span>
               <span class="date" style="margin-left: 630px;"><i class="fas fa-calendar"></i> <%= formattedList.createdDate %></span>
             </p>
             <p class="blog-meta">

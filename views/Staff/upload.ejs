@@ -49,7 +49,10 @@
               or
               <input type="file" name="files" accept=".doc, .docx, .pdf" multiple required>
             </label>
-            <input type="submit" value="Upload" style="margin-left: 500px; margin-top: 20px;">
+            <label>
+              <input type="checkbox" name="isAnonymous" value="true"> Đăng ẩn danh
+            </label>
+            <input type="submit" value="Upload" style="margin-left: 500px; margin-top: 20px;">            
           </form>
     </div>
     <script>
@@ -63,5 +66,15 @@
           return false;
         }
       }
+
+      const checkbox = document.querySelector('input[name="isAnonymous"]');
+      const username = document.querySelector('.username'); // thẻ HTML chứa tên người đăng
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          username.textContent = 'Unknown';
+        } else {
+          username.textContent = 'Tên người đăng'; // thay thế bằng tên thực của người đăng
+        }
+      });
     </script>   
 </body>

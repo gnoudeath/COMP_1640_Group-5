@@ -11,6 +11,7 @@ const uploadFile = async (req, res, next) => {
     idea.content = req.body.content
     idea.category = req.body.category
     idea.user = req.user
+    idea.isAnonymous = req.body.isAnonymous || false; //Lấy giá trị isAnonymous từ request body, nếu không có giá trị thì mặc định là false
     idea.save((err) => {
       if (err) { return next(err); }
     });
@@ -30,6 +31,7 @@ const uploadFile = async (req, res, next) => {
     res.status(500).send(err.message);
   }
 };
+
 
 const getUploadPage = async (req, res) => {
   const check = await Event.hasTrueStatusEvent();

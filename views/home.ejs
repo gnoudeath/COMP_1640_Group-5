@@ -209,7 +209,7 @@
                   <h3></h3>
                   <p class="blog-meta">
                     <span class="author"><i class="fas fa-user"></i>
-                      <%= ideas[i].user %>
+                      <%= ideas[i].isAnonymous ? 'Unknown' : ideas[i].user %>
                     </span>
                     <span class="date"><i class="fas fa-calendar"></i>
                       <%= formattedList[i].createdDate %>

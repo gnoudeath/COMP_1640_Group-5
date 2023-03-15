@@ -49,7 +49,11 @@ const ideaSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     unique: true
-  }]
+  }],
+  isAnonymous: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const Idea = mongoose.model('Idea', ideaSchema);
@@ -94,7 +98,6 @@ const uploadSchema = new mongoose.Schema({
   files: {
     type: Buffer,
     require: true,
-
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -105,7 +108,7 @@ const uploadSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Idea',
     required: true
-  },
+  }
 
 });
 
