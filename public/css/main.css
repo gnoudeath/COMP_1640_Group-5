@@ -463,13 +463,14 @@ a.bordered-btn {
 
 a.read-more-btn {
   display: inline-block;
-  margin-top: 15px;
   color: #051922;
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
   font-weight: 700;
   float:  right;
+  margin-right: 12px;
+  margin-top: -30px;
 }
 
 a.read-more-btn:hover {
@@ -1676,6 +1677,7 @@ div.owl-controls,
   font-size: 20px;
   line-height: 1.25em;
   font-weight: 600;
+  width: 350px;
 }
 
 .single-latest-news h3 a {
@@ -1710,6 +1712,8 @@ p.excerpt {
   padding: 25px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+  width: 350px;
+  height: 260px;
 }
 
 .single-latest-news {
