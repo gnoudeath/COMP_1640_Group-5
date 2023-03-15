@@ -2872,7 +2872,7 @@ table.order-details tbody td {
 .like{
   display: inline-block;
   cursor: pointer;
-  margin: 10px;
+  margin: 5px;
 }
 
 .dislike {

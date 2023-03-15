@@ -42,122 +42,9 @@ const logoutUser = (req, res, next) => {
 // Start: GET: Home Page
 
 
-const dashboardView = async (req, res) => {
 
-  try {
-    const title = 'Home';
-    const messages = req.flash('error');
-    const user = req.user;
-    let perPage = 6;
-    let page = req.params.page || 1;
-
-    Idea.aggregate([
-      // perform a left join between Idea and Comment collections
-      {
-        $lookup: {
-          from: 'comments', // the name of the Comment collection
-          localField: '_id',
-          foreignField: 'idea',
-          as: 'comments'
-        }
-      },
-      // group by Idea id and count the number of comments for each Idea
-      {
-        $group: {
-          _id: '$_id',
-          title: { $first: '$title' },
-          content: { $first: '$content' },
-          category: { $first: '$category' },
-          user: { $first: '$user' },
-          createdDate: { $first: '$createdDate' },
-          like: { $first: '$like' },
-          dislike: { $first: '$dislike' },
-          commentCount: { $sum: { $size: '$comments' } },
-          viewedBy: { $addToSet: '$viewedBy' },
-          viewCount: { $sum: { $cond: [{ $isArray: '$viewedBy' }, { $size: '$viewedBy' }, 0] } }
-        }
-      },
-      // populate user and category fields
-      {
-        $lookup: {
-          from: 'users', // the name of the User collection
-          localField: 'user',
-          foreignField: '_id',
-          as: 'user'
-        }
-      },
-      {
-        $lookup: {
-          from: 'categories', // the name of the Category collection
-          localField: 'category',
-          foreignField: '_id',
-          as: 'category'
-        }
-      },
-      // project only the necessary fields
-      {
-        $project: {
-          title: 1,
-          content: 1,
-          user: { $arrayElemAt: ['$user.username', 0] },
-          category: { $arrayElemAt: ['$category.name', 0] },
-          createdDate: 1,
-          commentCount: 1,
-          like: 1,
-          dislike: 1,
-          viewCount: 1
-        }
-      },
-      // sort by descending comment count
-      {
-        $sort: {
-          commentCount: -1
-        }
-      },
-      // skip and limit based on pagination
-      {
-        $skip: (perPage * page) - perPage
-      },
-      {
-        $limit: perPage
-      }
-    ], (err, ideas) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-
-      Idea.countDocuments(async (err, count) => { // đếm để tính có bao nhiêu trang
-        if (err) return next(err);
-        if (user.role) {
-          const role = await User.Role.findById(user.role);
-          user.role = role;
-          const formattedList = ideas.map(item => {
-            return {
-                createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
-            };
-        });
-          res.render('home', {
-            user,
-            ideas,
-            current: page,
-            pages: Math.ceil(count / perPage),
-            title,
-            messages,
-            formattedList
-          });
-        } else { res.redirect('/login') }
-      })
-    });
-  }
-  catch (error) {
-    console.error(error);
-    res.redirect('/');
-    // res.status(500).send('Internal Server Error');
-  }
-};
 // End: GET: Home Page
-const dashboardView2 = async (req, res) => {
+const dashboardView = async (req, res) => {
 
   try {
     const categories = await Category.find({});
@@ -230,8 +117,8 @@ const dashboardView2 = async (req, res) => {
           content: { $first: '$content' },
           category: { $first: '$category' },
           user: { $first: '$user' },
-          like: { $first: '$like' },
-          dislike: { $first: '$dislike' },
+          like: { $sum: { $cond: [{ $isArray: '$likedBy' }, { $size: '$likedBy' }, 0] } },
+          dislike: { $sum: { $cond: [{ $isArray: '$dislikedBy' }, { $size: '$dislikedBy' }, 0] } },
           createdDate: { $first: '$createdDate' },
           commentCount: { $sum: { $size: '$comments' } },
           viewedBy: { $addToSet: '$viewedBy' },
@@ -331,5 +218,5 @@ module.exports = {
   loginView,
   loginUser,
   dashboardView,
-  dashboardView2
+  
 };
