@@ -102,13 +102,14 @@ router.get('/detailIdeas/:id', async (req, res) => {
     await idea.save();
   }
 
-
-
   const title = 'Detail';
   const comments = await CommentModel.find({
     idea: req.params.id
   }).populate('user', 'username');
-  res.render('detailIdeas', { title, idea, comments, user, files, formattedList })
+
+  const checkHasTrueStatusComment = await Event.hasTrueStatusComment();
+
+  res.render('detailIdeas', { title, idea, comments, user, files, formattedList, checkHasTrueStatusComment })
 })
 
 router.post('/likeIdeas/:id', async (req, res) => {
@@ -169,7 +170,6 @@ router.post("/comment/:id", async (req, res) => {
     })
   }
 
-  // Cần hiện thông báo khi không thể comment được
   else {
     console.log("can not comment");
   }
