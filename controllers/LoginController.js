@@ -1,6 +1,9 @@
 const passport = require("passport");
 const User = require("../models/User");
 const { Idea, Category } = require('../models/Idea');
+const dateTimeFormat = 'DD/MM/YYYY HH:mm';
+const moment = require('moment-timezone');
+const timezone = 'Asia/Ho_Chi_Minh';
 
 // For View 
 const loginView = (req, res) => {
@@ -128,13 +131,19 @@ const dashboardView = async (req, res) => {
         if (user.role) {
           const role = await User.Role.findById(user.role);
           user.role = role;
+          const formattedList = ideas.map(item => {
+            return {
+                createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
+            };
+        });
           res.render('home', {
             user,
             ideas,
             current: page,
             pages: Math.ceil(count / perPage),
             title,
-            messages
+            messages,
+            formattedList
           });
         } else { res.redirect('/login') }
       })
