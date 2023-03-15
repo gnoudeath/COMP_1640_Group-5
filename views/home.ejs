@@ -34,6 +34,58 @@
     opacity: 0.5;
     pointer-events: none;
   }
+
+  .filter-bar .dropdown button {
+  background-color: #F28123;
+  color: #fff;
+  border: 1px solid #F28123;
+  border-radius: 5px;
+  padding: 5px 10px;
+  transition: all 0.3s ease;
+}
+
+
+
+.filter-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-section h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.filter-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.filter-section li {
+  margin-bottom: 0.5rem;
+}
+
+.filter-section a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #eee;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.filter-section a.active {
+  background-color: #F28123;
+  color: #fff;
+}
+
+.filter-section a:hover:not(.active) {
+  background-color: #ccc;
+}
+
+
+
 </style>
 
 <div class="breadcrumb-section breadcrumb-bg">
@@ -77,15 +129,50 @@
     <div class="row">
       <div class="col-md-3">
         <nav class="navbar bg-light">
-
-          <div class="">
+          <% /* %>
+          <!-- <div class="">
             <a href="/"><button class="tablinks <%= typeof filter =='undefined' ? 'active' : '' %>">All Ideas</button></a>
             <a href=""><button class="tablinks">Most Poppular</button></a>
             <a href="/most-viewed/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'most-viewed' ? 'active' : '' %>">Most Viewed</button></a>
             <a href="/last-ideas/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'last-ideas' ? 'active' : '' %>">Latest Idea</button></a>
             <a href="/last-comments/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'last-comments' ? 'active' : '' %>">Latest Comments</button></a>
 
+          </div> -->
+          <% */ %>
+          <div class="filter-sidebar">
+            <div class="filter-section">
+              <h4>Sort by</h4>
+              <ul>
+                <li>
+                  <a href="?sortBy=all-ideas&category=<%- category %>" class="<%= sortBy === 'all-ideas' ? 'active' : '' %>">All Ideas</a>
+                </li>
+                <li>
+                  <a href="?sortBy=most-viewed&category=<%- category %>" class="<%= sortBy === 'most-viewed' ? 'active' : '' %>">Most Viewed</a>
+                </li>
+                <li>
+                  <a href="?sortBy=last-ideas&category=<%- category %>" class="<%= sortBy === 'last-ideas' ? 'active' : '' %>">Last Ideas</a>
+                </li>
+                <li>
+                  <a href="?sortBy=last-comments&category=<%- category %>" class="<%= sortBy === 'last-comments' ? 'active' : '' %>">Last Comments</a>
+                </li>
+              </ul>
+            </div>
+            <div class="filter-section">
+              <h4>Category</h4>
+              <ul>
+                <li>
+                  <a href="?sortBy=<%- sortBy %>&category=all" class="<%= category === 'all' ? 'active' : '' %>">All</a>
+                </li>
+                <% categories.forEach(cat => { %>
+                  <li>
+                    <a href="?sortBy=<%- sortBy %>&category=<%- cat._id %>" class="<%= category.toString() === cat._id.toString() ? 'active' : '' %>"><%- cat.nameCate %></a>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
           </div>
+          
+          
         </nav>
       </div>
 
@@ -129,6 +216,40 @@
 
         </div>
       </div>
+      <div class="col-md-12">
+        <div class="row">
+      <nav aria-label="Page navigation" class="mx-auto">
+        <ul class="pagination">
+          <% if (current > 1) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= parseInt(current) - 1 %>&sortBy=<%= sortBy %>&category=<%= category %>" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+          <% } %>
+      
+          <% for (var i = 1; i <= pages; i++) { %>
+            <% if (i == current) { %>
+              <li class="page-item active"><a class="page-link" href="?page=<%= i %>&sortBy=<%= sortBy %>&category=<%= category %>"><%= i %></a></li>
+            <% } else { %>
+              <li class="page-item"><a class="page-link" href="?page=<%= i %>&sortBy=<%= sortBy %>&category=<%= category %>"><%= i %></a></li>
+            <% } %>
+          <% } %>
+      
+          <% if (current < pages) { %>
+            <li class="page-item">
+              <a class="page-link" href="?page=<%= parseInt(current) + 1 %>&sortBy=<%= sortBy %>&category=<%= category %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+      </div>
+      </div>
+      <% /* %>
       <div class="col-md-12">
         <div class="row">
           <!-- hiển thị phân trang nếu có trang -->
@@ -310,6 +431,7 @@
           <% } %>
         </div>
       </div>
+      <% */ %>
     </div>
   </div>
 </div>
