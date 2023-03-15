@@ -33,6 +33,7 @@ const uploadFile = async (req, res, next) => {
 
 const getUploadPage = async (req, res) => {
   const check = await Event.hasTrueStatusEvent();
+
   if (check) {
     const user = req.user;
     const role = await Role.findById(user.role);

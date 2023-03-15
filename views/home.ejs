@@ -39,8 +39,8 @@
 <div class="breadcrumb-section breadcrumb-bg">
   <div class="container">
     <div class="row">
+      <% if (typeof messages !=='undefined' ) { %>
       <% if (messages != '') { %>
-
       <div class="toast" role="alert" id="errorToast" style="position: absolute; top: 35%; right: 5%;">
         <div class="toast-header">
           <strong class="mr-auto">Notification</strong>
@@ -53,8 +53,9 @@
           <%= messages %>
         </div>
       </div>
-
       <% } %>
+      <% } %>
+
 
       <div class="col-lg-8 offset-lg-2 text-center">
         <div class="breadcrumb-text">

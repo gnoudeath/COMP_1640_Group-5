@@ -102,8 +102,14 @@ async function getAccountsByRoleName(roleName) {
  */
 async function getAccountByID(user_id) {
   try {
-    const user = await User.findOne({ _id: user_id }).populate('role');
-    return user;
+    const user = await User.findOne({ _id: user_id }).populate('role', 'department');
+
+    const convertedData = {
+      ...user._doc,
+      dob: user.dob.toISOString().slice(0, 10),
+    };
+
+    return convertedData;
   } catch (err) {
     console.error(err);
     return null;

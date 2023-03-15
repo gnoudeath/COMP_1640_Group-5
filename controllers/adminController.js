@@ -2,21 +2,26 @@ const Event = require('../models/Event');
 const Idea = require('../models/Idea');
 const User = require('../models/User');
 
+async function GetUser(user) {
+    // If the user has a role, fetch the role data using the populate() method
+    if (user.role) {
+        const role = await User.Role.findById(user.role);
+        user.role = role;
+    }
+}
+
 // Start: GET: Create Account Page
 const formAccountView = async (req, res) => {
     try {
         const title = 'Create Account';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const allRoles = await User.getAllRoles();
+        const allDepartments = await User.getAllDepartments();
 
-        res.render('Admin/formAccount', { user, title, allRoles })
+        res.render('Admin/formAccount', { user, title, allRoles, allDepartments })
 
     } catch (error) {
         console.error(error);
@@ -39,11 +44,7 @@ const listAccountsView = async (req, res, next) => {
         const title = 'List Accounts';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const staffs = await User.getAccountsByRoleName("Staff");
         const qa_managers = await User.getAccountsByRoleName("QA Manager");
@@ -65,19 +66,13 @@ const updateAccountView = async (req, res) => {
         const title = 'Update Account';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const allRoles = await User.getAllRoles();
+        const allDepartments = await User.getAllDepartments();
         const account = await User.getAccountByID(req.params.id);
 
-        const dob = new Date(account.dob);
-        const isoDob = dob.toISOString().slice(0, 10);
-
-        res.render('Admin/updateAccount', { user, title, allRoles, account, isoDob });
+        res.render('Admin/updateAccount', { user, title, allRoles, allDepartments, account });
 
     } catch (error) {
         console.error(error);
@@ -108,11 +103,7 @@ const formDepartmentView = async (req, res) => {
         const title = 'Create Department';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         res.render('Admin/formDepartment', { user, title })
 
@@ -138,11 +129,7 @@ const listDepartmentsView = async (req, res, next) => {
         const title = 'List Departments';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const departments = await User.getAllDepartments();
 
@@ -162,11 +149,7 @@ const updateDepartmentView = async (req, res) => {
         const title = 'Update Department';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const department = await User.getDepartmentByID(req.params.id);
 
@@ -200,11 +183,7 @@ const formCategoryView = async (req, res) => {
         const title = 'Create Category';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         res.render('Admin/formCategory', { user, title })
 
@@ -229,11 +208,7 @@ const listCategoriesView = async (req, res, next) => {
         const title = 'List Categories';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const categories = await Idea.getAllCategorys();
 
@@ -253,11 +228,7 @@ const updateCategoryView = async (req, res) => {
         const title = 'Update Category';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const category = await Idea.getCategoryByID(req.params.id);
 
@@ -292,11 +263,7 @@ const formEventView = async (req, res) => {
         const title = 'Create Event';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         res.render('Admin/formEvent', { user, title })
 
@@ -321,11 +288,7 @@ const listEventsView = async (req, res, next) => {
         const title = 'List Events';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const events = await Event.getAllEvents();
 
@@ -345,11 +308,7 @@ const updateEventView = async (req, res) => {
         const title = 'Update Event';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const event = await Event.getEventByID(req.params.id);
 
@@ -389,5 +348,5 @@ module.exports = {
     formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount,                      // Function: Admin
     formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment,    // Function: Department
     formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory,               // Function: Category
-    formEventView, submitFormEvent, listEventsView, updateEventView, updateFormEvent, deleteFormEvent, setDateFormEvent
+    formEventView, submitFormEvent, listEventsView, updateEventView, updateFormEvent, deleteFormEvent, setDateFormEvent                 // Function: Event
 };

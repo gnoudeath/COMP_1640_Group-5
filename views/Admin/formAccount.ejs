@@ -67,9 +67,21 @@
               </div>
             </div>
 
+            <div class="form-group row">
+              <label for="" class="col-sm-2 col-form-label">Department:</label>
+              <div class="col-sm-10">
+                <select name="department" id="" class="form-control">
+                  <option value="0" style="display: none;">Choose Department</option>
+                  <% for( let index = 0; index < allDepartments.length; index++ ) { %>
+                  <option value="<%= allDepartments[index]._id %>"><%= allDepartments[index].name %></option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+
             <fieldset class="form-group">
               <div class="row">
-                <legend class="col-form-label col-sm-2 pt-0">Role</legend>
+                <legend class="col-form-label col-sm-2 pt-0">Role:</legend>
                 <div class="col-sm-10">
 
                   <% for( let index = 0; index < allRoles.length; index++ ) { %>

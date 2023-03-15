@@ -29,7 +29,7 @@ function insertEvent(data) {
  *  Function: Lấy toàn bộ thông tin các Events
  */
 async function getAllEvents() {
-    // Sử dụng phương thức find để lấy tất cả các documents từ bảng users
+    // Sử dụng phương thức find để lấy tất cả các documents từ bảng events
 
     const events = await Event.find();
 
@@ -75,15 +75,21 @@ async function deleteEvent(id) {
     await Event.findByIdAndRemove(id);
 }
 
+/**
+ * Function: Thực hiện set Date Event, chuyển status từ false thành true
+ */
 async function setDate(id) {
     await Event.updateMany({ status: true }, { $set: { status: false } }, { new: true });
     await Event.findByIdAndUpdate(id, { status: true }, { new: true });
 }
 
+/**
+ * Function: Kiểm tra tất cả records trong event chỉ có 1 record có status = true, nếu thỏa mãn kiểm tra thời gian hiện tại trong khoảng thời gian từ start Date đến first Closure Date
+ */
 async function hasTrueStatusEvent() {
     try {
         const events = await Event.find({ status: true });
-        console.log(events.length);
+
         if (events.length == 1) {
             const event = await Event.findOne({ status: true });
 
