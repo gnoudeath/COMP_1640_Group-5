@@ -113,9 +113,39 @@ async function hasTrueStatusEvent() {
     }
 }
 
+/**
+ * Function: Kiểm tra tất cả records trong event chỉ có 1 record có status = true, nếu thỏa mãn kiểm tra thời gian hiện tại trong khoảng thời gian từ start Date đến first Closure Date
+ */
+async function hasTrueStatusComment() {
+    try {
+        const events = await Event.find({ status: true });
+
+        if (events.length == 1) {
+            const event = await Event.findOne({ status: true });
+
+            const currentTime = moment.tz(timezone)
+            const startDate = moment(event.startDate);
+            const finalClosureDate = moment(event.finalClosureDate);
+
+            if (currentTime.isAfter(startDate) && currentTime.isBefore(finalClosureDate)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
 
 // Export the Mongoose model
 module.exports = {
     Event,
-    insertEvent, getAllEvents, getEventByID, updateEvent, deleteEvent, setDate, hasTrueStatusEvent
+    insertEvent, getAllEvents, getEventByID, updateEvent, deleteEvent, setDate, hasTrueStatusEvent, hasTrueStatusComment
 };
