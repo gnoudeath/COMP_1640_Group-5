@@ -7,7 +7,7 @@ const timezone = 'Asia/Ho_Chi_Minh';
 const { loginView, loginUser } = require('../controllers/loginController');
 
 const { protectRoute, checkRole } = require("../auth/protect");
-const { logoutUser, dashboardView,dashboardView2 } = require('../controllers/loginController');
+const { logoutUser, dashboardView, dashboardView2 } = require('../controllers/loginController');
 
 // const staffController = require('../controllers/staffController');
 const { getUploadPage, uploadFile, getMyIdeasPage } = require('../controllers/staffController');
@@ -28,6 +28,7 @@ const multer = require('multer');
 const upload = multer();
 
 const { Idea, Category, CommentModel, File } = require('../models/Idea');
+const Event = require('../models/Event');
 
 // Define Routes
 const router = express.Router();
@@ -92,8 +93,9 @@ router.get('/detailIdeas/:id', async (req, res) => {
     .populate('user', 'username')
     .populate('category', 'nameCate');
 
-    const formattedList = {
-          createdDate: moment(idea.createdDate).tz(timezone).format(dateTimeFormat)};
+  const formattedList = {
+    createdDate: moment(idea.createdDate).tz(timezone).format(dateTimeFormat)
+  };
   if (!idea.viewedBy.includes(req.user._id)) {
     // User hasn't viewed the idea before, so update the viewedBy array and increment the view count
     idea.viewedBy.push(req.user._id);
@@ -106,7 +108,7 @@ router.get('/detailIdeas/:id', async (req, res) => {
   const comments = await CommentModel.find({
     idea: req.params.id
   }).populate('user', 'username');
-  res.render('detailIdeas', { title, idea, comments, user, files,formattedList })
+  res.render('detailIdeas', { title, idea, comments, user, files, formattedList })
 })
 
 router.post('/likeIdeas/:id', async (req, res) => {
@@ -146,26 +148,32 @@ router.post('/disLikeIdeas/:id', async (req, res) => {
   })
 })
 
-
 router.post("/comment/:id", async (req, res) => {
-  console.log(req.query)
-  const { comment, anonymous  } = req.query;
-  const cmt = await CommentModel.create({
-    idea: req.params.id,
-    comment: comment,
-    user: req.user._id,
-    anonymous: anonymous === 'true'
-  });
+  const check = await Event.hasTrueStatusComment();
 
-  const populateComment = await CommentModel.findById(cmt._id).populate('user', 'username')
-  console.log(populateComment)
-  res.json({
-    message: "success",
-    data: populateComment,
+  if (check) {
+    console.log(req.query)
+    const { comment, anonymous } = req.query;
+    const cmt = await CommentModel.create({
+      idea: req.params.id,
+      comment: comment,
+      user: req.user._id,
+      anonymous: anonymous === 'true'
+    });
 
-  })
+    const populateComment = await CommentModel.findById(cmt._id).populate('user', 'username')
+    console.log(populateComment)
+    res.json({
+      message: "success",
+      data: populateComment,
+    })
+  }
+
+  // Cần hiện thông báo khi không thể comment được
+  else {
+    console.log("can not comment");
+  }
 })
-
 
 
 router.get('/save', async function (req, res, next) {
@@ -204,10 +212,6 @@ router.get('/save', async function (req, res, next) {
   );
 });
 
-
-
-
-
 // ERROR PAGE
 router.get('/error', (req, res) => {
   res.render("error", {
@@ -215,8 +219,5 @@ router.get('/error', (req, res) => {
   })
 })
 // END ERROR PAGE
-
-
-
 
 module.exports = router;
