@@ -71,6 +71,7 @@ const updateAccountView = async (req, res) => {
         const allRoles = await User.getAllRoles();
         const allDepartments = await User.getAllDepartments();
         const account = await User.getAccountByID(req.params.id);
+        console.log(account);
 
         res.render('Admin/updateAccount', { user, title, allRoles, allDepartments, account });
 
