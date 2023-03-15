@@ -515,7 +515,7 @@ a.cart-btn {
 
 .breadcrumb-bg {
   /* background-image: url(../img/breadcrumb-bg.jpg); */
-  background-image: url("https://www.gre.ac.uk/__data/assets/image/0025/119653/varieties/v800.jpg");
+  background-image: url(../img/v800.jpg);
   background-size: contain;
   background-size: 300px;
 }

@@ -1,5 +1,5 @@
 const passport = require("passport");
-const User = require("../models/User");
+const {User,Department,Role} = require("../models/User");
 const { Idea, Category } = require('../models/Idea');
 const dateTimeFormat = 'DD/MM/YYYY HH:mm';
 const moment = require('moment-timezone');
@@ -161,6 +161,7 @@ const dashboardView2 = async (req, res) => {
 
   try {
     const categories = await Category.find({});
+    const departments = await Department.find({});
     const title = 'Home';
     const messages = req.flash('error');
     const user = req.user;
@@ -168,9 +169,10 @@ const dashboardView2 = async (req, res) => {
     let page = req.query.page || 1;
     const sortBy = req.query.sortBy || 'all-ideas'
     const category = req.query.category || 'all'
+    const department = req.query.department || 'all'
     
 
-    console.log(category)
+    
     let sortOptions;
     if (sortBy === 'all-ideas') {
       sortOptions = { commentCount: -1,createdDate: -1 };
@@ -196,13 +198,17 @@ const dashboardView2 = async (req, res) => {
     const selectedCategory = await Category.findById(category);
     categoryName = selectedCategory.nameCate;
   }
+  
+    if (department && department !== 'all') {
+      query['user.department'] = mongoose.Types.ObjectId(department);
+      const selectedDepartment = await Department.findById(department);
+      console.log(category)
+    }
 
     
 
     const ideas = await Idea.aggregate([
-      {
-        $match: query
-      },
+      
       
       // perform a left join between Idea and Comment collections
       {
@@ -239,6 +245,9 @@ const dashboardView2 = async (req, res) => {
           foreignField: '_id',
           as: 'user'
         }
+      },
+      {
+        $match: query
       },
       {
         $lookup: {
@@ -287,13 +296,8 @@ const dashboardView2 = async (req, res) => {
 
     const count = await Idea.countDocuments(query);
     if (user.role) {
-      const role = await User.Role.findById(user.role);
+      const role = await Role.findById(user.role);
       user.role = role;
-      // const formattedList = ideas.map(item => {
-      //   return {
-      //     createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
-      //   };
-      // });
       res.render('home', {
         user,
         ideas,
@@ -305,7 +309,9 @@ const dashboardView2 = async (req, res) => {
         sortBy,
         category,
         categories,
-        categoryName
+        categoryName,
+        departments,
+        department
       });
     } else {
       res.redirect('/login');

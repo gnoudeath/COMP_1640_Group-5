@@ -86,6 +86,7 @@
 
 
 
+
 </style>
 
 <div class="breadcrumb-section breadcrumb-bg">
@@ -144,16 +145,16 @@
               <h4>Sort by</h4>
               <ul>
                 <li>
-                  <a href="?sortBy=all-ideas&category=<%- category %>" class="<%= sortBy === 'all-ideas' ? 'active' : '' %>">All Ideas</a>
+                  <a href="?sortBy=all-ideas&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'all-ideas' ? 'active' : '' %>">All Ideas</a>
                 </li>
                 <li>
-                  <a href="?sortBy=most-viewed&category=<%- category %>" class="<%= sortBy === 'most-viewed' ? 'active' : '' %>">Most Viewed</a>
+                  <a href="?sortBy=most-viewed&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'most-viewed' ? 'active' : '' %>">Most Viewed</a>
                 </li>
                 <li>
-                  <a href="?sortBy=last-ideas&category=<%- category %>" class="<%= sortBy === 'last-ideas' ? 'active' : '' %>">Last Ideas</a>
+                  <a href="?sortBy=last-ideas&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'last-ideas' ? 'active' : '' %>">Last Ideas</a>
                 </li>
                 <li>
-                  <a href="?sortBy=last-comments&category=<%- category %>" class="<%= sortBy === 'last-comments' ? 'active' : '' %>">Last Comments</a>
+                  <a href="?sortBy=last-comments&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'last-comments' ? 'active' : '' %>">Last Comments</a>
                 </li>
               </ul>
             </div>
@@ -161,15 +162,31 @@
               <h4>Category</h4>
               <ul>
                 <li>
-                  <a href="?sortBy=<%- sortBy %>&category=all" class="<%= category === 'all' ? 'active' : '' %>">All</a>
+                  <a href="?sortBy=<%- sortBy %>&category=all&department=<%- department %>" class="<%= category === 'all' ? 'active' : '' %>">All</a>
                 </li>
                 <% categories.forEach(cat => { %>
                   <li>
-                    <a href="?sortBy=<%- sortBy %>&category=<%- cat._id %>" class="<%= category.toString() === cat._id.toString() ? 'active' : '' %>"><%- cat.nameCate %></a>
+                    <a href="?sortBy=<%- sortBy %>&category=<%- cat._id %>&department=<%- department %>" class="<%= category.toString() === cat._id.toString() ? 'active' : '' %>"><%- cat.nameCate %></a>
                   </li>
                 <% }) %>
               </ul>
             </div>
+            <div class="filter-section">
+              <h4>Department</h4>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="departmentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Departments
+                </button>
+                <div class="dropdown-menu" aria-labelledby="departmentDropdown">
+                  <a class="dropdown-item <%= department === 'all' ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- category %>&department=all" >All Departments</a>
+                  <% departments.forEach(dept => { %>
+                    <a class="dropdown-item <%= department.toString() === dept._id.toString() ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- category %>&department=<%- dept._id %>"><%- dept.name %></a>
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+            
+            
           </div>
           
           
