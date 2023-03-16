@@ -140,9 +140,9 @@ const exportIdeasToCsv = async (_req, res) => {
                 { id: 'closedDate', title: 'Closed Date' },
                 { id: 'category', title: 'Category' },
                 { id: 'user', title: 'User' },
-                { id: 'viewedBy', title: 'Viewed By' },
-                { id: 'likedBy', title: 'Liked By' },
-                { id: 'dislikedBy', title: 'Disliked By' },
+                { id: 'viewedBy', title: 'Viewed' },
+                { id: 'likedBy', title: 'Liked' },
+                { id: 'dislikedBy', title: 'Disliked' },
                 { id: 'isAnonymous', title: 'Is Anonymous' }
             ],
             encoding: 'utf8' //Thêm option encoding với giá trị utf8
