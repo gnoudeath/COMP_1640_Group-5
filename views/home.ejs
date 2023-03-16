@@ -165,7 +165,8 @@
             <div class="filter-section">
               <% if (user.role.name==="QA Manager" ) { %>
               <h4>Download all uploaded documents</h4>
-              <a download id="downloadBtn"> Download</a>
+              <a download id="downloadBtn"> Download Zip</a>
+              <a href="/export-ideas" download>Download CSV</a>
               <% }  %>
               <div id="confirmDownloadModal" style="display: none;">
                 <p>Are you sure you want to download all uploaded documents as a zip file?</p>

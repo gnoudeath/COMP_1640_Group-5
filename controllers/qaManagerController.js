@@ -1,6 +1,8 @@
-const Idea = require('../models/Idea');
 const {File} = require('../models/Idea');
 const archiver = require('archiver');
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const {Idea} = require('../models/Idea');
+const iconv = require('iconv-lite');
 
 // Start: GET: Create Category Page
 const formCategoryView = async (req, res) => {
@@ -114,6 +116,70 @@ const downloadZipDocs = async (req,res)=> {
       }
 }
 
+// Sử dụng đối tượng Intl.DateTimeFormat để định dạng ngày giờ
+const dateTimeFormat = new Intl.DateTimeFormat('vi-VN', {
+    year: 'numeric', 
+    month: 'numeric', 
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    timeZone: 'Asia/Ho_Chi_Minh'
+});
+
+const exportIdeasToCsv = async (_req, res) => {
+    try {
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="ideas.csv"');
+        const csvWriter = createCsvWriter({
+            path: 'ideas.csv',
+            header: [
+                { id: 'title', title: 'Title' },
+                { id: 'content', title: 'Content' },
+                { id: 'createdDate', title: 'Created Date' },
+                { id: 'closedDate', title: 'Closed Date' },
+                { id: 'category', title: 'Category' },
+                { id: 'user', title: 'User' },
+                { id: 'viewedBy', title: 'Viewed By' },
+                { id: 'likedBy', title: 'Liked By' },
+                { id: 'dislikedBy', title: 'Disliked By' },
+                { id: 'isAnonymous', title: 'Is Anonymous' }
+            ],
+            encoding: 'utf8' //Thêm option encoding với giá trị utf8
+        });
+        const csvData = await Idea.find({})
+            .populate('category', 'nameCate')
+            .populate('user', 'username')
+            .exec()
+            .then((ideas) => {
+                return ideas.map((idea) => {                   
+                return {
+                    title: iconv.encode(idea.title, 'utf8').toString(),
+                    content: iconv.encode(idea.content, 'utf8').toString(),
+                    createdDate: dateTimeFormat.format(idea.createdDate),
+                    closedDate: idea.closedDate ? dateTimeFormat.format(idea.closedDate) : '',
+                    category: idea.category.nameCate,
+                    user: idea.user.username,
+                    viewedBy: idea.viewedBy.length,
+                    likedBy: idea.likedBy.length,
+                    dislikedBy: idea.dislikedBy.length,
+                    isAnonymous: idea.isAnonymous ? 'Yes' : 'No'
+                };
+                });
+            });
+
+        // Write the CSV data to a file
+        await csvWriter.writeRecords(csvData);
+
+        // Set the character encoding and download the file
+        res.download('ideas.csv');
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+};
+
+
 module.exports = {
-    formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory, downloadZipDocs                // Function: Category
+    formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory, downloadZipDocs, exportIdeasToCsv     // Function: Category
 };
