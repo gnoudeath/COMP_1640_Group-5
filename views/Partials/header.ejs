@@ -36,14 +36,6 @@
           </li>
 
           <li>
-            <a href="#">Categories</a>
-            <ul class="sub-menu">
-              <li><a href="/listCategories">List Categories</a></li>
-              <li><a href="/formCategory">Create new category</a></li>
-            </ul>
-          </li>
-
-          <li>
             <a href="#">Events</a>
             <ul class="sub-menu">
               <li><a href="/listEvents">List Events</a></li>
@@ -53,7 +45,7 @@
 
           <li>
             <div class="header-icons">
-              <a class="boxed-btn" href="#">Hello, <%= user.fullName %> | <%= user.role.name %></a>
+              <a class="boxed-btn" href="">Hello, <%= user.fullName %> | <%= user.role.name %></a>
               <ul class="sub-menu">
                 <li><a href="/updateAccount/<%= user._id %>">Account Settings</a></li>
                 <li><a href="/logout">Log out</a></li>
@@ -75,7 +67,7 @@
           <li><a href="/myideas">My Ideas</a></li>
           <li>
             <div class="header-icons">
-              <a class="boxed-btn" href="cart.html">Hello, <%= user.fullName %> | <%= user.role.name %></a>
+              <a class="boxed-btn" href="">Hello, <%= user.fullName %> | <%= user.role.name %></a>
               <ul class="sub-menu">
 
                 <li><a href="/logout">Log out</a></li>
@@ -103,8 +95,7 @@
 
           <li>
             <div class="header-icons">
-              <a class="boxed-btn" href="cart.html">Hello, <%= user.fullName %> | <%= user.role.name
-                                      %></a>
+              <a class="boxed-btn" href="">Hello, <%= user.fullName %> | <%= user.role.name%></a>
               <ul class="sub-menu">
 
                 <li><a href="/logout">Log out</a></li>

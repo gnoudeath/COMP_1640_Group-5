@@ -9,17 +9,21 @@ const { loginView, loginUser } = require('../controllers/loginController');
 const { protectRoute, checkRole } = require("../auth/protect");
 const { logoutUser, dashboardView, dashboardView2 } = require('../controllers/loginController');
 
-// const staffController = require('../controllers/staffController');
 const { getUploadPage, uploadFile, getMyIdeasPage } = require('../controllers/staffController');
-// const qaManagerController = require('../controllers/adminController');
 
+// Start: Has Functions Site Admin
 const {
   formAccountView, submitFormAccount, listAccountsView, updateAccountView, updateFormAccount, deleteFormAccount,
   formDepartmentView, submitFormDepartment, listDepartmentsView, updateDepartmentView, updateFormDepartment, deleteFormDepartment,
-  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory,
   formEventView, submitFormEvent, listEventsView, deleteFormEvent, updateEventView, updateFormEvent, setDateFormEvent
 } = require('../controllers/adminController');
+// End: Has Functions Site Admin
 
+// Start: Has Functions Site QA Manager
+const {
+  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory
+} = require('../controllers/qaManagerController');
+// End: Has Functions Site QA Manager
 
 
 const { Role, User } = require('../models/User');
@@ -39,7 +43,7 @@ router.get("/", protectRoute, dashboardView);
 
 router.get('/logout', logoutUser);
 
-// Start: Route Admin site
+// -------------- Start: Route Admin site --------------
 
 // Section: Account
 router.get('/formAccount', checkRole('Admin'), formAccountView);
@@ -57,14 +61,6 @@ router.get('/updateDepartment/:id', checkRole('Admin'), updateDepartmentView);
 router.post('/updateFormDepartment', checkRole('Admin'), updateFormDepartment);
 router.post('/deleteDepartment/:id', checkRole('Admin'), deleteFormDepartment);
 
-// Section: Category
-router.get('/formCategory', checkRole(['Admin', 'QA Manager']), formCategoryView);
-router.post('/submitFormCategory', checkRole(['Admin', 'QA Manager']), submitFormCategory);
-router.get('/listCategories', checkRole(['Admin', 'QA Manager']), listCategoriesView);
-router.get('/updateCategory/:id', checkRole(['Admin', 'QA Manager']), updateCategoryView);
-router.post('/updateFormCategory', checkRole(['Admin', 'QA Manager']), updateFormCategory);
-router.post('/deleteCategory/:id', checkRole(['Admin', 'QA Manager']), deleteFormCategory);
-
 // Section: Set Date
 router.get('/formEvent', checkRole('Admin'), formEventView);
 router.post('/submitFormEvent', checkRole('Admin'), submitFormEvent);
@@ -74,13 +70,24 @@ router.post('/updateFormEvent', checkRole('Admin'), updateFormEvent);
 router.post('/deleteEvent/:id', checkRole('Admin'), deleteFormEvent);
 router.post('/setDate/:id', checkRole('Admin'), setDateFormEvent);
 
-// End: Route Admin site
+// -------------- End: Route Admin site --------------
 
-// ------ STAFF -----------
+// -------------- Start: Route Staff site --------------
 router.get('/myideas', getMyIdeasPage)
 router.get('/upload', checkRole('Staff'), getUploadPage);
 router.post('/upload', upload.array('files'), uploadFile);
-// ------ STAFF END --------------
+// -------------- End: Route Staff site --------------
+
+// -------------- Start: Route QA Manager site --------------
+// Section: Category
+router.get('/formCategory', checkRole('QA Manager'), formCategoryView);
+router.post('/submitFormCategory', checkRole('QA Manager'), submitFormCategory);
+router.get('/listCategories', checkRole('QA Manager'), listCategoriesView);
+router.get('/updateCategory/:id', checkRole('QA Manager'), updateCategoryView);
+router.post('/updateFormCategory', checkRole('QA Manager'), updateFormCategory);
+router.post('/deleteCategory/:id', checkRole('QA Manager'), deleteFormCategory);
+
+// -------------- End: Route QA Manager site --------------
 
 
 router.get('/detailIdeas/:id', async (req, res) => {
