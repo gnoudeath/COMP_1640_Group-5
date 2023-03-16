@@ -69,6 +69,8 @@ const dashboardView = async (req, res) => {
       sortOptions = { createdDate: -1 };
     } else if (sortBy === 'last-comments') {
       sortOptions = { latestCommentDate: -1, createdDate: -1 };
+    } else if (sortBy === 'most-popular'){
+      sortOptions = { popularity: -1,createdDate: -1 };
     }
     else {
       // Default sort option
@@ -128,6 +130,7 @@ const dashboardView = async (req, res) => {
 
         }
       },
+      
       // populate user and category fields
       {
         $lookup: {
@@ -162,6 +165,11 @@ const dashboardView = async (req, res) => {
           latestCommentDate: 1,
           isAnonymous: 1
         }
+      },
+      {
+        $addFields: {
+          popularity: { $subtract: ['$like', '$dislike'] },
+        },
       },
       // sort by descending comment count
       {
