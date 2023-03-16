@@ -1,5 +1,5 @@
 const passport = require("passport");
-const {User,Department,Role} = require("../models/User");
+const { User, Department, Role } = require("../models/User");
 const { Idea, Category } = require('../models/Idea');
 const dateTimeFormat = 'DD/MM/YYYY HH:mm';
 const moment = require('moment-timezone');
@@ -57,46 +57,46 @@ const dashboardView = async (req, res) => {
     const sortBy = req.query.sortBy || 'all-ideas'
     const category = req.query.category || 'all'
     const department = req.query.department || 'all'
-    
 
-    
+
+
     let sortOptions;
     if (sortBy === 'all-ideas') {
-      sortOptions = { commentCount: -1,createdDate: -1 };
+      sortOptions = { commentCount: -1, createdDate: -1 };
     } else if (sortBy === 'most-viewed') {
-      sortOptions = { viewCount: -1,createdDate: -1 };
+      sortOptions = { viewCount: -1, createdDate: -1 };
     } else if (sortBy === 'last-ideas') {
-      sortOptions = { createdDate: -1};
+      sortOptions = { createdDate: -1 };
     } else if (sortBy === 'last-comments') {
-      sortOptions = { latestCommentDate: -1,createdDate: -1 };
+      sortOptions = { latestCommentDate: -1, createdDate: -1 };
     }
     else {
       // Default sort option
       sortOptions = { commentCount: -1 };
     }
 
-    
+
     const query = {};
 
-  // Filter by category
-  let categoryName = 'All Categories';
-  if (category && category !== 'all') {
-    query.category = mongoose.Types.ObjectId(category);
-    const selectedCategory = await Category.findById(category);
-    categoryName = selectedCategory.nameCate;
-  }
-  
+    // Filter by category
+    let categoryName = 'All Categories';
+    if (category && category !== 'all') {
+      query.category = mongoose.Types.ObjectId(category);
+      const selectedCategory = await Category.findById(category);
+      categoryName = selectedCategory.nameCate;
+    }
+
     if (department && department !== 'all') {
       const departmentId = mongoose.Types.ObjectId(department);
       const usersInDepartment = await User.find({ department: departmentId }).distinct('_id');
       query.user = { $in: usersInDepartment };
-      
+
     }
 
-    
+
 
     const ideas = await Idea.aggregate([
-      
+
       {
         $match: query
       },
@@ -137,7 +137,7 @@ const dashboardView = async (req, res) => {
           as: 'user'
         }
       },
-      
+
       {
         $lookup: {
           from: 'categories', // the name of the Category collection
@@ -146,7 +146,7 @@ const dashboardView = async (req, res) => {
           as: 'category'
         }
       },
-      
+
       // project only the necessary fields
       {
         $project: {
@@ -165,9 +165,9 @@ const dashboardView = async (req, res) => {
       },
       // sort by descending comment count
       {
-        $sort: 
-        sortOptions
-        
+        $sort:
+          sortOptions
+
       },
       // skip and limit based on pagination
       {
@@ -177,13 +177,13 @@ const dashboardView = async (req, res) => {
         $limit: perPage
       }
     ]).exec();
-    console.log(ideas)
-    
+    // console.log(ideas)
+
     const formattedList = ideas.map(item => {
       return {
-          createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
+        createdDate: moment(item.createdDate).tz(timezone).format(dateTimeFormat),
       };
-  });
+    });
 
     const count = await Idea.countDocuments(query);
     if (user.role) {
@@ -220,5 +220,5 @@ module.exports = {
   loginView,
   loginUser,
   dashboardView,
-  
+
 };

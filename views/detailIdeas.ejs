@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-lg-8 offset-lg-2 text-center">
         <div class="breadcrumb-text">
-          <p>Organic Information</p>
+          <p>University Of Greenwich</p>
           <h1> Detail Ideas</h1>
         </div>
       </div>
@@ -64,20 +64,20 @@
               <div class="like grow" data="<%= idea._id %>" id="like-idea">
                 <span id="number-like"><%= idea.like %></span>
                 <button id="like-button" class="btn btn-outline-primary <%= isLiked ? 'active' : '' %> " data-id="<%= idea._id %>">
-  <i class="fa fa-thumbs-up fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
-  <span class="ms-2"><%= numLikes %></span>
-</button>
+                  <i class="fa fa-thumbs-up fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
+                  <span class="ms-2"><%= numLikes %></span>
+                </button>
 
 
-              
+
               </div>
               <!-- Thumbs down -->
               <div class="dislike grow" data="<%= idea._id %>" id="dislike-idea">
                 <span id="number-dislike"><%= idea.dislike %></span>
                 <button id="dislike-button" class="btn btn-outline-danger <%= isDisliked ? 'active' : '' %>" data-id="<%= idea._id %>">
-  <i class="fa fa-thumbs-down fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
-  <span class="ms-2"><%= numDislikes %></span>
-</button>
+                  <i class="fa fa-thumbs-down fa-3x like" aria-hidden="true" style="font-size: 15px;"></i>
+                  <span class="ms-2"><%= numDislikes %></span>
+                </button>
               </div>
               <!-- Comments -->
             </div>
@@ -150,7 +150,5 @@
       selectedLink.click();
     }
   });
-
-  
 </script>
 <!-- end single article section -->

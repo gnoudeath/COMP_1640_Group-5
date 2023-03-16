@@ -71,7 +71,6 @@ const updateAccountView = async (req, res) => {
         const allRoles = await User.getAllRoles();
         const allDepartments = await User.getAllDepartments();
         const account = await User.getAccountByID(req.params.id);
-        console.log(account);
 
         res.render('Admin/updateAccount', { user, title, allRoles, allDepartments, account });
 
@@ -86,7 +85,6 @@ const updateAccountView = async (req, res) => {
 // Start: POST: Update Account
 const updateFormAccount = async (req, res) => {
     await User.updateAccount(req.body.id, req.body);
-    console.log(req.body);
     res.redirect('/listAccounts');
 }
 // End: POST: Update Account

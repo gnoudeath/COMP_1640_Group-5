@@ -120,7 +120,7 @@ router.get('/detailIdeas/:id', async (req, res) => {
 
   const checkHasTrueStatusComment = await Event.hasTrueStatusComment();
 
-  res.render('detailIdeas', { title, idea, comments, user, files, formattedList, checkHasTrueStatusComment,isLiked,isDisliked,numLikes,numDislikes })
+  res.render('detailIdeas', { title, idea, comments, user, files, formattedList, checkHasTrueStatusComment, isLiked, isDisliked, numLikes, numDislikes })
 })
 
 
@@ -151,9 +151,9 @@ router.post('/likeIdeas/:id', async (req, res) => {
 
     const numLikes = idea.likedBy.length;
     const numDislikes = idea.dislikedBy.length;
-    
 
-    return res.json({ message: 'Idea liked successfully.',numLikes: numLikes, numDislikes: numDislikes });
+
+    return res.json({ message: 'Idea liked successfully.', numLikes: numLikes, numDislikes: numDislikes });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error.' });
@@ -178,7 +178,7 @@ router.post('/dislikeIdeas/:id', async (req, res) => {
 
     const numLikes = idea.likedBy.length;
     const numDislikes = idea.dislikedBy.length;
-    res.json({numLikes: numLikes, numDislikes: numDislikes});
+    res.json({ numLikes: numLikes, numDislikes: numDislikes });
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');
@@ -191,7 +191,7 @@ router.post("/comment/:id", async (req, res) => {
   const check = await Event.hasTrueStatusComment();
 
   if (check) {
-    console.log(req.query)
+    // console.log(req.query)
     const { comment, anonymous } = req.query;
     const cmt = await CommentModel.create({
       idea: req.params.id,
@@ -201,7 +201,7 @@ router.post("/comment/:id", async (req, res) => {
     });
 
     const populateComment = await CommentModel.findById(cmt._id).populate('user', 'username')
-    console.log(populateComment)
+    // console.log(populateComment)
     res.json({
       message: "success",
       data: populateComment,
