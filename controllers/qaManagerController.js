@@ -1,4 +1,6 @@
 const Idea = require('../models/Idea');
+const {File} = require('../models/Idea');
+const archiver = require('archiver');
 
 // Start: GET: Create Category Page
 const formCategoryView = async (req, res) => {
@@ -92,6 +94,26 @@ const deleteFormCategory = async (req, res) => {
 }
 // End: POST: Delete Category
 
+
+const downloadZipDocs = async (req,res)=> {
+    try {
+        const uploads = await File.find();
+    
+        const archive = archiver('zip', { zlib: { level: 9 } });
+    
+        uploads.forEach(upload => {
+          archive.append(upload.files, { name: upload.name });
+        });
+    
+        res.attachment('uploads.zip');
+    
+        archive.pipe(res);
+        archive.finalize();
+      } catch (error) {
+        next(error);
+      }
+}
+
 module.exports = {
-    formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory                // Function: Category
+    formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory, downloadZipDocs                // Function: Category
 };
