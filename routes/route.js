@@ -21,7 +21,7 @@ const {
 
 // Start: Has Functions Site QA Manager
 const {
-  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory
+  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory, downloadZipDocs
 } = require('../controllers/qaManagerController');
 // End: Has Functions Site QA Manager
 
@@ -263,6 +263,8 @@ router.get('/error', (req, res) => {
     layout: 'error',
   })
 })
+
+router.get('/downloads',downloadZipDocs)
 // END ERROR PAGE
 
 module.exports = router;
