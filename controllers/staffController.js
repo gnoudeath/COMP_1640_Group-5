@@ -1,8 +1,12 @@
 const Event = require('../models/Event');
 const { File, Idea, Category } = require('../models/Idea');
-const { User, Role } = require('../models/User');
+const { Role, getDepartmentByID, getAccountsByRoleNameAndDepartmentName } = require('../models/User');
 const mongoose = require('mongoose');
 const moment = require('moment-timezone');
+const mailer = require('../utils/mailer');
+const contentMail = require('../utils/contentMail');
+const timezone = 'Asia/Ho_Chi_Minh';
+const dateTimeFormat = 'DD/MM/YYYY HH:mm';
 
 const uploadFile = async (req, res, next) => {
   try {
@@ -26,6 +30,23 @@ const uploadFile = async (req, res, next) => {
       return newFile.save();
     });
     const uploadedFiles = await Promise.all(uploadPromises);
+
+    const department = await getDepartmentByID(req.user.department);
+    const accounts = await getAccountsByRoleNameAndDepartmentName("QA Coordinator", department.name);
+
+    const now = new Date();
+    const currentDateTime = moment(now).tz(timezone).format(dateTimeFormat);
+
+    accounts.forEach(element => {
+      mailer.sendMail(
+        element.email,                // Gửi đến email nào
+        "Notification Submit Idea",   // Tên tiêu đề
+        contentMail.GetContentMailAfterPostIdea(req.user.fullName, req.user.username, currentDateTime, req.body.title, req.body.content) // Nội dung trong email
+      );
+    });
+
+
+
     res.redirect('/');
   } catch (err) {
     res.status(500).send(err.message);

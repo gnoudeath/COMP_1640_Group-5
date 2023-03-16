@@ -89,7 +89,23 @@ async function getAllRoles() {
 async function getAccountsByRoleName(roleName) {
   try {
     const role = await Role.findOne({ name: roleName });
-    const users = await User.find({ role: role._id }).populate('role');
+    const users = await User.find({ role: role._id }).populate(['role', 'department']);
+    return users;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+/**
+ * Function: Lấy toàn bộ thông tin các Users dựa vào tên Role
+ */
+async function getAccountsByRoleNameAndDepartmentName(roleName, departmentName) {
+  try {
+    const role = await Role.findOne({ name: roleName });
+    const department = await Department.findOne({ name: departmentName });
+
+    const users = await User.find({ role: role._id, department: department._id }).populate(['role', 'department']);
     return users;
   } catch (err) {
     console.error(err);
@@ -177,7 +193,7 @@ async function deleteDepartment(id) {
 // Export the Mongoose model
 module.exports = {
   User, Role, Department,
-  getAllRoles,                                                                                    // Function: Role
+  getAllRoles, getAccountsByRoleNameAndDepartmentName,                                            // Function: Role
   insertUser, getAccountsByRoleName, getAccountByID, updateAccount, deleteAccount,                // Function: Account
   insertDepartment, getAllDepartments, getDepartmentByID, updateDepartment, deleteDepartment,     // Function: Department
 };

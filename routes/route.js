@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dateTimeFormat = 'DD/MM/YYYY HH:mm';
 const moment = require('moment-timezone');
 const timezone = 'Asia/Ho_Chi_Minh';
+const mailer = require('../utils/mailer');
+const contentMail = require('../utils/contentMail');
 
 const { loginView, loginUser } = require('../controllers/loginController');
 
@@ -26,7 +28,7 @@ const {
 // End: Has Functions Site QA Manager
 
 
-const { Role, User } = require('../models/User');
+const { Role, getAccountByID } = require('../models/User');
 
 const multer = require('multer');
 const upload = multer();
@@ -192,8 +194,6 @@ router.post('/dislikeIdeas/:id', async (req, res) => {
   }
 });
 
-
-
 router.post("/comment/:id", async (req, res) => {
   const check = await Event.hasTrueStatusComment();
 
@@ -213,6 +213,20 @@ router.post("/comment/:id", async (req, res) => {
       message: "success",
       data: populateComment,
     })
+
+    console.log(comment);
+
+    const idea = await Idea.findById(req.params.id);
+    const user = await getAccountByID(idea.user);
+
+    const now = new Date();
+    const currentDateTime = moment(now).tz(timezone).format(dateTimeFormat);
+
+    mailer.sendMail(
+      user.email,               // Gửi đến email nào
+      "Notification Comment",   // Tên tiêu đề
+      contentMail.GetContentMailAfterComment(req.user.fullName, req.user.username, currentDateTime, idea.title, comment) // Nội dung trong email
+    );
   }
 
   else {

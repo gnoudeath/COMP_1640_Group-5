@@ -50,6 +50,9 @@ const listAccountsView = async (req, res, next) => {
         const qa_managers = await User.getAccountsByRoleName("QA Manager");
         const qa_coordinators = await User.getAccountsByRoleName("QA Coordinator");
 
+        const test = await User.getAccountsByRoleNameAndDepartmentName("Staff", "IT");
+
+
         res.render('Admin/listAccounts', { user, title, qa_managers, qa_coordinators, staffs });
 
     } catch (error) {
