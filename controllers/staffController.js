@@ -45,8 +45,6 @@ const uploadFile = async (req, res, next) => {
       );
     });
 
-
-
     res.redirect('/');
   } catch (err) {
     res.status(500).send(err.message);
