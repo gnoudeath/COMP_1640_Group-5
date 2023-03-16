@@ -214,8 +214,6 @@ router.post("/comment/:id", async (req, res) => {
       data: populateComment,
     })
 
-    console.log(comment);
-
     const idea = await Idea.findById(req.params.id);
     const user = await getAccountByID(idea.user);
 
@@ -225,7 +223,7 @@ router.post("/comment/:id", async (req, res) => {
     mailer.sendMail(
       user.email,               // Gửi đến email nào
       "Notification Comment",   // Tên tiêu đề
-      contentMail.GetContentMailAfterComment(req.user.fullName, req.user.username, currentDateTime, idea.title, comment) // Nội dung trong email
+      contentMail.GetContentMailAfterComment(anonymous == "true" ? "Unknown" : req.user.fullName, anonymous == "true" ? "Unknown" : req.user.username, currentDateTime, idea.title, comment) // Nội dung trong email
     );
   }
 
@@ -278,7 +276,7 @@ router.get('/error', (req, res) => {
   })
 })
 
-router.get('/downloads',downloadZipDocs)
+router.get('/downloads', downloadZipDocs)
 // END ERROR PAGE
 
 // csv

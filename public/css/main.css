@@ -1688,7 +1688,7 @@ p.blog-meta span {
   margin-right: 15px;
   opacity: 0.6;
   color: #051922;
-  font-size: 0.85em;
+  font-size: 1.2em;
 }
 
 p.blog-meta span:last-child {
@@ -1768,12 +1768,15 @@ p.excerpt {
   font-weight: 600;
   line-height: 1.4;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .single-article-text p {
   font-size: 15px;
   line-height: 1.6;
   color: #051922;
+  /* border-radius: 10px;
+  border: 5px solid  rgba(16, 46, 46, 1); */
 }
 
 .comments-list-wrap {
@@ -1811,11 +1814,20 @@ p.excerpt {
 .comment-text-body {
   padding-left: 10px;
   margin-bottom: 40px;
+  border-radius: 10px;
+  border: 5px solid  rgba(16, 46, 46, 1);
+  padding: 20px;
+  width: 600px;
+  height: 100px;
+  background-color: whitesmoke
+  
 }
 
 .comment-text-body h4 {
   font-size: 18px;
   font-weight: 600;
+  display: inline;
+  color: black
 }
 
 span.comment-date {
@@ -1837,7 +1849,7 @@ span.comment-date {
 }
 
 .comment-text-body p {
-  color: #888;
+  color:black;
   line-height: 2;
   margin: 0;
 }
