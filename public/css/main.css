@@ -1688,7 +1688,7 @@ p.blog-meta span {
   margin-right: 15px;
   opacity: 0.6;
   color: #051922;
-  font-size: 1.2em;
+  font-size: 1em;
 }
 
 p.blog-meta span:last-child {
@@ -1815,7 +1815,7 @@ p.excerpt {
   padding-left: 10px;
   margin-bottom: 40px;
   border-radius: 10px;
-  border: 5px solid  rgba(16, 46, 46, 1);
+  border: 3px solid  rgba(16, 46, 46, 1);
   padding: 20px;
   width: 600px;
   height: 100px;
