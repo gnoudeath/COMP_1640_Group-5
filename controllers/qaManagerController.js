@@ -1,8 +1,17 @@
-const {File} = require('../models/Idea');
+const { File } = require('../models/Idea');
 const archiver = require('archiver');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const {Idea} = require('../models/Idea');
+const Idea = require('../models/Idea');
 const iconv = require('iconv-lite');
+const User = require('../models/User');
+
+async function GetUser(user) {
+    // If the user has a role, fetch the role data using the populate() method
+    if (user.role) {
+        const role = await User.Role.findById(user.role);
+        user.role = role;
+    }
+}
 
 // Start: GET: Create Category Page
 const formCategoryView = async (req, res) => {
@@ -10,13 +19,9 @@ const formCategoryView = async (req, res) => {
         const title = 'Create Category';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
-        res.render('QA_Manger/formCategory', { user, title })
+        res.render('QA_Manager/formCategory', { user, title })
 
     } catch (error) {
         console.error(error);
@@ -39,15 +44,11 @@ const listCategoriesView = async (req, res, next) => {
         const title = 'List Categories';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const categories = await Idea.getAllCategorys();
 
-        res.render('QA_Manger/listCategories', { user, title, categories });
+        res.render('QA_Manager/listCategories', { user, title, categories });
 
     } catch (error) {
         console.error(error);
@@ -63,15 +64,11 @@ const updateCategoryView = async (req, res) => {
         const title = 'Update Category';
         const user = req.user;
 
-        // If the user has a role, fetch the role data using the populate() method
-        if (user.role) {
-            const role = await User.Role.findById(user.role);
-            user.role = role;
-        }
+        await GetUser(user);
 
         const category = await Idea.getCategoryByID(req.params.id);
 
-        res.render('QA_Manger/updateCategory', { user, title, category });
+        res.render('QA_Manager/updateCategory', { user, title, category });
 
     } catch (error) {
         console.error(error);
@@ -97,29 +94,29 @@ const deleteFormCategory = async (req, res) => {
 // End: POST: Delete Category
 
 
-const downloadZipDocs = async (req,res)=> {
+const downloadZipDocs = async (req, res) => {
     try {
         const uploads = await File.find();
-    
+
         const archive = archiver('zip', { zlib: { level: 9 } });
-    
+
         uploads.forEach(upload => {
-          archive.append(upload.files, { name: upload.name });
+            archive.append(upload.files, { name: upload.name });
         });
-    
+
         res.attachment('uploads.zip');
-    
+
         archive.pipe(res);
         archive.finalize();
-      } catch (error) {
+    } catch (error) {
         next(error);
-      }
+    }
 }
 
 // Sử dụng đối tượng Intl.DateTimeFormat để định dạng ngày giờ
 const dateTimeFormat = new Intl.DateTimeFormat('vi-VN', {
-    year: 'numeric', 
-    month: 'numeric', 
+    year: 'numeric',
+    month: 'numeric',
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
@@ -152,19 +149,19 @@ const exportIdeasToCsv = async (_req, res) => {
             .populate('user', 'username')
             .exec()
             .then((ideas) => {
-                return ideas.map((idea) => {                   
-                return {
-                    title: iconv.encode(idea.title, 'utf8').toString(),
-                    content: iconv.encode(idea.content, 'utf8').toString(),
-                    createdDate: dateTimeFormat.format(idea.createdDate),
-                    closedDate: idea.closedDate ? dateTimeFormat.format(idea.closedDate) : '',
-                    category: idea.category.nameCate,
-                    user: idea.user.username,
-                    viewedBy: idea.viewedBy.length,
-                    likedBy: idea.likedBy.length,
-                    dislikedBy: idea.dislikedBy.length,
-                    isAnonymous: idea.isAnonymous ? 'Yes' : 'No'
-                };
+                return ideas.map((idea) => {
+                    return {
+                        title: iconv.encode(idea.title, 'utf8').toString(),
+                        content: iconv.encode(idea.content, 'utf8').toString(),
+                        createdDate: dateTimeFormat.format(idea.createdDate),
+                        closedDate: idea.closedDate ? dateTimeFormat.format(idea.closedDate) : '',
+                        category: idea.category.nameCate,
+                        user: idea.user.username,
+                        viewedBy: idea.viewedBy.length,
+                        likedBy: idea.likedBy.length,
+                        dislikedBy: idea.dislikedBy.length,
+                        isAnonymous: idea.isAnonymous ? 'Yes' : 'No'
+                    };
                 });
             });
 
@@ -181,5 +178,6 @@ const exportIdeasToCsv = async (_req, res) => {
 
 
 module.exports = {
-    formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory, downloadZipDocs, exportIdeasToCsv     // Function: Category
+    formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory, // Function: Category
+    downloadZipDocs, exportIdeasToCsv
 };
