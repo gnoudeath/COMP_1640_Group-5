@@ -1,7 +1,7 @@
-const { File } = require('../models/Idea');
+const { File, getAllCategorys, getCategoryByID, updateCategory, deleteCategory, insertCategory } = require('../models/Idea');
 const archiver = require('archiver');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const Idea = require('../models/Idea');
+const { Idea } = require('../models/Idea');
 const iconv = require('iconv-lite');
 const User = require('../models/User');
 
@@ -33,7 +33,7 @@ const formCategoryView = async (req, res) => {
 
 // Start: POST: Create Category
 const submitFormCategory = (req, res, next) => {
-    Idea.insertCategory(req.body);
+    insertCategory(req.body);
     res.redirect('/listCategories');
 };
 // End: POST: Create Category
@@ -46,7 +46,7 @@ const listCategoriesView = async (req, res, next) => {
 
         await GetUser(user);
 
-        const categories = await Idea.getAllCategorys();
+        const categories = await getAllCategorys();
 
         res.render('QA_Manager/listCategories', { user, title, categories });
 
@@ -66,7 +66,7 @@ const updateCategoryView = async (req, res) => {
 
         await GetUser(user);
 
-        const category = await Idea.getCategoryByID(req.params.id);
+        const category = await getCategoryByID(req.params.id);
 
         res.render('QA_Manager/updateCategory', { user, title, category });
 
@@ -80,7 +80,7 @@ const updateCategoryView = async (req, res) => {
 
 // Start: POST: Update Category
 const updateFormCategory = async (req, res) => {
-    await Idea.updateCategory(req.body.id, req.body);
+    await updateCategory(req.body.id, req.body);
     res.redirect('/listCategories');
 }
 // End: POST: Update Category
@@ -88,7 +88,7 @@ const updateFormCategory = async (req, res) => {
 
 // Start: POST: Delete Category
 const deleteFormCategory = async (req, res) => {
-    await Idea.deleteCategory(req.params.id);
+    await deleteCategory(req.params.id);
     res.redirect('/listCategories');
 }
 // End: POST: Delete Category
