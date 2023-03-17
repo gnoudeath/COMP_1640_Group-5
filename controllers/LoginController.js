@@ -69,14 +69,13 @@ const dashboardView = async (req, res) => {
       sortOptions = { createdDate: -1 };
     } else if (sortBy === 'last-comments') {
       sortOptions = { latestCommentDate: -1, createdDate: -1 };
-    } else if (sortBy === 'most-popular'){
-      sortOptions = { popularity: -1,createdDate: -1 };
+    } else if (sortBy === 'most-popular') {
+      sortOptions = { popularity: -1, createdDate: -1 };
     }
     else {
       // Default sort option
       sortOptions = { commentCount: -1 };
     }
-
 
     const query = {};
 
@@ -92,13 +91,9 @@ const dashboardView = async (req, res) => {
       const departmentId = mongoose.Types.ObjectId(department);
       const usersInDepartment = await User.find({ department: departmentId }).distinct('_id');
       query.user = { $in: usersInDepartment };
-
     }
 
-
-
     const ideas = await Idea.aggregate([
-
       {
         $match: query
       },
@@ -130,7 +125,7 @@ const dashboardView = async (req, res) => {
 
         }
       },
-      
+
       // populate user and category fields
       {
         $lookup: {

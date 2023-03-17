@@ -1,7 +1,7 @@
 const { File, getAllCategorys, getCategoryByID, updateCategory, deleteCategory, insertCategory } = require('../models/Idea');
 const archiver = require('archiver');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const { Idea } = require('../models/Idea');
+const Idea = require('../models/Idea');
 const iconv = require('iconv-lite');
 const User = require('../models/User');
 
@@ -176,8 +176,69 @@ const exportIdeasToCsv = async (_req, res) => {
     }
 };
 
+// Start: GET: dashboardForQAM Page
+const dashboardForQAM = async (req, res) => {
+    try {
+        const title = 'Dashboard';
+        const user = req.user;
+
+        await GetUser(user);
+
+        res.render('QA_Manager/dashboardForQAM', { user, title });
+
+    } catch (error) {
+        console.error(error);
+        // res.status(500).send('Internal Server Error');
+        res.redirect('/');
+    }
+};
+// End: GET: dashboardForQAM Page
+
+const checkData5s = async function (req, res) {
+    try {
+        // Start: Xử lý data dành cho bar chart
+        const categories = await Idea.getAllCategorys();
+
+        const nameCategory = [];
+        const countIdeasInCategory = [];
+
+        for (const category of categories) {
+            nameCategory.push(category.nameCate);
+            const count = await Idea.getCountIdeaRecordsByCategoryName(category._id);
+            countIdeasInCategory.push(count);
+        }
+
+        const barChartData = { nameCategory, countIdeasInCategory };
+        // End: Xử lý data dành cho bar chart
+
+        // Start: Xử lý data dành cho pie chart
+        const nameDepartment = [];
+        const totalIdeas = [];
+
+        const totalIdeasOfDepartment = await Idea.getTotalIdeaOfDepartment();
+
+        for (const totalIdea of totalIdeasOfDepartment) {
+            nameDepartment.push(totalIdea.departmentName);
+            totalIdeas.push(totalIdea.totalIdeas);
+        }
+
+        const pieChartData = { nameDepartment, totalIdeas };
+        // End: Xử lý data dành cho pie chart
+
+        // Start: Xử lý data dành cho line chart
+        const lineChartData = await Idea.getCountIdeaByEachEvent();
+        // End: Xử lý data dành cho line chart
+
+        const data = { barChartData, pieChartData, lineChartData };
+
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
 
 module.exports = {
     formCategoryView, submitFormCategory, listCategoriesView, updateCategoryView, updateFormCategory, deleteFormCategory, // Function: Category
-    downloadZipDocs, exportIdeasToCsv
+    downloadZipDocs, exportIdeasToCsv,
+    dashboardForQAM, checkData5s
 };

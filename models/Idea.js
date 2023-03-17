@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const Event = require('../models/Event');
+
 // Category Model
 const categorySchema = new mongoose.Schema({
   nameCate: String, // String is shorthand for {type: String}
@@ -85,7 +87,7 @@ const commentSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   }
-}); 
+});
 
 const CommentModel = mongoose.model('Comment', commentSchema, "comments");
 
@@ -149,6 +151,11 @@ async function updateCategory(id, data) {
   await Category.findByIdAndUpdate(id, data);
 }
 
+async function getCountIdeaRecordsByCategoryName(categoryID) {
+  const count = await Idea.countDocuments({ category: categoryID });
+  return count;
+}
+
 /**
  * Function: Xóa Category
  */
@@ -156,7 +163,74 @@ async function deleteCategory(id) {
   await Category.findByIdAndRemove(id);
 }
 
+/**
+ * Function: Lấy tổng Idea của mỗi Department
+ */
+async function getTotalIdeaOfDepartment() {
+  const data = await Idea.aggregate([
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user'
+      }
+    },
+    {
+      $unwind: '$user'
+    },
+    {
+      $lookup: {
+        from: 'departments',
+        localField: 'user.department',
+        foreignField: '_id',
+        as: 'department'
+      }
+    },
+    {
+      $unwind: '$department'
+    },
+    {
+      $group: {
+        _id: '$department._id',
+        departmentName: { $first: '$department.name' },
+        totalIdeas: { $sum: 1 }
+      }
+    }
+  ]);
+  return data;
+}
+
+/**
+ * Function: Lấy số lượng Idea của mỗi Event
+ */
+async function getCountIdeaByEachEvent() {
+  const ideas = await Idea.find().populate('user');
+  const events = await Event.Event.find();
+
+  const eventIdeaCounts = {};
+  ideas.forEach(idea => {
+    // duyệt qua danh sách các Idea và tìm Event tương ứng với mỗi Idea bằng cách kiểm tra xem createdDate của Idea có nằm trong khoảng startDate và finalClosureDate của một Event nào đó hay không
+    const event = events.find(event => idea.createdDate >= event.startDate && idea.createdDate <= event.finalClosureDate);
+
+    // Nếu có thì tăng biến đếm eventIdeaCounts[event._id] lên 1.
+    if (event) {
+      if (!eventIdeaCounts[event._id]) {
+        eventIdeaCounts[event._id] = 0;
+      }
+      eventIdeaCounts[event._id]++;
+    }
+  });
+
+  const labels = events.map(event => event.name);
+  const value = events.map(event => eventIdeaCounts[event._id] || 0);
+
+  const data = { labels, value };
+  return data;
+}
+
 module.exports = {
-  Idea, Category, File,
-  getAllCategorys, insertCategory, getCategoryByID, updateCategory, deleteCategory, CommentModel    // Function: Category
+  Idea, Category, File, CommentModel,
+  getAllCategorys, insertCategory, getCategoryByID, updateCategory, deleteCategory,
+  getCountIdeaRecordsByCategoryName, getTotalIdeaOfDepartment, getCountIdeaByEachEvent    // Function: Category
 }

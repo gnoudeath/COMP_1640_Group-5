@@ -1,0 +1,237 @@
+<!-- breadcrumb-section -->
+<div class="breadcrumb-section breadcrumb-bg">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <div class="breadcrumb-text">
+          <p>University Of Greenwich</p>
+          <h1><%= title %></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end breadcrumb section -->
+
+<!-- Section: Main Content -->
+<div class="contact-from-section mt-150 mb-150">
+  <div class="container">
+
+    <div class="col-md-12">
+      <!-- Content Row -->
+
+      <div class="row">
+
+        <!-- Start: Bar Chart -->
+        <div class="col-12 col-md-8">
+          <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+              <h6 class="m-0 font-weight-bold text-primary">Number of Ideas in each Category</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+              <div class="chart-area">
+                <canvas id="barChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End: Bar Chart -->
+
+        <div class="col-xl-4 col-lg-5">
+          <!-- Start: Pie Chart -->
+          <div class="row">
+            <div class="card shadow mb-4">
+              <!-- Card Header - Dropdown -->
+              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Number of Ideas in each Department</h6>
+              </div>
+
+              <!-- Card Body -->
+              <div class="card-body">
+                <div class="chart-pie pt-4 pb-2">
+                  <canvas id="pieChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End: Pie Chart -->
+
+          <!-- Start: Line Chart -->
+          <div class="row">
+            <div class="card shadow mb-4">
+              <!-- Card Header - Dropdown -->
+              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Number of Ideas In Each Event</h6>
+              </div>
+
+              <!-- Card Body -->
+              <div class="card-body">
+                <div class="chart-pie pt-4 pb-2">
+                  <canvas id="lineChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End: Line Chart -->
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<!-- End: Section: Main Content -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // ---------------------------- End: Chart ----------------------------
+
+    function updateData() {
+      $.ajax({
+        url: '/api/data',
+        method: 'GET',
+        success: function(response) {
+          // code để hiển thị dữ liệu trên view ở đây
+
+          // ---------------------------- Bar Chart ----------------------------
+
+          // Start: Random backgroundColor and borderColor in Bar Chart
+          const backgroundColorBarChart = [];
+          const borderColorBarChart = [];
+
+          for (let index = 0; index < response.barChartData.nameCategory.length; index++) {
+            const r = Math.floor(Math.random() * 255);
+            const g = Math.floor(Math.random() * 255);
+            const b = Math.floor(Math.random() * 255);
+
+            backgroundColorBarChart.push('rgba(' + r + ', ' + g + ', ' + b + ', 0.2)');
+            borderColorBarChart.push('rgba(' + r + ', ' + g + ', ' + b + ', 1)');
+          }
+          // End: Random backgroundColor and borderColor in Bar Chart
+
+          var barChart = document.getElementById('barChart').getContext('2d');
+
+          new Chart(barChart, {
+            type: 'bar',
+            data: {
+              labels: JSON.parse(JSON.stringify(response.barChartData.nameCategory).replace(/'/g, "\\'")),
+              datasets: [{
+                label: 'Number of Ideas in each Category',
+                data: JSON.parse(JSON.stringify(response.barChartData.countIdeasInCategory).replace(/'/g, "\\'")),
+                backgroundColor: backgroundColorBarChart,
+                borderColor: borderColorBarChart,
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
+            }
+          });
+          // ---------------------------- End: Bar Chart ----------------------------
+
+          // ---------------------------- Pie Chart ----------------------------
+          // Start: Random backgroundColor and borderColor in Bar Chart
+          const backgroundColorPieChart = [];
+          const borderColorPieChart = [];
+
+          for (let index = 0; index < response.pieChartData.nameDepartment.length; index++) {
+            const r = Math.floor(Math.random() * 255);
+            const g = Math.floor(Math.random() * 255);
+            const b = Math.floor(Math.random() * 255);
+
+            backgroundColorPieChart.push('rgba(' + r + ', ' + g + ', ' + b + ', 0.2)');
+            borderColorPieChart.push('rgba(' + r + ', ' + g + ', ' + b + ', 1)');
+          }
+          // End: Random backgroundColor and borderColor in Bar Chart
+
+          var pieChart = document.getElementById('pieChart').getContext('2d');
+
+          new Chart(pieChart, {
+            type: 'pie',
+            data: {
+              labels: JSON.parse(JSON.stringify(response.pieChartData.nameDepartment).replace(/'/g, "\\'")),
+              datasets: [{
+                label: 'Number of Ideas in each Department',
+                data: JSON.parse(JSON.stringify(response.pieChartData.totalIdeas).replace(/'/g, "\\'")),
+                backgroundColor: backgroundColorPieChart,
+                borderColor: borderColorPieChart,
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
+            }
+          });
+          // ---------------------------- End: Pie Chart ----------------------------
+
+          // ---------------------------- Line Chart ----------------------------
+          // Start: Random backgroundColor and borderColor in Line Chart
+          const backgroundColorLineChart = [];
+          const borderColorLineChart = [];
+
+          for (let index = 0; index < response.lineChartData.labels.length; index++) {
+            const r = Math.floor(Math.random() * 255);
+            const g = Math.floor(Math.random() * 255);
+            const b = Math.floor(Math.random() * 255);
+
+            backgroundColorLineChart.push('rgba(' + r + ', ' + g + ', ' + b + ', 0.2)');
+            borderColorLineChart.push('rgba(' + r + ', ' + g + ', ' + b + ', 1)');
+          }
+          // End: Random backgroundColor and borderColor in Bar Chart
+
+          var lineChart = document.getElementById('lineChart').getContext('2d');
+
+          console.log(response.lineChartData);
+
+          new Chart(lineChart, {
+            type: 'line',
+            data: {
+              labels: JSON.parse(JSON.stringify(response.lineChartData.labels).replace(/'/g, "\\'")),
+              datasets: [{
+                label: 'Number of Ideas In Each Event',
+                data: JSON.parse(JSON.stringify(response.lineChartData.value).replace(/'/g, "\\'")),
+                backgroundColor: backgroundColorLineChart,
+                borderColor: borderColorLineChart,
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
+            }
+          });
+          // ---------------------------- End: Pie Chart ----------------------------
+
+        },
+        error: function(err) {
+          console.log(err);
+        }
+      });
+    }
+
+    $(document).ready(function() {
+      setInterval(updateData, 3000); // tự động cập nhật dữ liệu sau mỗi 3 giây
+    });
+  });
+</script>

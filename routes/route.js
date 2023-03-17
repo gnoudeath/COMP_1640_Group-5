@@ -23,7 +23,7 @@ const {
 
 // Start: Has Functions Site QA Manager
 const {
-  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory, downloadZipDocs, exportIdeasToCsv
+  formCategoryView, submitFormCategory, listCategoriesView, deleteFormCategory, updateCategoryView, updateFormCategory, downloadZipDocs, exportIdeasToCsv, dashboardForQAM, checkData5s
 } = require('../controllers/qaManagerController');
 // End: Has Functions Site QA Manager
 
@@ -88,6 +88,10 @@ router.get('/listCategories', checkRole('QA Manager'), listCategoriesView);
 router.get('/updateCategory/:id', checkRole('QA Manager'), updateCategoryView);
 router.post('/updateFormCategory', checkRole('QA Manager'), updateFormCategory);
 router.post('/deleteCategory/:id', checkRole('QA Manager'), deleteFormCategory);
+
+router.get('/dashboardForQAM', checkRole('QA Manager'), dashboardForQAM);
+
+router.get('/api/data', checkData5s);
 
 // -------------- End: Route QA Manager site --------------
 
