@@ -24,10 +24,6 @@ const ideaSchema = new mongoose.Schema({
     type: Date,
     default: Date.now()
   },
-  closedDate: {
-    type: Date,
-    default: null
-  },
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',

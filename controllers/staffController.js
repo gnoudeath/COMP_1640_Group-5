@@ -128,7 +128,6 @@ const getMyIdeasPage = async (req, res) => {
         title: 1,
         content: 1,
         createdDate: 1,
-        closedDate: 1,
         category: { $arrayElemAt: ['$category.nameCate', 0] }, // Include category name
         user: { $arrayElemAt: ['$user', 0] },
         viewedBy: 1,
