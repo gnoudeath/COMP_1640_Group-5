@@ -1,9 +1,10 @@
+const Idea = require('../models/Idea');
 const { File, getAllCategorys, getCategoryByID, updateCategory, deleteCategory, insertCategory } = require('../models/Idea');
 const archiver = require('archiver');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const Idea = require('../models/Idea');
 const iconv = require('iconv-lite');
 const User = require('../models/User');
+
 
 async function GetUser(user) {
     // If the user has a role, fetch the role data using the populate() method
@@ -144,7 +145,7 @@ const exportIdeasToCsv = async (_req, res) => {
             ],
             encoding: 'utf8' //Thêm option encoding với giá trị utf8
         });
-        const csvData = await Idea.find({})
+        const csvData = await Idea.Idea.find({})
             .populate('category', 'nameCate')
             .populate('user', 'username')
             .exec()
