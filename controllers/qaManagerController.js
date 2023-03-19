@@ -4,6 +4,7 @@ const archiver = require('archiver');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const iconv = require('iconv-lite');
 const User = require('../models/User');
+const Event = require('../models/Event');
 
 
 async function GetUser(user) {
@@ -183,7 +184,19 @@ const dashboardForQAM = async (req, res) => {
 
         await GetUser(user);
 
-        res.render('QA_Manager/dashboardForQAM', { user, title });
+        const categories = await Idea.getAllCategorys();
+        const ideas = await Idea.Idea.find();
+        const departments = await User.getAllDepartments();
+        const events = await Event.getAllEvents();
+
+        const countCategories = categories.length;
+        const countEvents = events.length;
+        const countIdeas = ideas.length;
+        const countDepartments = departments.length;
+
+        const count = { countIdeas, countCategories, countDepartments, countEvents };
+
+        res.render('QA_Manager/dashboardForQAM', { user, title, count });
 
     } catch (error) {
         console.error(error);
@@ -228,7 +241,20 @@ const checkData5s = async function (req, res) {
         const lineChartData = await Idea.getCountIdeaByEachEvent();
         // End: Xử lý data dành cho line chart
 
-        const data = { barChartData, pieChartData, lineChartData };
+        // Start: Kiểm tra số lượng của ideas, categories, departments, events
+        const ideas = await Idea.Idea.find();
+        const departments = await User.getAllDepartments();
+        const events = await Event.getAllEvents();
+
+        const countIdeas = ideas.length;
+        const countCategories = categories.length;
+        const countDepartments = departments.length;
+        const countEvents = events.length;
+
+        const count = { countIdeas, countCategories, countDepartments, countEvents };
+        // End: Kiểm tra số lượng của ideas, categories, departments, events
+
+        const data = { barChartData, pieChartData, lineChartData, count };
 
         res.status(200).json(data);
     } catch (err) {
