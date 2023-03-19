@@ -255,6 +255,19 @@ $("#like-button").click(function() {
         }
         $button.prop("disabled", false);
         $("#dislike-button").prop("disabled", false);
+
+        // Update list of users who have liked the idea
+        $("#likesTab ul").empty();
+        data.updatedIdea.likedBy.forEach(function(user) {
+          $("#likesTab ul").append("<li class='list-group-item'>" + user.username + "</li>");
+        });
+      
+        // update list of users who have disliked the idea
+        $("#dislikesTab ul").empty();
+        data.updatedIdea.dislikedBy.forEach(function(user) {
+          $("#dislikesTab ul").append("<li class='list-group-item'>" + user.username + "</li>");
+        });
+        
       },
       error: function(xhr, status, error) {
         // Handle error response
@@ -282,6 +295,16 @@ $("#like-button").click(function() {
         }
         $button.prop("disabled", false);
         $("#like-button").prop("disabled", false);
+        $("#likesTab ul").empty();
+        data.updatedIdea.likedBy.forEach(function(user) {
+          $("#likesTab ul").append("<li class='list-group-item'>" + user.username + "</li>");
+        });
+      
+        // update list of users who have disliked the idea
+        $("#dislikesTab ul").empty();
+        data.updatedIdea.dislikedBy.forEach(function(user) {
+          $("#dislikesTab ul").append("<li class='list-group-item'>" + user.username + "</li>");
+        });
       },
       error: function(xhr, status, error) {
         // Handle error response

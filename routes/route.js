@@ -104,7 +104,9 @@ router.get('/detailIdeas/:id', async (req, res) => {
   const idea = await Idea
     .findById(req.params.id)
     .populate('user', 'username')
-    .populate('category', 'nameCate');
+    .populate('category', 'nameCate')
+    .populate('likedBy')
+    .populate('dislikedBy');
 
   const formattedList = {
     createdDate: moment(idea.createdDate).tz(timezone).format(dateTimeFormat)
@@ -115,15 +117,13 @@ router.get('/detailIdeas/:id', async (req, res) => {
     await idea.save();
   }
 
-  let isLiked = false;
-  let isDisliked = false;
+  
 
-  if (idea.likedBy.includes(req.user._id)) {
-    isLiked = true;
-  } else if (idea.dislikedBy.includes(req.user._id)) {
-    isDisliked = true;
-  }
+  // Find the current user's interaction with the idea
+const isLiked = idea.likedBy.some(user => user._id.equals(req.user._id));
+const isDisliked = idea.dislikedBy.some(user => user._id.equals(req.user._id));
 
+  
   const numLikes = idea.likedBy.length;
   const numDislikes = idea.dislikedBy.length;
   const title = 'Detail';
@@ -141,7 +141,7 @@ router.post('/likeIdeas/:id', async (req, res) => {
   try {
     const user = req.user; // assuming user authentication middleware is used
     const ideaId = req.params.id;
-    const idea = await Idea.findById(ideaId);
+    const idea = await Idea.findById(ideaId)
 
     // check if user has already liked the idea
     const isLiked = idea.likedBy.includes(user._id);
@@ -164,9 +164,11 @@ router.post('/likeIdeas/:id', async (req, res) => {
 
     const numLikes = idea.likedBy.length;
     const numDislikes = idea.dislikedBy.length;
+    // send back updated list of users who have liked the idea
+    const updatedIdea = await Idea.findById(ideaId).populate('likedBy').populate('dislikedBy');
 
 
-    return res.json({ message: 'Idea liked successfully.', numLikes: numLikes, numDislikes: numDislikes });
+    return res.json({ message: 'Idea liked successfully.', numLikes: numLikes, numDislikes: numDislikes,updatedIdea:updatedIdea  });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error.' });
@@ -191,7 +193,8 @@ router.post('/dislikeIdeas/:id', async (req, res) => {
 
     const numLikes = idea.likedBy.length;
     const numDislikes = idea.dislikedBy.length;
-    res.json({ numLikes: numLikes, numDislikes: numDislikes });
+    const updatedIdea = await Idea.findById(req.params.id).populate('likedBy').populate('dislikedBy');
+    res.json({ numLikes: numLikes, numDislikes: numDislikes,updatedIdea:updatedIdea });
   } catch (error) {
     console.error(error);
     res.status(500).send('Server error');

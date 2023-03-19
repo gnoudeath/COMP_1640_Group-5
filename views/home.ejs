@@ -165,8 +165,8 @@
             <div class="filter-section">
               <% if (user.role.name==="QA Manager" ) { %>
               <h4>Download all uploaded documents</h4>
-              <a download id="downloadBtn"> Download Zip</a>
               <a href="/export-ideas" download>Download CSV</a>
+              <a download id="downloadBtn"> Download Zip</a>
               <% }  %>
               <div id="confirmDownloadModal" style="display: none;">
                 <p>Are you sure you want to download all uploaded documents as a zip file?</p>
@@ -194,17 +194,18 @@
               </ul>
             </div>
             <div class="filter-section">
-              <h4>Category</h4>
-              <ul>
-                <li>
-                  <a href="?sortBy=<%- sortBy %>&category=all&department=<%- department %>" class="<%= category === 'all' ? 'active' : '' %>">All</a>
-                </li>
-                <% categories.forEach(cat => { %>
-                <li>
-                  <a href="?sortBy=<%- sortBy %>&category=<%- cat._id %>&department=<%- department %>" class="<%= category.toString() === cat._id.toString() ? 'active' : '' %>"><%- cat.nameCate %></a>
-                </li>
-                <% }) %>
-              </ul>
+              <h4>Department</h4>
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Category
+                </button>
+                <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+                  <a class="dropdown-item <%= category === 'all' ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=all&department=<%- department %>">All Categories</a>
+                  <% categories.forEach(cat => { %>
+                  <a class="dropdown-item <%= category.toString() === cat._id.toString() ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- cat._id %>&department=<%- department %>"><%- cat.nameCate %></a>
+                  <% }) %>
+                </div>
+              </div>
             </div>
             <div class="filter-section">
               <h4>Department</h4>
