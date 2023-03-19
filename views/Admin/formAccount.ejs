@@ -2,6 +2,22 @@
 <div class="breadcrumb-section breadcrumb-bg">
   <div class="container">
     <div class="row">
+
+      <% if (messages != '') { %>
+      <div class="toast" role="alert" id="errorToast" style="position: absolute; top: 35%; right: 5%;">
+        <div class="toast-header">
+          <strong class="mr-auto">Notification</strong>
+          <button type="button" class="close">
+            <span>&times;</span>
+          </button>
+        </div>
+
+        <div class="toast-body text-left">
+          <%= messages %>
+        </div>
+      </div>
+      <% } %>
+
       <div class="col-lg-8 offset-lg-2 text-center">
         <div class="breadcrumb-text">
           <p>University Of Greenwich</p>
@@ -130,6 +146,13 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+
+    $('#errorToast').toast({
+      delay: 5000
+    });
+
+    $('#errorToast').toast("show");
+
     $(document).ready(function() {
       $("div#form-department").hide();
 

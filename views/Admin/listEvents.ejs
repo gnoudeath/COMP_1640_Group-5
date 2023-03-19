@@ -38,7 +38,7 @@
           <td><%= element.startDate %></td>
           <td><%= element.firstClosureDate %></td>
           <td><%= element.finalClosureDate %></td>
-          <td><%= element.status %></td>
+          <td><%= element.status == true ? "Opening" : "Closed" %></td>
           <td>
             <button type="button" class="btn btn-primary" data-id="<%= element._id %>" data-toggle="modal" data-target="#set_date_modal">Set Date</button>
             <a href="updateEvent/<%= element._id %>" class="btn btn-warning">Edit</a>

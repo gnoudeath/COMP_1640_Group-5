@@ -13,6 +13,7 @@ async function GetUser(user) {
 // Start: GET: Create Account Page
 const formAccountView = async (req, res) => {
     try {
+        const messages = req.flash('error');
         const title = 'Create Account';
         const user = req.user;
 
@@ -21,7 +22,7 @@ const formAccountView = async (req, res) => {
         const allRoles = await User.getAllRoles();
         const allDepartments = await User.getAllDepartments();
 
-        res.render('Admin/formAccount', { user, title, allRoles, allDepartments })
+        res.render('Admin/formAccount', { messages, user, title, allRoles, allDepartments })
 
     } catch (error) {
         console.error(error);
@@ -32,15 +33,25 @@ const formAccountView = async (req, res) => {
 // End: GET: Create Account Page
 
 // Start: POST: Create Account
-const submitFormAccount = (req, res, next) => {
-    User.insertUser(req.body);
-    res.redirect('/listAccounts');
+const submitFormAccount = async (req, res, next) => {
+    const account = await User.checkAccountExists(req.body.username);
+    if (account == false) {
+        User.insertUser(req.body);
+        req.flash('success', `Created Account "${req.body.username}" Successfully`);
+        res.redirect('/listAccounts');
+    }
+
+    else {
+        req.flash('error', `Username Existed. Please try again!!!`);
+        res.redirect('/formAccount');
+    }
 };
 // End: POST: Create Account
 
 // Start: GET: List Account Page
 const listAccountsView = async (req, res, next) => {
     try {
+        const messages = req.flash('success');
         const title = 'List Accounts';
         const user = req.user;
 
@@ -53,7 +64,7 @@ const listAccountsView = async (req, res, next) => {
         const test = await User.getAccountsByRoleNameAndDepartmentName("Staff", "IT");
 
 
-        res.render('Admin/listAccounts', { user, title, qa_managers, qa_coordinators, staffs });
+        res.render('Admin/listAccounts', { messages, user, title, qa_managers, qa_coordinators, staffs });
 
     } catch (error) {
         console.error(error);
