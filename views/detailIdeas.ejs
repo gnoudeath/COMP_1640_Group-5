@@ -28,10 +28,15 @@
             <p class="blog-meta">
               <span class="author"><i class="fas fa-user"></i> <%= idea.isAnonymous ? 'Unknown' : idea.user.username %></span>
               <span class="date" style="margin-left: 630px;"><i class="fas fa-calendar"></i> <%= formattedList.createdDate %></span>
+              
             </p>
             <p class="blog-meta">
               <span class="category"><i class="fa fa-tags" aria-hidden="true"></i> <%= idea.category.nameCate %></span>
             </p>
+            <p class="blog-meta">
+              <span class="viewed"><i class="fa fa-eye" aria-hidden="true"></i> <%= idea.viewedBy.length %></span>
+            </p>
+           
             <h2><%= idea.title %></h2>
             <p><%= idea.content %></p>
             <div class="right-left">
