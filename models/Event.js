@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const moment = require('moment-timezone');
+const schedule = require('node-schedule');
 const timezone = 'Asia/Ho_Chi_Minh';
 const dateFormat = 'DD/MM/YYYY';
 const dateTimeFormat = 'DD/MM/YYYY HH:mm';
@@ -142,6 +143,27 @@ async function hasTrueStatusComment() {
         return false;
     }
 }
+
+// Mỗi 10s sẽ kiểm tra ngày hết hạn của event
+schedule.scheduleJob('*/10 * * * * *', async () => {
+
+    const currentDate = new Date();
+    // nếu có event đang có status là true sẽ bắt đầu kiểm tra
+    const events = await Event.find({
+        status: true
+    });
+
+    if (events.length == 1) {
+        for (const event of events) {
+            // Nếu ngày hiện tại trùng hoặc là đã quá ngày finalClosureDate (so sánh theo GMT+0 London)
+            if (currentDate >= event.finalClosureDate) {
+                // Chuyển status thành false và lưu lại
+                event.status = false;
+                await event.save();
+            }
+        }
+    }
+});
 
 
 // Export the Mongoose model
