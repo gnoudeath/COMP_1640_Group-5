@@ -51,7 +51,11 @@ const ideaSchema = new mongoose.Schema({
   isAnonymous: {
     type: Boolean,
     default: false
-  }
+  },
+  uploads: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Upload'
+  }]
 });
 
 const Idea = mongoose.model('Idea', ideaSchema);

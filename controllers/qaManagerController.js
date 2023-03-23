@@ -141,16 +141,22 @@ const exportIdeasToCsv = async (_req, res) => {
                 { id: 'viewedBy', title: 'Viewed' },
                 { id: 'likedBy', title: 'Liked' },
                 { id: 'dislikedBy', title: 'Disliked' },
-                { id: 'isAnonymous', title: 'Is Anonymous' }
+                { id: 'isAnonymous', title: 'Is Anonymous' },
+                { id: 'hasFiles', title: 'hasFiles' },
             ],
             encoding: 'utf8' //Thêm option encoding với giá trị utf8
         });
         const csvData = await Idea.Idea.find({})
             .populate('category', 'nameCate')
             .populate('user', 'username')
+            .populate('uploads')
             .exec()
             .then((ideas) => {
                 return ideas.map((idea) => {
+                    let hasFiles = "No";
+                    if (idea.uploads.length > 0 && idea.uploads[0].files) {
+                        hasFiles = "Yes";
+                    }
                     return {
                         title: iconv.encode(idea.title, 'utf8').toString(),
                         content: iconv.encode(idea.content, 'utf8').toString(),
@@ -160,11 +166,11 @@ const exportIdeasToCsv = async (_req, res) => {
                         viewedBy: idea.viewedBy.length,
                         likedBy: idea.likedBy.length,
                         dislikedBy: idea.dislikedBy.length,
-                        isAnonymous: idea.isAnonymous ? 'Yes' : 'No'
+                        isAnonymous: idea.isAnonymous ? 'Yes' : 'No',
+                        hasFiles: hasFiles
                     };
                 });
             });
-
         // Write the CSV data to a file
         await csvWriter.writeRecords(csvData);
 

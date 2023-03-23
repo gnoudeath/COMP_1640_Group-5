@@ -43,7 +43,7 @@
             <label for="file" class="drop-container">
               <span class="drop-title">Drop files here</span>
               or
-              <input type="file" name="files" accept=".doc, .docx, .pdf" multiple required>
+              <input type="file" name="files" accept=".doc, .docx, .pdf" multiple>
             </label>
             <div class="checkbox">
               <label>
@@ -61,8 +61,8 @@
     <script>
       function confirmAgreement() {
         if (document.getElementById("terms").checked) {
-          var terms = "Terms and conditions: Are you sure";
-          window.alert(terms);
+          // var terms = "Terms and conditions: Are you sure";
+          // window.alert(terms);
           return confirm("Are you sure you agree to the terms and conditions?");
         } else {
           alert("Please agree to the terms and conditions.");
