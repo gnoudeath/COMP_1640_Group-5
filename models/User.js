@@ -147,7 +147,20 @@ async function deleteAccount(id) {
 }
 
 /**
- * Function: Xóa tài khoản
+ * Function: Kiểm tra department này có tài khoản nào không
+ */
+async function checkAccountExistsInDepartment(department_ID) {
+  const accounts = await User.find({ department: department_ID });
+  if (accounts.length > 0) {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
+/**
+ * Function: Kiểm tra tài khoản tồn tại bằng cách check username
  */
 async function checkAccountExists(username) {
   const account = await User.find({ username: username });
@@ -206,8 +219,8 @@ async function deleteDepartment(id) {
 // Export the Mongoose model
 module.exports = {
   User, Role, Department,
-  getAllRoles, getAccountsByRoleNameAndDepartmentName,                                                              // Function: Role
-  insertUser, getAccountsByRoleName, getAccountByID, updateAccount, deleteAccount, checkAccountExists,              // Function: Account
-  insertDepartment, getAllDepartments, getDepartmentByID, updateDepartment, deleteDepartment,                       // Function: Department
+  getAllRoles, getAccountsByRoleNameAndDepartmentName,
+  insertUser, getAccountsByRoleName, getAccountByID, updateAccount, deleteAccount, checkAccountExists,
+  insertDepartment, getAllDepartments, getDepartmentByID, updateDepartment, deleteDepartment, checkAccountExistsInDepartment
 };
 

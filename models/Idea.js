@@ -229,8 +229,35 @@ async function getCountIdeaByEachEvent() {
   return data;
 }
 
+/**
+ * Function: Kiểm tra người dùng này có sở hữu Idea nào không
+ */
+async function checkUserOwnsIdeas(user_ID) {
+  const ideas = await Idea.find({ user: user_ID });
+  if (ideas.length > 0) {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
+/**
+ * Function: Kiểm tra category này có Ideas nào không
+ */
+async function checkCategoryHasIdeas(category_ID) {
+  const ideas = await Idea.find({ category: category_ID });
+  if (ideas.length > 0) {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
 module.exports = {
   Idea, Category, File, CommentModel,
   getAllCategorys, insertCategory, getCategoryByID, updateCategory, deleteCategory,
-  getCountIdeaRecordsByCategoryName, getTotalIdeaOfDepartment, getCountIdeaByEachEvent    // Function: Category
+  getCountIdeaRecordsByCategoryName, getTotalIdeaOfDepartment, getCountIdeaByEachEvent,
+  checkUserOwnsIdeas, checkCategoryHasIdeas
 }

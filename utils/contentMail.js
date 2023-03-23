@@ -838,7 +838,7 @@ function GetContentMailAfterPostIdea(fullname, username, created_at, title, cont
                         <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
                           <p class="size-17" style="Margin-top: 0;Margin-bottom: 0;font-size: 17px;line-height: 26px;" lang="x-size-17">Thanks,<br />
                             <strong>&#272;&#7913;c Chi&#7871;n</strong><br />
-                            <em>&#212;ng t&#7893; FullStack - Si&#234;u c&#7845;p vip pro</em>
+                            <em>Group 5 - TCH2203</em>
                           </p>
                         </div>
                       </div>
@@ -1782,7 +1782,7 @@ function GetContentMailAfterComment(fullname, username, created_at, title, comme
                       <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
                         <p class="size-17" style="Margin-top: 0;Margin-bottom: 0;font-size: 17px;line-height: 26px;" lang="x-size-17">Thanks,<br />
                           <strong>&#272;&#7913;c Chi&#7871;n</strong><br />
-                          <em>&#212;ng t&#7893; FullStack - Si&#234;u c&#7845;p vip pro</em>
+                          <em>Group 5 - TCH2203</em>
                         </p>
                       </div>
                     </div>

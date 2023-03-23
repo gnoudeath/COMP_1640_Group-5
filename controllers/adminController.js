@@ -37,7 +37,7 @@ const submitFormAccount = async (req, res, next) => {
     const account = await User.checkAccountExists(req.body.username);
     if (account == false) {
         User.insertUser(req.body);
-        req.flash('success', `Created Account "${req.body.username}" Successfully`);
+        req.flash('notification', `Created Account "${req.body.username}" Successfully`);
         res.redirect('/listAccounts');
     }
 
@@ -48,10 +48,10 @@ const submitFormAccount = async (req, res, next) => {
 };
 // End: POST: Create Account
 
-// Start: GET: List Account Page
+// Start: GET: List Accounts Page
 const listAccountsView = async (req, res, next) => {
     try {
-        const messages = req.flash('success');
+        const messages = req.flash('notification');
         const title = 'List Accounts';
         const user = req.user;
 
@@ -61,9 +61,6 @@ const listAccountsView = async (req, res, next) => {
         const qa_managers = await User.getAccountsByRoleName("QA Manager");
         const qa_coordinators = await User.getAccountsByRoleName("QA Coordinator");
 
-        const test = await User.getAccountsByRoleNameAndDepartmentName("Staff", "IT");
-
-
         res.render('Admin/listAccounts', { messages, user, title, qa_managers, qa_coordinators, staffs });
 
     } catch (error) {
@@ -72,7 +69,7 @@ const listAccountsView = async (req, res, next) => {
         // res.status(500).send('Internal Server Error');
     }
 }
-// End: GET: List Account Page
+// End: GET: List Accounts Page
 
 // Start: GET: Update Account Page
 const updateAccountView = async (req, res) => {
@@ -105,8 +102,19 @@ const updateFormAccount = async (req, res) => {
 
 // Start: POST: Delete Account
 const deleteFormAccount = async (req, res) => {
-    await User.deleteAccount(req.params.id);
-    res.redirect('/listAccounts');
+    const account = await User.getAccountByID(req.params.id);
+    const checkUserOwnsIdeas = await Idea.checkUserOwnsIdeas(req.params.id);
+
+    if (checkUserOwnsIdeas == true) {
+        await User.deleteAccount(req.params.id);
+        req.flash('notification', `Deleted account "${account.fullName}" - ${account.role.name}`);
+        res.redirect('/listAccounts');
+    }
+    else {
+        req.flash('notification', `Cannot delete account "${account.fullName}" - ${account.role.name}`);
+        res.redirect('/listAccounts');
+    }
+
 }
 // End: POST: Delete Account
 
@@ -139,6 +147,8 @@ const submitFormDepartment = (req, res, next) => {
 // Start: GET: List Departments Page
 const listDepartmentsView = async (req, res, next) => {
     try {
+        const messages = req.flash('notification');
+
         const title = 'List Departments';
         const user = req.user;
 
@@ -146,7 +156,7 @@ const listDepartmentsView = async (req, res, next) => {
 
         const departments = await User.getAllDepartments();
 
-        res.render('Admin/listDepartments', { user, title, departments });
+        res.render('Admin/listDepartments', { messages, user, title, departments });
 
     } catch (error) {
         console.error(error);
@@ -185,8 +195,18 @@ const updateFormDepartment = async (req, res) => {
 
 // Start: POST: Delete Department
 const deleteFormDepartment = async (req, res) => {
-    await User.deleteDepartment(req.params.id);
-    res.redirect('/listDepartments');
+    const department = await User.getDepartmentByID(req.params.id);
+    const checkAccountExists = await User.checkAccountExistsInDepartment(req.params.id);
+    if (checkAccountExists == true) {
+        await User.deleteDepartment(req.params.id);
+        req.flash('notification', `Deleted "${department.name}" department`);
+        res.redirect('/listDepartments');
+    }
+    else {
+        req.flash('notification', `Cannot delete "${department.name}" department!!! Because this department is having accounts`);
+        res.redirect('/listDepartments');
+    }
+
 }
 // End: POST: Delete Department
 

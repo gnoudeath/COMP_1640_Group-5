@@ -43,6 +43,7 @@ const submitFormCategory = (req, res, next) => {
 // Start: GET: List Categories Page
 const listCategoriesView = async (req, res, next) => {
     try {
+        const messages = req.flash('notification');
         const title = 'List Categories';
         const user = req.user;
 
@@ -50,7 +51,7 @@ const listCategoriesView = async (req, res, next) => {
 
         const categories = await getAllCategorys();
 
-        res.render('QA_Manager/listCategories', { user, title, categories });
+        res.render('QA_Manager/listCategories', { messages, user, title, categories });
 
     } catch (error) {
         console.error(error);
@@ -90,8 +91,18 @@ const updateFormCategory = async (req, res) => {
 
 // Start: POST: Delete Category
 const deleteFormCategory = async (req, res) => {
-    await deleteCategory(req.params.id);
-    res.redirect('/listCategories');
+    const category = await Idea.getCategoryByID(req.params.id);
+    const checkCategoryHasIdeas = await Idea.checkCategoryHasIdeas(req.params.id);
+    if (checkCategoryHasIdeas == true) {
+        await deleteCategory(req.params.id);
+        req.flash('notification', `Deleted "${category.nameCate}" category`);
+        res.redirect('/listCategories');
+    }
+    else {
+        req.flash('notification', `Cannot delete "${category.nameCate}" category!!! Because this category is having ideas`);
+        res.redirect('/listCategories');
+    }
+
 }
 // End: POST: Delete Category
 
