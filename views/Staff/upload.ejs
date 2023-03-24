@@ -121,8 +121,7 @@ const hashtags = [];
     if (hashtagValue.length > 0) {
       addHashtag(hashtagValue);
       input.value = "";
-      hashtags.push(hashtagValue);
-      hiddenInput.value = JSON.stringify(hashtags);
+      
     } else {
       event.preventDefault(); // prevent form submission if hashtag input is empty
     }
@@ -162,10 +161,13 @@ function addHashtag(hashtag) {
   hashtagElem.appendChild(removeElem);
   container.appendChild(hashtagElem);
 
-  // Add hashtag to array
-  hashtags.push(hashtag);
-  hiddenInput.value = JSON.stringify(hashtags);
+  // Add hashtag to array if it doesn't already exist
+  if (!hashtags.includes(hashtag)) {
+    hashtags.push(hashtag);
+    hiddenInput.value = JSON.stringify(hashtags);
+  }
 }
+
 
       
     </script>   
