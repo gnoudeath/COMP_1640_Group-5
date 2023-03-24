@@ -16,6 +16,7 @@ const uploadFile = async (req, res, next) => {
     idea.category = req.body.category
     idea.user = req.user
     idea.isAnonymous = req.body.isAnonymous || false; //Lấy giá trị isAnonymous từ request body, nếu không có giá trị thì mặc định là false
+    idea.hashtags =  JSON.parse(req.body.hashtags);
     idea.save((err) => {
       if (err) { return next(err); }
     });
@@ -25,7 +26,7 @@ const uploadFile = async (req, res, next) => {
         name: file.originalname,
         files: file.buffer,
         user: req.user,
-        ideas: idea
+        ideas: idea,
       });
       return newFile.save();
     });

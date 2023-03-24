@@ -36,6 +36,9 @@
             <p class="blog-meta">
               <span class="viewed"><i class="fa fa-eye" aria-hidden="true"></i> <%= idea.viewedBy.length %></span>
             </p>
+            
+            
+            
            
             <h2><%= idea.title %></h2>
             <p><%= idea.content %></p>
@@ -60,8 +63,13 @@
             </div>
 
           </div>
-
-          <div id="form_status"></div>
+          <% if (idea.hashtags.length > 0) { %>
+          <span>Tags:</span>
+          <% for (const hashtag of idea.hashtags) { %>
+          <span class="badge bg-info text-white">#<%= hashtag %></span>
+          <% } %>
+          <% } %>
+          
 
           <div class="action">
             <div>

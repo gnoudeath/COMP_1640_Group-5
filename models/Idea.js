@@ -51,7 +51,11 @@ const ideaSchema = new mongoose.Schema({
   isAnonymous: {
     type: Boolean,
     default: false
-  }
+  },
+  hashtags: [{
+    type: String,
+    
+  }]
 });
 
 const Idea = mongoose.model('Idea', ideaSchema);
