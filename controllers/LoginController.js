@@ -57,6 +57,11 @@ const dashboardView = async (req, res) => {
     const sortBy = req.query.sortBy || 'all-ideas'
     const category = req.query.category || 'all'
     const department = req.query.department || 'all'
+    const hashtags = req.query.hashtags ? req.query.hashtags.split(',') : [];
+    const queryParams = req.query;
+
+    
+
 
 
 
@@ -92,6 +97,10 @@ const dashboardView = async (req, res) => {
       const usersInDepartment = await User.find({ department: departmentId }).distinct('_id');
       query.user = { $in: usersInDepartment };
     }
+    if (hashtags.length > 0) {
+      query.hashtags = { $in: hashtags };
+    }
+    
 
     const ideas = await Idea.aggregate([
       {
@@ -205,7 +214,11 @@ const dashboardView = async (req, res) => {
         categories,
         categoryName,
         departments,
-        department
+        department,
+        queryParams,
+        categories,
+        hashtags,
+        
       });
     } else {
       res.redirect('/login');

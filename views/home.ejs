@@ -106,6 +106,7 @@
   -webkit-user-select: none;
   touch-action: manipulation;
 }
+
 </style>
 
 <div class="breadcrumb-section breadcrumb-bg">
@@ -149,19 +150,7 @@
     <div class="row">
       <div class="col-md-3">
         <nav class="navbar bg-light">
-          <% /* %>
-          <!-- <div class="">
-            <a href="/"><button class="tablinks <%= typeof filter =='undefined' ? 'active' : '' %>">All Ideas</button></a>
-            <a href=""><button class="tablinks">Most Poppular</button></a>
-            <a href="/most-viewed/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'most-viewed' ? 'active' : '' %>">Most Viewed</button></a>
-            <a href="/last-ideas/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'last-ideas' ? 'active' : '' %>">Latest Idea</button></a>
-            <a href="/last-comments/1"><button class="tablinks <%= typeof filter !=='undefined' && filter === 'last-comments' ? 'active' : '' %>">Latest Comments</button></a>
-
-          </div> -->
-          <% */ %>
           <div class="filter-sidebar">
-            
-            
             <div class="filter-section">
               <% if (user.role.name==="QA Manager" ) { %>
               <h4>Download all uploaded documents</h4>
@@ -177,19 +166,19 @@
               <h4>Sort by</h4>
               <ul>
                 <li>
-                  <a href="?sortBy=all-ideas&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'all-ideas' ? 'active' : '' %>">All Ideas</a>
+                  <a href="?sortBy=all-ideas&category=<%- category %>&department=<%- department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>" class="<%= sortBy === 'all-ideas' ? 'active' : '' %>">All Ideas</a>
                 </li>
                 <li>
-                  <a href="?sortBy=most-viewed&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'most-viewed' ? 'active' : '' %>">Most Viewed</a>
+                  <a href="?sortBy=most-viewed&category=<%- category %>&department=<%- department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>" class="<%= sortBy === 'most-viewed' ? 'active' : '' %>">Most Viewed</a>
                 </li>
                 <li>
-                  <a href="?sortBy=most-popular&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'most-popular' ? 'active' : '' %>">Most Popular</a>
+                  <a href="?sortBy=most-popular&category=<%- category %>&department=<%- department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>" class="<%= sortBy === 'most-popular' ? 'active' : '' %>">Most Popular</a>
                 </li>
                 <li>
-                  <a href="?sortBy=last-ideas&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'last-ideas' ? 'active' : '' %>">Last Ideas</a>
+                  <a href="?sortBy=last-ideas&category=<%- category %>&department=<%- department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>" class="<%= sortBy === 'last-ideas' ? 'active' : '' %>">Last Ideas</a>
                 </li>
                 <li>
-                  <a href="?sortBy=last-comments&category=<%- category %>&department=<%- department %>" class="<%= sortBy === 'last-comments' ? 'active' : '' %>">Last Comments</a>
+                  <a href="?sortBy=last-comments&category=<%- category %>&department=<%- department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>" class="<%= sortBy === 'last-comments' ? 'active' : '' %>">Last Comments</a>
                 </li>
               </ul>
             </div>
@@ -200,9 +189,9 @@
                   Category
                 </button>
                 <div class="dropdown-menu" aria-labelledby="categoryDropdown">
-                  <a class="dropdown-item <%= category === 'all' ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=all&department=<%- department %>">All Categories</a>
+                  <a class="dropdown-item <%= category === 'all' ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=all&department=<%- department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>">All Categories</a>
                   <% categories.forEach(cat => { %>
-                  <a class="dropdown-item <%= category.toString() === cat._id.toString() ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- cat._id %>&department=<%- department %>"><%- cat.nameCate %></a>
+                  <a class="dropdown-item <%= category.toString() === cat._id.toString() ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- cat._id %>&department=<%- department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>"><%- cat.nameCate %></a>
                   <% }) %>
                 </div>
               </div>
@@ -214,18 +203,43 @@
                   Departments
                 </button>
                 <div class="dropdown-menu" aria-labelledby="departmentDropdown">
-                  <a class="dropdown-item <%= department === 'all' ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- category %>&department=all">All Departments</a>
+                  <a class="dropdown-item <%= department === 'all' ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- category %>&department=all<% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>">All Departments</a>
                   <% departments.forEach(dept => { %>
-                  <a class="dropdown-item <%= department.toString() === dept._id.toString() ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- category %>&department=<%- dept._id %>"><%- dept.name %></a>
+                  <a class="dropdown-item <%= department.toString() === dept._id.toString() ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- category %>&department=<%- dept._id %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>"><%- dept.name %></a>
                   <% }) %>
                 </div>
               </div>
             </div>
-
-
           </div>
-
-
+          <div class="filter-section">
+            <h4>Filter by Hashtag (separated by comma)</h4>
+            <form id="hashtag-form" class="form-inline mb-3" action="">
+              <div class="input-group mr-2">
+                <input type="text" class="form-control" name="hashtags" placeholder="Enter hashtag">
+                <div class="input-group-append">
+                  <button class="btn btn-secondary" type="submit">Apply</button>
+                </div>
+              </div>
+              <% Object.keys(queryParams).forEach(key => { %>
+                <% if (key !== 'hashtags') { %>
+                  <input type="hidden" name="<%= key %>" value="<%= queryParams[key] %>">
+                <% } %>
+              <% }) %>
+            </form>
+            <div id="applied-filters">
+              <% if (queryParams.hashtags) { %>
+                <div class="filter-tag mb-2">
+                  <span class="badge badge-pill badge-primary"><%= "#" + queryParams.hashtags %></span>
+                  <button class="btn btn-sm btn-secondary ml-2" onclick="clearHashtags()">Remove</button>
+                </div>
+              <% } %>
+            </div>
+          </div>
+          
+          
+          
+          
+          
         </nav>
       </div>
 
@@ -276,7 +290,7 @@
             <ul class="pagination">
               <% if (current > 1) { %>
               <li class="page-item">
-                <a class="page-link" href="?page=<%= parseInt(current) - 1 %>&sortBy=<%= sortBy %>&category=<%= category %>&department=<%= department %>" aria-label="Previous">
+                <a class="page-link" href="?page=<%= parseInt(current) - 1 %>&sortBy=<%= sortBy %>&category=<%= category %>&department=<%= department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>" aria-label="Previous">
                   <span aria-hidden="true">&laquo;</span>
                   <span class="sr-only">Previous</span>
                 </a>
@@ -285,15 +299,15 @@
 
               <% for (var i = 1; i <= pages; i++) { %>
               <% if (i == current) { %>
-              <li class="page-item active"><a class="page-link" href="?page=<%= i %>&sortBy=<%= sortBy %>&category=<%= category %>&department=<%= department %>"><%= i %></a></li>
+              <li class="page-item active"><a class="page-link" href="?page=<%= i %>&sortBy=<%= sortBy %>&category=<%= category %>&department=<%= department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>"><%= i %></a></li>
               <% } else { %>
-              <li class="page-item"><a class="page-link" href="?page=<%= i %>&sortBy=<%= sortBy %>&category=<%= category %>&department=<%= department %>"><%= i %></a></li>
+              <li class="page-item"><a class="page-link" href="?page=<%= i %>&sortBy=<%= sortBy %>&category=<%= category %>&department=<%= department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>"><%= i %></a></li>
               <% } %>
               <% } %>
 
               <% if (current < pages) { %>
               <li class="page-item">
-                <a class="page-link" href="?page=<%= parseInt(current) + 1 %>&sortBy=<%= sortBy %>&category=<%= category %>&department=<%= department %>" aria-label="Next">
+                <a class="page-link" href="?page=<%= parseInt(current) + 1 %>&sortBy=<%= sortBy %>&category=<%= category %>&department=<%= department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>" aria-label="Next">
                   <span aria-hidden="true">&raquo;</span>
                   <span class="sr-only">Next</span>
                 </a>
@@ -335,4 +349,20 @@
       confirmDownloadNo.addEventListener('click', () => {
         confirmDownloadModal.style.display = 'none';
       });
+
+      function clearHashtags() {
+  const queryParams = new URLSearchParams(window.location.search);
+  queryParams.delete("hashtags");
+  window.location.search = queryParams.toString();
+}
+
+
+      
+
+
+
+
+
+
+
 </script>
