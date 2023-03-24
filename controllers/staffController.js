@@ -11,15 +11,14 @@ const dateTimeFormat = 'DD/MM/YYYY HH:mm';
 const uploadFile = async (req, res, next) => {
   try {
     const idea = new Idea();
-    idea.title = req.body.title
-    idea.content = req.body.content
-    idea.category = req.body.category
-    idea.user = req.user
-    idea.isAnonymous = req.body.isAnonymous || false; //Lấy giá trị isAnonymous từ request body, nếu không có giá trị thì mặc định là false
+    idea.title = req.body.title;
+    idea.content = req.body.content;
+    idea.category = req.body.category;
+    idea.user = req.user;
+    idea.isAnonymous = req.body.isAnonymous || false;
+    idea.uploads = [];
     idea.hashtags =  JSON.parse(req.body.hashtags);
-    idea.save((err) => {
-      if (err) { return next(err); }
-    });
+
     const files = req.files;
     const uploadPromises = files.map(file => {
       const newFile = new File({
@@ -32,6 +31,14 @@ const uploadFile = async (req, res, next) => {
     });
     const uploadedFiles = await Promise.all(uploadPromises);
 
+    uploadedFiles.forEach(file => {
+      idea.uploads.push(file);
+    });
+
+    idea.uploadsCount = idea.uploads.length;
+
+    await idea.save();
+
     const department = await getDepartmentByID(req.user.department);
     const accounts = await getAccountsByRoleNameAndDepartmentName("QA Coordinator", department.name);
 
@@ -40,9 +47,9 @@ const uploadFile = async (req, res, next) => {
 
     accounts.forEach(element => {
       mailer.sendMail(
-        element.email,                // Gửi đến email nào
-        "Notification Submit Idea",   // Tên tiêu đề
-        contentMail.GetContentMailAfterPostIdea(req.user.fullName, req.user.username, currentDateTime, req.body.title, req.body.content) // Nội dung trong email
+        element.email,                
+        "Notification Submit Idea",   
+        contentMail.GetContentMailAfterPostIdea(req.user.fullName, req.user.username, currentDateTime, req.body.title, req.body.content) 
       );
     });
 

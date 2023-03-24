@@ -4,6 +4,7 @@ const archiver = require('archiver');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const iconv = require('iconv-lite');
 const User = require('../models/User');
+const Event = require('../models/Event');
 
 
 async function GetUser(user) {
@@ -42,6 +43,7 @@ const submitFormCategory = (req, res, next) => {
 // Start: GET: List Categories Page
 const listCategoriesView = async (req, res, next) => {
     try {
+        const messages = req.flash('notification');
         const title = 'List Categories';
         const user = req.user;
 
@@ -49,7 +51,7 @@ const listCategoriesView = async (req, res, next) => {
 
         const categories = await getAllCategorys();
 
-        res.render('QA_Manager/listCategories', { user, title, categories });
+        res.render('QA_Manager/listCategories', { messages, user, title, categories });
 
     } catch (error) {
         console.error(error);
@@ -89,8 +91,18 @@ const updateFormCategory = async (req, res) => {
 
 // Start: POST: Delete Category
 const deleteFormCategory = async (req, res) => {
-    await deleteCategory(req.params.id);
-    res.redirect('/listCategories');
+    const category = await Idea.getCategoryByID(req.params.id);
+    const checkCategoryHasIdeas = await Idea.checkCategoryHasIdeas(req.params.id);
+    if (checkCategoryHasIdeas == true) {
+        await deleteCategory(req.params.id);
+        req.flash('notification', `Deleted "${category.nameCate}" category`);
+        res.redirect('/listCategories');
+    }
+    else {
+        req.flash('notification', `Cannot delete "${category.nameCate}" category!!! Because this category is having ideas`);
+        res.redirect('/listCategories');
+    }
+
 }
 // End: POST: Delete Category
 
@@ -140,16 +152,22 @@ const exportIdeasToCsv = async (_req, res) => {
                 { id: 'viewedBy', title: 'Viewed' },
                 { id: 'likedBy', title: 'Liked' },
                 { id: 'dislikedBy', title: 'Disliked' },
-                { id: 'isAnonymous', title: 'Is Anonymous' }
+                { id: 'isAnonymous', title: 'Is Anonymous' },
+                { id: 'hasFiles', title: 'hasFiles' },
             ],
             encoding: 'utf8' //Thêm option encoding với giá trị utf8
         });
         const csvData = await Idea.Idea.find({})
             .populate('category', 'nameCate')
             .populate('user', 'username')
+            .populate('uploads')
             .exec()
             .then((ideas) => {
                 return ideas.map((idea) => {
+                    let hasFiles = "No";
+                    if (idea.uploads.length > 0 && idea.uploads[0].files) {
+                        hasFiles = "Yes";
+                    }
                     return {
                         title: iconv.encode(idea.title, 'utf8').toString(),
                         content: iconv.encode(idea.content, 'utf8').toString(),
@@ -159,11 +177,11 @@ const exportIdeasToCsv = async (_req, res) => {
                         viewedBy: idea.viewedBy.length,
                         likedBy: idea.likedBy.length,
                         dislikedBy: idea.dislikedBy.length,
-                        isAnonymous: idea.isAnonymous ? 'Yes' : 'No'
+                        isAnonymous: idea.isAnonymous ? 'Yes' : 'No',
+                        hasFiles: hasFiles
                     };
                 });
             });
-
         // Write the CSV data to a file
         await csvWriter.writeRecords(csvData);
 
@@ -183,7 +201,19 @@ const dashboardForQAM = async (req, res) => {
 
         await GetUser(user);
 
-        res.render('QA_Manager/dashboardForQAM', { user, title });
+        const categories = await Idea.getAllCategorys();
+        const ideas = await Idea.Idea.find();
+        const departments = await User.getAllDepartments();
+        const events = await Event.getAllEvents();
+
+        const countCategories = categories.length;
+        const countEvents = events.length;
+        const countIdeas = ideas.length;
+        const countDepartments = departments.length;
+
+        const count = { countIdeas, countCategories, countDepartments, countEvents };
+
+        res.render('QA_Manager/dashboardForQAM', { user, title, count });
 
     } catch (error) {
         console.error(error);
@@ -228,7 +258,20 @@ const checkData5s = async function (req, res) {
         const lineChartData = await Idea.getCountIdeaByEachEvent();
         // End: Xử lý data dành cho line chart
 
-        const data = { barChartData, pieChartData, lineChartData };
+        // Start: Kiểm tra số lượng của ideas, categories, departments, events
+        const ideas = await Idea.Idea.find();
+        const departments = await User.getAllDepartments();
+        const events = await Event.getAllEvents();
+
+        const countIdeas = ideas.length;
+        const countCategories = categories.length;
+        const countDepartments = departments.length;
+        const countEvents = events.length;
+
+        const count = { countIdeas, countCategories, countDepartments, countEvents };
+        // End: Kiểm tra số lượng của ideas, categories, departments, events
+
+        const data = { barChartData, pieChartData, lineChartData, count };
 
         res.status(200).json(data);
     } catch (err) {

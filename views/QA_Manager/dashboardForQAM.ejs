@@ -18,6 +18,114 @@
   <div class="container">
 
     <div class="col-md-12">
+
+      <div class="row">
+
+        <!-- Ideas Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+
+                <div class="col mr-2">
+                  <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Ideas
+                  </div>
+
+                  <div class="h5 mb-0 font-weight-bold text-gray-800" id="countIdeas">
+                    <%= count.countIdeas %>
+                  </div>
+
+                </div>
+
+                <div class="col-auto">
+                  <i class="bi bi-stickies fa-2x text-gray-300"></i>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categories Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+
+                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                    Categories
+                  </div>
+
+                  <div class="h5 mb-0 font-weight-bold text-gray-800" id="countCategories">
+                    <%= count.countCategories %>
+                  </div>
+
+                </div>
+
+                <div class="col-auto">
+                  <i class="bi bi-square-half fa-2x text-gray-300"></i>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Departments Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+
+                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                    Departments
+                  </div>
+
+                  <div class="h5 mb-0 font-weight-bold text-gray-800" id="countDepartments">
+                    <%= count.countDepartments %>
+                  </div>
+
+                </div>
+
+                <div class="col-auto">
+                  <i class="bi bi-stack fa-2x text-gray-300"></i>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Events Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+
+                  <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                    Events
+                  </div>
+
+                  <div class="h5 mb-0 font-weight-bold text-gray-800" id="countEvents">
+                    <%= count.countEvents %>
+                  </div>
+
+                </div>
+
+                <div class="col-auto">
+                  <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Content Row -->
 
       <div class="row">
@@ -96,6 +204,13 @@
         method: 'GET',
         success: function(response) {
           // code để hiển thị dữ liệu trên view ở đây
+
+          // ---------------------------- Set Value Card ----------------------------
+          $("#countIdeas").html(response.count.countIdeas);
+          $("#countCategories").html(response.count.countCategories);
+          $("#countDepartments").html(response.count.countDepartments);
+          $("#countEvents").html(response.count.countEvents);
+          // ---------------------------- End: Set Value Card ----------------------------
 
           // ---------------------------- Bar Chart ----------------------------
 
@@ -197,8 +312,6 @@
 
           var lineChart = document.getElementById('lineChart').getContext('2d');
 
-          console.log(response.lineChartData);
-
           new Chart(lineChart, {
             type: 'line',
             data: {
@@ -231,7 +344,7 @@
     }
 
     $(document).ready(function() {
-      setInterval(updateData, 3000); // tự động cập nhật dữ liệu sau mỗi 3 giây
+      setInterval(updateData, 5000); // tự động cập nhật dữ liệu sau mỗi 5 giây
     });
   });
 </script>
