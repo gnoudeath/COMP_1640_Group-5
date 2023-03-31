@@ -154,12 +154,20 @@ const exportIdeasToCsv = async (_req, res) => {
                 { id: 'dislikedBy', title: 'Disliked' },
                 { id: 'isAnonymous', title: 'Is Anonymous' },
                 { id: 'hasFiles', title: 'hasFiles' },
+                { id: 'department', title: 'Department' },
             ],
             encoding: 'utf8' //Thêm option encoding với giá trị utf8
         });
         const csvData = await Idea.Idea.find({})
             .populate('category', 'nameCate')
-            .populate('user', 'username')
+            .populate({
+                path: 'user', // Lấy trường user trong bảng idea
+                select: 'username department', // Chọn tới trường username và department trong bảng user
+                populate: {
+                    path: 'department', // Tiếp tục lấy trường department trong bảng user
+                    select: 'name' // Chọn tới trường name trong bảng department
+                }
+            })
             .populate('uploads')
             .exec()
             .then((ideas) => {
@@ -174,11 +182,12 @@ const exportIdeasToCsv = async (_req, res) => {
                         createdDate: dateTimeFormat.format(idea.createdDate),
                         category: idea.category.nameCate,
                         user: idea.user.username,
+                        department: idea.user.department.name,
                         viewedBy: idea.viewedBy.length,
                         likedBy: idea.likedBy.length,
                         dislikedBy: idea.dislikedBy.length,
                         isAnonymous: idea.isAnonymous ? 'Yes' : 'No',
-                        hasFiles: hasFiles
+                        hasFiles: hasFiles,                       
                     };
                 });
             });
