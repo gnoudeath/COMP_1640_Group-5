@@ -10,7 +10,7 @@ const categorySchema = new mongoose.Schema({
 
 const Category = mongoose.model('Category', categorySchema);
 
-// Idea 
+// Idea Model
 const ideaSchema = new mongoose.Schema({
   title: {
     type: String,
