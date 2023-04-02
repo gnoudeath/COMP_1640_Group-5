@@ -206,7 +206,6 @@ const deleteFormDepartment = async (req, res) => {
         req.flash('notification', `Cannot delete "${department.name}" department!!! Because this department is having accounts`);
         res.redirect('/listDepartments');
     }
-
 }
 // End: POST: Delete Department
 

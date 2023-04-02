@@ -68,23 +68,23 @@ const User = mongoose.model('User', userSchema);
 // End: Define our user schema
 
 /**
- *  Function: Thêm 1 tài khoản
+ *  Function: Insert 1 User
  */
 function insertUser(data) {
   User.create(data);
 }
 
 /**
- *  Function Lấy toàn bộ thông tin các Roles
+ *  Function: Get all information about Roles
  */
 async function getAllRoles() {
-  // Sử dụng phương thức find để lấy tất cả các documents từ bảng users
+  // Use find method to get all documents from "users" table
   const roles = await Role.find();
   return roles;
 }
 
 /**
- * Function: Lấy toàn bộ thông tin các Users dựa vào tên Role
+ * Function: Get all infomation of Users based on Role name
  */
 async function getAccountsByRoleName(roleName) {
   try {
@@ -114,7 +114,7 @@ async function getAccountsByRoleNameAndDepartmentName(roleName, departmentName) 
 }
 
 /**
- * Function: Lấy dữ liệu của 1 users bằng User_ID
+ * Function: Get data of 1 user by User_ID
  */
 async function getAccountByID(user_id) {
   try {
@@ -133,7 +133,7 @@ async function getAccountByID(user_id) {
 }
 
 /**
- * Function: Cập nhật tài khoản
+ * Function: Update Account
  */
 async function updateAccount(id, data) {
   await User.findByIdAndUpdate(id, data);
@@ -147,7 +147,7 @@ async function deleteAccount(id) {
 }
 
 /**
- * Function: Kiểm tra department này có tài khoản nào không
+ * Function: Check if this department has any accounts
  */
 async function checkAccountExistsInDepartment(department_ID) {
   const accounts = await User.find({ department: department_ID });
@@ -160,7 +160,7 @@ async function checkAccountExistsInDepartment(department_ID) {
 }
 
 /**
- * Function: Kiểm tra tài khoản tồn tại bằng cách check username
+ * Function: Check the account exists by checking username
  */
 async function checkAccountExists(username) {
   const account = await User.find({ username: username });
@@ -173,23 +173,23 @@ async function checkAccountExists(username) {
 }
 
 /**
- *  Function: Thêm 1 Department
+ *  Function: Insert Department
  */
 function insertDepartment(data) {
   Department.create(data);
 }
 
 /**
- *  Function Lấy toàn bộ thông tin các Departments
+ * Function: Get all information about Departments
  */
 async function getAllDepartments() {
-  // Sử dụng phương thức find để lấy tất cả các documents từ bảng Departments
+  // Use find method to get all documents from "departments" table
   const departments = await Department.find();
   return departments;
 }
 
 /**
- * Function: Lấy dữ liệu của 1 department bằng id
+ * Function: Get data of department by ID
  */
 async function getDepartmentByID(id) {
   try {
@@ -202,14 +202,14 @@ async function getDepartmentByID(id) {
 }
 
 /**
- * Function: Cập nhật department
+ * Function: Update department
  */
 async function updateDepartment(id, data) {
   await Department.findByIdAndUpdate(id, data);
 }
 
 /**
- * Function: Xóa Department
+ * Function: Delete Department
  */
 async function deleteDepartment(id) {
   await Department.findByIdAndRemove(id);

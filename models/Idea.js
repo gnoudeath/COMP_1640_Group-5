@@ -58,7 +58,7 @@ const ideaSchema = new mongoose.Schema({
   }],
   hashtags: [{
     type: String,
-    
+
   }]
 });
 
@@ -121,7 +121,7 @@ const uploadSchema = new mongoose.Schema({
 const File = mongoose.model('Upload', uploadSchema);
 
 /**
- * Function: Lấy tất cả categories
+ * Function: Get All Categories
  */
 async function getAllCategorys() {
   const categorys = await Category.find();
@@ -129,14 +129,14 @@ async function getAllCategorys() {
 }
 
 /**
- *  Function: Thêm 1 category
+ *  Function: Insert category
  */
 function insertCategory(data) {
   Category.create(data);
 }
 
 /**
- * Function: Lấy dữ liệu của 1 category bằng id
+ * Function: Get data of a category by id
  */
 async function getCategoryByID(id) {
   try {
@@ -149,7 +149,7 @@ async function getCategoryByID(id) {
 }
 
 /**
- * Function: Cập nhật category
+ * Function: Update category
  */
 async function updateCategory(id, data) {
   await Category.findByIdAndUpdate(id, data);
@@ -161,7 +161,7 @@ async function getCountIdeaRecordsByCategoryName(categoryID) {
 }
 
 /**
- * Function: Xóa Category
+ * Function: Delete Category
  */
 async function deleteCategory(id) {
   await Category.findByIdAndRemove(id);
@@ -234,7 +234,7 @@ async function getCountIdeaByEachEvent() {
 }
 
 /**
- * Function: Kiểm tra người dùng này có sở hữu Idea nào không
+ * Function: Check if this user owns any ideas
  */
 async function checkUserOwnsIdeas(user_ID) {
   const ideas = await Idea.find({ user: user_ID });
@@ -247,7 +247,7 @@ async function checkUserOwnsIdeas(user_ID) {
 }
 
 /**
- * Function: Kiểm tra category này có Ideas nào không
+ * Function: Check this category has any Ideas
  */
 async function checkCategoryHasIdeas(category_ID) {
   const ideas = await Idea.find({ category: category_ID });

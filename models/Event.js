@@ -20,18 +20,17 @@ const eventSchema = new mongoose.Schema({
 const Event = mongoose.model('Event', eventSchema);
 
 /**
- *  Function: Thêm 1 Event
+ *  Function: Insert Event
  */
 function insertEvent(data) {
     Event.create(data);
 }
 
 /**
- *  Function: Lấy toàn bộ thông tin các Events
+ *  Function: Get all information about Events
  */
 async function getAllEvents() {
-    // Sử dụng phương thức find để lấy tất cả các documents từ bảng events
-
+    // Use find method to get all documents from "events" table
     const events = await Event.find();
 
     const formattedList = events.map(item => {
@@ -47,7 +46,7 @@ async function getAllEvents() {
 }
 
 /**
- * Function: Lấy dữ liệu của 1 event bằng id
+ * Function: Get the data of an event by id
  */
 async function getEventByID(id) {
     const event = await Event.findOne({ _id: id });
@@ -63,21 +62,21 @@ async function getEventByID(id) {
 }
 
 /**
- * Function: Cập nhật Event
+ * Function: Update Event
  */
 async function updateEvent(id, data) {
     await Event.findByIdAndUpdate(id, data);
 }
 
 /**
- * Function: Xóa event
+ * Function: Delete event
  */
 async function deleteEvent(id) {
     await Event.findByIdAndRemove(id);
 }
 
 /**
- * Function: Thực hiện set Date Event, chuyển status từ false thành true
+ * Function: Implement set Date Event, change status from false to true
  */
 async function setDate(id) {
     await Event.updateMany({ status: true }, { $set: { status: false } }, { new: true });
@@ -144,20 +143,20 @@ async function hasTrueStatusComment() {
     }
 }
 
-// Mỗi 10s sẽ kiểm tra ngày hết hạn của event
+// Every 10s will check the expiration date of the event
 schedule.scheduleJob('*/10 * * * * *', async () => {
 
     const currentDate = new Date();
-    // nếu có event đang có status là true sẽ bắt đầu kiểm tra
+    // The event query is having status as true
     const events = await Event.find({
         status: true
     });
 
     if (events.length == 1) {
         for (const event of events) {
-            // Nếu ngày hiện tại trùng hoặc là đã quá ngày finalClosureDate (so sánh theo GMT+0 London)
+            // If the current date matches or is past the finalClosureDate date (compare GMT+0 London)
             if (currentDate >= event.finalClosureDate) {
-                // Chuyển status thành false và lưu lại
+                // Change status to false and save
                 event.status = false;
                 await event.save();
             }
