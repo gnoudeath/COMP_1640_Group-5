@@ -44,7 +44,7 @@ const logoutUser = (req, res, next) => {
 
 
 // End: GET: Home Page
-const dashboardView = async (req, res) => {
+const homeView = async (req, res) => {
 
   try {
     const categories = await Category.find({});
@@ -89,12 +89,17 @@ const dashboardView = async (req, res) => {
     if (category && category !== 'all') {
       query.category = mongoose.Types.ObjectId(category);
       const selectedCategory = await Category.findById(category);
+      
       categoryName = selectedCategory.nameCate;
+      console.log(categoryName)
     }
 
+    let departmentName = 'All Departments';
     if (department && department !== 'all') {
       const departmentId = mongoose.Types.ObjectId(department);
       const usersInDepartment = await User.find({ department: departmentId }).distinct('_id');
+      const selectedDept = await Department.findById(departmentId);
+      departmentName = selectedDept.name
       query.user = { $in: usersInDepartment };
     }
     if (hashtags.length > 0) {
@@ -218,6 +223,7 @@ const dashboardView = async (req, res) => {
         queryParams,
         categories,
         hashtags,
+        departmentName
         
       });
     } else {
@@ -235,6 +241,6 @@ module.exports = {
   logoutUser,
   loginView,
   loginUser,
-  dashboardView,
+  homeView,
 
 };
