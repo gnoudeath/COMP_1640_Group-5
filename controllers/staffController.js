@@ -17,7 +17,7 @@ const uploadFile = async (req, res, next) => {
     idea.user = req.user;
     idea.isAnonymous = req.body.isAnonymous || false;
     idea.uploads = [];
-    idea.hashtags =  JSON.parse(req.body.hashtags);
+    idea.hashtags =  JSON.parse(JSON.stringify(req.body.hashtags));
 
     const files = req.files;
     const uploadPromises = files.map(file => {
