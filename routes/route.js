@@ -9,7 +9,7 @@ const contentMail = require('../utils/contentMail');
 const { loginView, loginUser } = require('../controllers/loginController');
 
 const { protectRoute, checkRole } = require("../auth/protect");
-const { logoutUser, dashboardView, dashboardView2 } = require('../controllers/loginController');
+const { logoutUser, homeView } = require('../controllers/loginController');
 
 const { getUploadPage, uploadFile, getMyIdeasPage } = require('../controllers/staffController');
 
@@ -41,7 +41,7 @@ const router = express.Router();
 router.get('/login', loginView);
 router.post("/login", loginUser);
 
-router.get("/", protectRoute, dashboardView);
+router.get("/", protectRoute, homeView);
 
 router.get('/logout', logoutUser);
 

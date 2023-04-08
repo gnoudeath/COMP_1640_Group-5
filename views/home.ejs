@@ -149,7 +149,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-3">
-        <nav class="navbar bg-light">
+        <nav class="navbar shadow-sm p-3 mb-5 bg-white rounded">
           <div class="filter-sidebar">
             <div class="filter-section">
               <% if (user.role.name==="QA Manager" ) { %>
@@ -186,7 +186,9 @@
               <h4>Category</h4>
               <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Category
+                  Category: 
+                  <% if(categoryName!='All Categories') { %> <%=categoryName%> <% } %>
+                  
                 </button>
                 <div class="dropdown-menu" aria-labelledby="categoryDropdown">
                   <a class="dropdown-item <%= category === 'all' ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=all&department=<%- department %><% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>">All Categories</a>
@@ -200,7 +202,7 @@
               <h4>Department</h4>
               <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="departmentDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Departments
+                  Departments: <% if(departmentName!='All Departments') { %> <%=departmentName%> <% } %>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="departmentDropdown">
                   <a class="dropdown-item <%= department === 'all' ? 'active' : '' %>" href="?sortBy=<%- sortBy %>&category=<%- category %>&department=all<% if(hashtags.length) { %>&hashtags=<%= hashtags.join(',') %><% } %>">All Departments</a>
