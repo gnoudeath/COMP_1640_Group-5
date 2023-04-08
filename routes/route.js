@@ -116,9 +116,6 @@ router.get('/detailIdeas/:id', async (req, res) => {
     idea.viewedBy.push(req.user._id);
     await idea.save();
   }
-
-  
-
   // Find the current user's interaction with the idea
 const isLiked = idea.likedBy.some(user => user._id.equals(req.user._id));
 const isDisliked = idea.dislikedBy.some(user => user._id.equals(req.user._id));
@@ -166,7 +163,6 @@ router.post('/likeIdeas/:id', async (req, res) => {
     const numDislikes = idea.dislikedBy.length;
     // send back updated list of users who have liked the idea
     const updatedIdea = await Idea.findById(ideaId).populate('likedBy').populate('dislikedBy');
-
 
     return res.json({ message: 'Idea liked successfully.', numLikes: numLikes, numDislikes: numDislikes,updatedIdea:updatedIdea  });
   } catch (error) {
@@ -230,10 +226,13 @@ router.post("/comment/:id", async (req, res) => {
     mailer.sendMail(
       user.email,               // Gửi đến email nào
       "Notification Comment",   // Tên tiêu đề
-      contentMail.GetContentMailAfterComment(anonymous == "true" ? "Unknown" : req.user.fullName, anonymous == "true" ? "Unknown" : req.user.username, currentDateTime, idea.title, comment) // Nội dung trong email
+      contentMail.GetContentMailAfterComment(anonymous == "true" ? "Unknown" : req.user.fullName, 
+                                            anonymous == "true" ? "Unknown" : req.user.username, 
+                                            currentDateTime, 
+                                            idea.title, 
+                                            comment) // Nội dung trong email
     );
   }
-
   else {
     console.log("can not comment");
   }

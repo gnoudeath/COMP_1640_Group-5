@@ -153,7 +153,7 @@ const exportIdeasToCsv = async (_req, res) => {
                 { id: 'likedBy', title: 'Liked' },
                 { id: 'dislikedBy', title: 'Disliked' },
                 { id: 'isAnonymous', title: 'Is Anonymous' },
-                { id: 'hasFiles', title: 'hasFiles' },
+                { id: 'hasFiles', title: 'Files' },
                 { id: 'department', title: 'Department' },
             ],
             encoding: 'utf8' //Thêm option encoding với giá trị utf8

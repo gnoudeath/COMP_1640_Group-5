@@ -322,9 +322,9 @@ $("#like-button").click(function() {
                 "url": `http://localhost:3000/comment/${id}?comment=${commentValue}&anonymous=${isAnonymous}`,
                 "method": "POST",
                 "headers": {
-                  "content-type": "application/json",
-                  "cache-control": "no-cache",
-                  "postman-token": "4a023968-04bb-3e57-ca9b-dfdd6ab4a373"
+                    "content-type": "application/json",
+                    "cache-control": "no-cache",
+                    "postman-token": "4a023968-04bb-3e57-ca9b-dfdd6ab4a373"
                 },
                 "processData": false,
                 "data": "{\n\t\"comment\": \"test comment đá\"\n}"

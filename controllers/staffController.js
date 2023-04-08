@@ -30,21 +30,15 @@ const uploadFile = async (req, res, next) => {
       return newFile.save();
     });
     const uploadedFiles = await Promise.all(uploadPromises);
-
     uploadedFiles.forEach(file => {
       idea.uploads.push(file);
     });
-
     idea.uploadsCount = idea.uploads.length;
-
     await idea.save();
-
     const department = await getDepartmentByID(req.user.department);
     const accounts = await getAccountsByRoleNameAndDepartmentName("QA Coordinator", department.name);
-
     const now = new Date();
     const currentDateTime = moment(now).tz(timezone).format(dateTimeFormat);
-
     accounts.forEach(element => {
       mailer.sendMail(
         element.email,                
@@ -87,7 +81,6 @@ const getMyIdeasPage = async (req, res) => {
   const role = await Role.findById(user.role)
   user.role = role
   const title = 'My Ideas'
-
 
   Idea.aggregate([
     // Match ideas by user id
@@ -151,8 +144,6 @@ const getMyIdeasPage = async (req, res) => {
       console.log(err);
       return;
     }
-
-
 
     Idea.aggregate([
       // Match ideas by user id
