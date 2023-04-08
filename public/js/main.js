@@ -312,14 +312,18 @@ $("#like-button").click(function() {
     });
   });
   
-    $(document).on("click", "#add-comment", () => {     
+    $(document).on("click", "#add-comment", () => {    
+        var protocol = window.location.protocol; // Giao thức (http:// hoặc https://)
+var host = window.location.host; // Tên miền (bao gồm cả cổng nếu có)
+// Tạo lại URL gốc của trang web hiện tại
+var baseUrl = protocol + '//' + host;
         const commentValue = $("#comment-value").val();
         const isAnonymous = $("#anonymous-checkbox").prop("checked"); // Lấy giá trị của ô checkbox
         if (commentValue) {
             var settings = {
                 "async": true,
                 "crossDomain": true,
-                "url": `http://localhost:3000/comment/${id}?comment=${commentValue}&anonymous=${isAnonymous}`,
+                "url": `${baseUrl}/comment/${id}?comment=${commentValue}&anonymous=${isAnonymous}`,
                 "method": "POST",
                 "headers": {
                     "content-type": "application/json",

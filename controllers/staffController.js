@@ -17,7 +17,9 @@ const uploadFile = async (req, res, next) => {
     idea.user = req.user;
     idea.isAnonymous = req.body.isAnonymous || false;
     idea.uploads = [];
-    idea.hashtags =  JSON.parse(JSON.stringify(req.body.hashtags));
+    const hashtagsEncoded = req.body.hashtags; // Giá trị của thuộc tính value đã được gửi từ view
+    const hashtagsDecoded = decodeURIComponent(hashtagsEncoded);  
+    idea.hashtags =  JSON.parse(hashtagsDecoded);
 
     const files = req.files;
     const uploadPromises = files.map(file => {
