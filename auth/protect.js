@@ -35,10 +35,6 @@ function checkRole(allowedRoles) {
   }
 }
 
-
-
-
-
 module.exports = {
   protectRoute,
   checkRole,
