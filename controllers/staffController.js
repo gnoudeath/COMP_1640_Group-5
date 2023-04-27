@@ -20,7 +20,9 @@ const uploadFile = async (req, res, next) => {
     idea.user = req.user;
     idea.isAnonymous = req.body.isAnonymous || false;// đăng bài ẩn danh ân , mặc định là false
     idea.uploads = [];
-    idea.hashtags =  JSON.parse(req.body.hashtags);
+    const hashtagsEncoded = req.body.hashtags; // Giá trị của thuộc tính value đã được gửi từ view
+    const hashtagsDecoded = decodeURIComponent(hashtagsEncoded);  
+    idea.hashtags =  JSON.parse(hashtagsDecoded);
 
     // Lấy danh sách các file được gửi từ client và 
     //tạo một mảng các Promise để upload các file này lên server.
