@@ -139,11 +139,13 @@ const dateTimeFormat = new Intl.DateTimeFormat('vi-VN', {
 
 const exportIdeasToCsv = async (_req, res) => {
     try {
+        // Thiết lập kiểu dữ liệu trả về là text/csv và đặt tên file
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="ideas.csv"');
+        // Dùng module csv-writer để  Khởi tạo đối tượng csvWriter để ghi dữ liệu vào file csv.
         const csvWriter = createCsvWriter({
-            path: 'ideas.csv',
-            header: [
+            path: 'ideas.csv', //lưu vào ideas.csv
+            header: [ // tạo header trong file csv
                 { id: 'title', title: 'Title' },
                 { id: 'content', title: 'Content' },
                 { id: 'createdDate', title: 'Created Date' },
@@ -158,8 +160,9 @@ const exportIdeasToCsv = async (_req, res) => {
             ],
             encoding: 'utf8' //Thêm option encoding với giá trị utf8
         });
+        // Lấy dữ liệu ý tưởng từ cơ sở dữ liệu và xử lý nó thành định dạng csv.
         const csvData = await Idea.Idea.find({})
-            .populate('category', 'nameCate')
+            .populate('category', 'nameCate') // tạo đg dẫn tới category và lấy nameCate
             .populate({
                 path: 'user', // Lấy trường user trong bảng idea
                 select: 'username department', // Chọn tới trường username và department trong bảng user
@@ -171,30 +174,36 @@ const exportIdeasToCsv = async (_req, res) => {
             .populate('uploads')
             .exec()
             .then((ideas) => {
+                // Map mỗi ý tưởng thành một object với các thuộc tính tương ứng.
                 return ideas.map((idea) => {
-                    let hasFiles = "No";
+                    let hasFiles = "No"; // khai báo biến hasFiles với giá trị ban đầu là No
+                    // kiểm tra độ dài của mảng uploads 
                     if (idea.uploads.length > 0 && idea.uploads[0].files) {
                         hasFiles = "Yes";
                     }
                     return {
+                        // mã hóa kí tự để đọc đúng và hiển thị khi mở file csv
                         title: iconv.encode(idea.title, 'utf8').toString(),
                         content: iconv.encode(idea.content, 'utf8').toString(),
+                        // Sử dụng đối tượng DateTimeFormat để định dạng ngày giờ
                         createdDate: dateTimeFormat.format(idea.createdDate),
                         category: idea.category.nameCate,
                         user: idea.user.username,
                         department: idea.user.department.name,
-                        viewedBy: idea.viewedBy.length,
-                        likedBy: idea.likedBy.length,
-                        dislikedBy: idea.dislikedBy.length,
+                        viewedBy: idea.viewedBy.length,// lấy độ dài của viewedBy trong idea
+                        likedBy: idea.likedBy.length,// lấy độ dài của likedBy trong idea
+                        dislikedBy: idea.dislikedBy.length,// lấy độ dài của dislikedBy trong idea
+                        // nếu isAnonymous là true thì trả về là yes , và ngược lại
                         isAnonymous: idea.isAnonymous ? 'Yes' : 'No',
+                        // đã khai báo ở trên...
                         hasFiles: hasFiles,                       
                     };
                 });
             });
-        // Write the CSV data to a file
+        //Ghi dữ liệu vào file csv bằng phương thức `writeRecords`.
         await csvWriter.writeRecords(csvData);
 
-        // Set the character encoding and download the file
+        // Thiết lập mã ký tự và tải file csv về.
         res.download('ideas.csv');
     } catch (err) {
         console.error(err);

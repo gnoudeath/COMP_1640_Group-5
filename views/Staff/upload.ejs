@@ -69,10 +69,12 @@
             <label for="file" class="drop-container">
               <span class="drop-title">Drop files here</span>
               or
+              <!-- Chỉ chấp nhận tập tin có định dạng là .doc, .docx hoặc .pdf. và cho phép chọn nhiều tập tin cùng một lúc -->
               <input type="file" name="files" accept=".doc, .docx, .pdf" multiple>
             </label>
             <div class="checkbox">
               <label>
+                <!-- value="true": Đặt giá trị cho ô checkbox là "true". -->
                 <input type="checkbox" name="isAnonymous" value="true"> 
                   Post ideas anonymously
               </label>
@@ -88,21 +90,23 @@
       
       function confirmAgreement() {
         if (document.getElementById("terms").checked) {
-          // var terms = "Terms and conditions: Are you sure";
-          // window.alert(terms);
           return confirm("Are you sure you agree to the terms and conditions?");
         } else {
           alert("Please agree to the terms and conditions.");
           return false;
         }
       }
-
+      // Tìm phần tử HTML checkbox về việc ẩn danh
       const checkbox = document.querySelector('input[name="isAnonymous"]');
+      // Tìm phần tử HTML chứa tên người đăng
       const username = document.querySelector('.username'); // thẻ HTML chứa tên người đăng
+      // Thêm sự kiện lắng nghe cho checkbox, bất cứ khi nào trạng thái thay đổi, hàm này được kích hoạt
       checkbox.addEventListener('change', () => {
+        // Nếu checkbox được chọn, thay đổi nội dung của phần tử HTML chứa tên người đăng thành "Unknown"
         if (checkbox.checked) {
           username.textContent = 'Unknown';
         } else {
+          // Ngược lại, thay đổi nội dung của phần tử HTML chứa tên người đăng thành tên thực của người đăng
           username.textContent = 'Tên người đăng'; // thay thế bằng tên thực của người đăng
         }
       });

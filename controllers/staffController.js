@@ -10,35 +10,51 @@ const dateTimeFormat = 'DD/MM/YYYY HH:mm';
 
 const uploadFile = async (req, res, next) => {
   try {
+    // Khởi tạo một đối tượng `Idea`.
     const idea = new Idea();
+
+    // Gán giá trị cho các thuộc tính của đối tượng `Idea` từ dữ liệu được gửi từ client.
     idea.title = req.body.title;
     idea.content = req.body.content;
     idea.category = req.body.category;
     idea.user = req.user;
-    idea.isAnonymous = req.body.isAnonymous || false;
+    idea.isAnonymous = req.body.isAnonymous || false;// đăng bài ẩn danh ân , mặc định là false
     idea.uploads = [];
     idea.hashtags =  JSON.parse(req.body.hashtags);
 
+    // Lấy danh sách các file được gửi từ client và 
+    //tạo một mảng các Promise để upload các file này lên server.
     const files = req.files;
     const uploadPromises = files.map(file => {
+      // Tạo một đối tượng `File` mới từ file được gửi từ client.
       const newFile = new File({
         name: file.originalname,
         files: file.buffer,
         user: req.user,
         ideas: idea,
       });
+      // Lưu đối tượng `File` này vào cơ sở dữ liệu 
+      //và trả về một Promise để xử lý bất đồng bộ.
       return newFile.save();
     });
+    // Giải quyết tất cả các Promise đã tạo để upload 
+    //các file và lấy danh sách các file đã được upload.
     const uploadedFiles = await Promise.all(uploadPromises);
+    // Gán danh sách các file đã upload vào thuộc tính `uploads` của đối tượng `idea`.
     uploadedFiles.forEach(file => {
       idea.uploads.push(file);
     });
+    // Cập nhật số lượng file đã upload.
     idea.uploadsCount = idea.uploads.length;
+    // Lưu thông tin của idea vào cơ sở dữ liệu.
     await idea.save();
+    // Lấy thông tin của đơn vị và danh sách tài khoản có vai trò `QA Coordinator` cùng đơn vị.
     const department = await getDepartmentByID(req.user.department);
     const accounts = await getAccountsByRoleNameAndDepartmentName("QA Coordinator", department.name);
+    // Lấy thời gian hiện tại và định dạng thời gian này.
     const now = new Date();
     const currentDateTime = moment(now).tz(timezone).format(dateTimeFormat);
+    // Gửi email thông báo cho từng tài khoản có vai trò `QA Coordinator`.
     accounts.forEach(element => {
       mailer.sendMail(
         element.email,                
@@ -46,9 +62,10 @@ const uploadFile = async (req, res, next) => {
         contentMail.GetContentMailAfterPostIdea(req.user.fullName, req.user.username, currentDateTime, req.body.title, req.body.content) 
       );
     });
-
+    // Chuyển hướng người dùng về trang chủ.
     res.redirect('/');
   } catch (err) {
+    // Xử lý ngoại lệ nếu có và trả về mã lỗi HTTP 500 và thông báo lỗi.
     res.status(500).send(err.message);
   }
 };
